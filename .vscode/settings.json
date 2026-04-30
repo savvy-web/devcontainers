@@ -47,7 +47,7 @@
 		"**/node_modules": false
 	},
 	"gitlens.statusBar.pullRequests.enabled": true,
-	"typescript.experimental.useTsgo": true,
+	"ts/js.experimental.useTsgo": true,
 	"gitlens.gitkraken.cli.integration.enabled": true,
 	"github-actions.workflows.pinned.refresh.enabled": true,
 	// GitHub Actions IDE configuration
@@ -113,5 +113,6 @@
 		"editor.formatOnPaste": true
 	},
 	"markdown.styles": [".vscode/static/github-markdown.css"],
-	"vitest.disableWorkspaceWarning": true
+	"vitest.disableWorkspaceWarning": true,
+	"typescript.native-preview.tsdk": "/Users/spencer/workspaces/savvy-web/devcontainers/node_modules/@typescript/native-preview"
 }

@@ -1,0 +1,27 @@
+{
+	"id": "rust",
+	"version": "0.1.0",
+	"name": "Rust Toolchain (Global)",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/rust.md",
+	"description": "Installs the Rust toolchain globally using rustup. Supports toolchain selection, component install, and validation.",
+	"options": {
+		"toolchain": {
+			"type": "string",
+			"default": "stable",
+			"description": "Rust toolchain to install (e.g. stable, nightly, 1.77.2)"
+		},
+		"components": {
+			"type": "string",
+			"default": "clippy rustfmt",
+			"description": "Space-separated list of rustup components to install"
+		}
+	},
+	"installsAfter": ["ghcr.io/devcontainers/features/common-utils"],
+	"customizations": {
+		"vscode": {
+			"extensions": ["rust-lang.rust-analyzer"]
+		}
+	},
+	"platforms": ["linux", "darwin"],
+	"keywords": ["rust", "toolchain", "compiler", "cargo"]
+}

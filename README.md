@@ -35,6 +35,20 @@ pnpm test
 - **[CLAUDE.md](CLAUDE.md)** — Detailed architecture and conventions
   for AI-assisted development with Claude Code.
 
+## Copilot Workspace (Cloud Agent) Support
+
+This repository is configured for GitHub Copilot Workspace (cloud agent) with the following files:
+
+- `.copilot/agent.env`: Pins Node.js and pnpm versions for the agent
+- `.copilot/agent.yaml`: (Optional) Customizes the agent image and prebuild steps
+
+**Copilot agent environment:**
+
+- Node.js: 24.11.0
+- pnpm: 10.20.0
+
+See [GitHub Copilot agent environment docs](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-agent-environment) for details.
+
 ## License
 
-[MIT](LICENSE)
+[MIT](./LICENSE)
