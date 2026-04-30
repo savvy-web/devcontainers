@@ -49,8 +49,10 @@ permissions:
   contents: read
 ```
 
-Always set `permissions` at the top-level workflow to `read-all` as a default,
-then override per job.
+At the top-level workflow, prefer the most restrictive default that still
+works for the workflow, such as explicit read-only scopes or `permissions: {}`.
+Then grant additional permissions per job only when a specific action needs
+them.
 
 Docs:
 [Permissions for the GITHUB\_TOKEN](https://docs.github.com/en/actions/reference/security/automatic-token-authentication#permissions-for-the-github_token)

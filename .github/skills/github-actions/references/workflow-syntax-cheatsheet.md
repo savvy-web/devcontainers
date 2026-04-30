@@ -109,7 +109,7 @@ Docs:
 ## 5. `permissions` block
 
 ```yaml
-# Minimal top-level default — restrict everything, then opt in per job
+# Read-only top-level default across all scopes; override per job as needed
 permissions: read-all
 
 jobs:
@@ -141,7 +141,8 @@ Docs:
 # In a later job that needs: [test]
 - uses: actions/download-artifact@v4
   with:
-    name: test-results-${{ matrix.target }}
+    pattern: test-results-*
+    merge-multiple: true
     path: downloaded/
 ```
 
