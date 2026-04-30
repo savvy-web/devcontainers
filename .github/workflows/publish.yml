@@ -34,6 +34,7 @@ jobs:
     if: ${{ needs.collect.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include: ${{fromJson(needs.collect.outputs.matrix)}}
     steps:
@@ -42,16 +43,81 @@ jobs:
       #   id: runtime
       #   uses: savvy-web/workflow-runtime-action@main
       - name: Test Feature
+        id: test
+        continue-on-error: true
         run: |
           chmod +x test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
           ./test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
+      - name: Save result
+        run: |
+          mkdir -p /tmp/results
+          echo "${{ steps.test.outcome }}" > /tmp/results/${{ matrix.scope }}-${{ matrix.id }}.txt
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-result-${{ matrix.scope }}-${{ matrix.id }}
+          path: /tmp/results/${{ matrix.scope }}-${{ matrix.id }}.txt
+      - name: Fail if test failed
+        if: steps.test.outcome == 'failure'
+        run: exit 1
+
+  summarize:
+    needs: [collect, test]
+    if: always() && needs.collect.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      all_passed: ${{ steps.check.outputs.all_passed }}
+    steps:
+      - name: Download all results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-result-*
+          path: /tmp/results
+          merge-multiple: true
+      - name: Write summary and check results
+        id: check
+        run: |
+          all_passed=true
+          shopt -s nullglob
+          result_files=(/tmp/results/*.txt)
+          {
+            echo "## Feature Test Results"
+            echo ""
+            if [ ${#result_files[@]} -eq 0 ]; then
+              echo "⚠️ No test results found — all test jobs may have been cancelled."
+              all_passed=false
+            else
+              echo "| Feature | Result |"
+              echo "| ------- | ------ |"
+              for file in "${result_files[@]}"; do
+                name=$(basename "$file" .txt)
+                result=$(cat "$file")
+                if [ "$result" = "success" ]; then
+                  echo "| \`$name\` | ✅ Pass |"
+                else
+                  echo "| \`$name\` | ❌ Fail |"
+                  all_passed=false
+                fi
+              done
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "all_passed=$all_passed" >> "$GITHUB_OUTPUT"
+      - name: Fail if any test failed
+        if: steps.check.outputs.all_passed != 'true'
+        run: exit 1
 
   publish:
-    needs: [test, collect]
+    needs: [summarize, collect]
     if: >-
       github.event.inputs.dry_run != 'true' && success() &&
       needs.collect.outputs.matrix != '[]'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         include: ${{fromJson(needs.collect.outputs.matrix)}}
