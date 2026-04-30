@@ -1,8 +1,8 @@
 name: Workflow
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   pull_request:
     branches: [main, changeset-release/main]
     types: [opened, synchronize, reopened]

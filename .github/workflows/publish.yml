@@ -1,12 +1,13 @@
-name: Test & Publish Devcontainer Features
+name: Publish
 
 on:
   workflow_dispatch:
     inputs:
       dry_run:
         description: "Dry run (do not publish)"
-        required: false
-        default: "false"
+        type: boolean
+        required: true
+        default: true
 
 jobs:
   collect-features:
@@ -61,9 +62,8 @@ jobs:
 
   publish:
     needs: [test, filter-publish-matrix]
-    if:
-      success() && fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0
-      && github.event.inputs.dry_run != 'true'
+    if: github.event.inputs.dry_run != true && success() &&
+      fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0
     runs-on: ubuntu-latest
     strategy:
       matrix:
