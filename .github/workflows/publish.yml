@@ -1,5 +1,4 @@
 name: Publish
-
 on:
   workflow_dispatch:
     inputs:
@@ -10,22 +9,10 @@ on:
         default: true
 
 jobs:
-  collect-features:
+  collect-and-filter-features:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v6
-      - id: set-matrix
-        run: |
-          node .github/scripts/collect-features.js > features.json
-          echo "matrix=$(cat features.json)" >> $GITHUB_OUTPUT
-
-  filter-publish-matrix:
-    needs: collect-features
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.filter.outputs.matrix }}
+      matrix: ${{ steps.collect_and_filter.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
       - name: Setup Runtime
@@ -33,23 +20,22 @@ jobs:
         uses: savvy-web/workflow-runtime-action@main
       - name: Set up Docker
         uses: docker/setup-buildx-action@v4
-      - id: filter
+      - id: collect_and_filter
         run: |
-          echo '${{ needs.collect-features.outputs.matrix }}' | node .github/scripts/filter-unpublished-features.js | tee filtered.json
+          node .github/scripts/collect-and-filter-features.js | tee filtered.json
           echo "matrix=$(cat filtered.json)" >> $GITHUB_OUTPUT
         env:
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         shell: bash
         working-directory: ${{ github.workspace }}
         continue-on-error: false
-
   test:
-    needs: filter-publish-matrix
-    if: ${{ fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0 }}
+    needs: collect-and-filter-features
+    if: ${{ fromJson(needs.collect-and-filter-features.outputs.matrix).length > 0 }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include: ${{fromJson(needs.filter-publish-matrix.outputs.matrix)}}
+        include: ${{fromJson(needs.collect-and-filter-features.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
       - name: Setup Runtime
@@ -61,13 +47,13 @@ jobs:
           ./test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
 
   publish:
-    needs: [test, filter-publish-matrix]
+    needs: [test, collect-and-filter-features]
     if: github.event.inputs.dry_run != true && success() &&
-      fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0
+      fromJson(needs.collect-and-filter-features.outputs.matrix).length > 0
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include: ${{fromJson(needs.filter-publish-matrix.outputs.matrix)}}
+        include: ${{fromJson(needs.collect-and-filter-features.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
       - name: Setup Runtime
