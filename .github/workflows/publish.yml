@@ -35,7 +35,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
       - id: filter
         run: |
-          node .github/scripts/filter-unpublished-features.js features.json filtered.json
+          echo '${{ needs.collect-features.outputs.matrix }}' | node .github/scripts/filter-unpublished-features.js | tee filtered.json
           echo "matrix=$(cat filtered.json)" >> $GITHUB_OUTPUT
         env:
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
