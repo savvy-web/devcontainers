@@ -16,13 +16,20 @@ Intentionally selective — always verify against live docs on `docs.github.com`
 
 - [Workflows](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows)
 - [Variables](https://docs.github.com/en/actions/concepts/workflows-and-actions/variables)
+- [Default environment variables](https://docs.github.com/en/actions/concepts/workflows-and-actions/variables#default-environment-variables)
 - [Contexts](https://docs.github.com/en/actions/concepts/workflows-and-actions/contexts)
+- [Contexts reference table](https://docs.github.com/en/actions/reference/accessing-contextual-information-about-workflow-runs)
 - [Expressions](https://docs.github.com/en/actions/concepts/workflows-and-actions/expressions)
+- [Workflow commands reference](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands)
 - [Using jobs in a workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-jobs)
 - [Running variations of jobs in a workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations)
 - [Passing information between jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/pass-job-outputs)
+- [Controlling the concurrency of workflows and jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-your-workflow-runs/control-the-concurrency-of-workflows-and-jobs)
+- [Skipping workflow runs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-your-workflow-runs/skipping-workflow-runs)
 - [Reuse workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
 - [Reusing workflow configurations](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations)
+- [Creating workflow templates for your organization](https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates-for-your-organization)
+- [Required workflows](https://docs.github.com/en/actions/how-tos/manage-actions-policy/required-workflows)
 - [Storing workflow data as artifacts](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/store-workflow-data-as-artifacts)
 - [Caching dependencies to speed up workflows](https://docs.github.com/en/actions/how-tos/optimize-workflows/cache-dependencies)
 
@@ -30,16 +37,21 @@ Intentionally selective — always verify against live docs on `docs.github.com`
 
 - [GitHub-hosted runners](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners)
 - [Using GitHub-hosted runners](https://docs.github.com/en/actions/how-tos/manage-runners/github-hosted-runners/use-github-hosted-runners)
+- [Supported runners and hardware resources](https://docs.github.com/en/actions/reference/runners/github-hosted-runners#supported-runners-and-hardware-resources)
 - [Choosing the runner for a job](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)
 - [Running jobs in a container](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container)
 - [Self-hosted runners](https://docs.github.com/en/actions/concepts/runners/self-hosted-runners)
 - [Larger runners](https://docs.github.com/en/actions/concepts/runners/larger-runners)
 - [Actions Runner Controller](https://docs.github.com/en/actions/concepts/runners/actions-runner-controller)
 - [Get started with Actions Runner Controller](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/get-started)
+- [Usage limits, billing, and administration](https://docs.github.com/en/actions/reference/usage-limits)
 
 ## Security and Supply Chain
 
 - [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)
+- [Script injection mitigations](https://docs.github.com/en/actions/reference/security/secure-use#good-practices-for-mitigating-script-injection-attacks)
+- [Pinning actions to a commit SHA](https://docs.github.com/en/actions/concepts/security/supply-chain-security#using-sha-pinning)
+- [Approving workflow runs from public forks](https://docs.github.com/en/actions/how-tos/secure-your-work/protect-repositories/approving-workflow-runs-from-public-forks)
 - [Secrets](https://docs.github.com/en/actions/concepts/security/secrets)
 - [GITHUB\_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token)
 - [OpenID Connect](https://docs.github.com/en/actions/concepts/security/openid-connect)
@@ -48,6 +60,8 @@ Intentionally selective — always verify against live docs on `docs.github.com`
 - [Using artifact attestations to establish provenance for builds](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations)
 - [Using OpenID Connect with reusable workflows](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-with-reusable-workflows)
 - [Configuring OpenID Connect in Amazon Web Services](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws)
+- [Configuring OpenID Connect in Azure](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-azure)
+- [Configuring OpenID Connect in Google Cloud](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-google-cloud)
 - [Permissions for the GITHUB\_TOKEN](https://docs.github.com/en/actions/reference/security/automatic-token-authentication#permissions-for-the-github_token)
 
 ## Deployments and Environments

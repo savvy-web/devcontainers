@@ -1,5 +1,6 @@
 ---
 name: github-actions
+allowed-tools: fetch
 description: >-
   Use when asked to write, explain, customize, debug, migrate, or secure GitHub
   Actions workflows — including workflow syntax, triggers, matrices, runners,
@@ -116,7 +117,77 @@ Keep citations close to the claim they support.
 - Mixing up reusable workflows and composite actions
 - Suggesting long-lived cloud credentials when OIDC is the better documented path
 - Treating repo-specific CI debugging as a documentation question — use GitHub MCP Server tools instead
+- Using `@v3` / `@latest` tags on third-party actions instead of pinning to a full commit SHA — this is a supply-chain security anti-pattern
+- Using the deprecated `set-output` / `save-state` workflow commands — these were replaced by writing to `$GITHUB_OUTPUT` / `$GITHUB_STATE` and will stop working in newer runner images
+
+## Job Summary Visibility
+
+Visibility is paramount. Whenever writing or reviewing workflow steps that produce
+observable outcomes, **always design beautiful, structured job summaries** using
+`$GITHUB_STEP_SUMMARY`. A well-crafted summary means engineers can understand
+pass, fail, skip, and error states at a glance without reading raw logs.
+
+### Rules
+
+1. **Every job that produces meaningful output must write a summary.** Add a step
+   that writes to `$GITHUB_STEP_SUMMARY` — use `>>` to append, never `>` to
+   overwrite.
+2. **Use a Markdown table as the primary structure** for multi-item status
+   (matrix results, test outcomes, artifact lists, deploy targets).
+3. **Lead every summary with an emoji status badge** so the overall result is
+   readable in one character:
+   - `✅` — success
+   - `❌` — failure
+   - `⚠️` — partial / warning
+   - `⏭️` — skipped
+   - `🔄` — in-progress or retried
+4. **Use `<details>` / `<summary>` for verbose output** (full logs, diff output,
+   raw JSON) so summaries remain scannable by default.
+5. **Include a header** (`##` level) naming the job or step so summaries compose
+   cleanly when multiple jobs write to the same run summary.
+6. **Fail state must always be explicit.** When a step fails, write the error
+   message and the command that failed into the summary before the step exits.
+7. **Group related shell output** with `::group::` / `::endgroup::` so the
+   Actions log tree stays collapsed by default.
+
+### Summary Template
+
+```bash
+{
+  echo "## ✅ Feature Tests"
+  echo ""
+  echo "| Feature | Status | Duration |"
+  echo "| :------ | :----: | -------: |"
+  echo "| my-feature | ✅ Pass | 42s |"
+  echo "| other-feature | ❌ Fail | 11s |"
+  echo ""
+  echo "<details><summary>Error details</summary>"
+  echo ""
+  echo '```'
+  cat error.log
+  echo '```'
+  echo ""
+  echo "</details>"
+} >> "$GITHUB_STEP_SUMMARY"
+```
+
+### Docs
+
+- [Adding a job summary](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/workflow-commands#adding-a-job-summary)
+- [Workflow commands reference](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands)
 
 ## Bundled Reference
 
-Load `references/topic-map.md` as a compact index of likely documentation entry points. It is intentionally selective and should never replace the live GitHub docs as the final authority.
+The following reference files are pre-loaded in this skill directory. Load them
+to avoid unnecessary fetches for the most common questions:
+
+- `references/topic-map.md` — compact index of documentation entry points across
+  all major Actions areas; intentionally selective, never replaces live docs
+- `references/workflow-syntax-cheatsheet.md` — the 10 most commonly needed YAML
+  patterns: triggers, `concurrency`, job outputs, dynamic matrices, `permissions`,
+  artifact pairs, OIDC, `if:` conditions, `env:` scope, and `$GITHUB_OUTPUT`
+- `references/contexts-and-variables.md` — all context objects and their key
+  properties, plus the full list of default environment variables
+- `references/actions-marketplace-pinning.md` — how to pin third-party actions to
+  a commit SHA, configure Dependabot to keep pins current, and set the correct
+  `permissions` block
