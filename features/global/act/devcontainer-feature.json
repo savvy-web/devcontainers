@@ -1,0 +1,17 @@
+{
+	"id": "act",
+	"version": "0.1.0",
+	"name": "act (local GitHub Actions runner)",
+	"description": "Installs act by nektos for running GitHub Actions workflows locally with Docker.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/act.md",
+	"options": {
+		"actVersion": {
+			"type": "string",
+			"default": "0.2.76",
+			"description": "act version to install (absolute, no semver ranges)"
+		}
+	},
+	"installsAfter": [],
+	"platforms": ["linux", "darwin"],
+	"keywords": ["act", "github-actions", "local", "ci", "nektos"]
+}

@@ -151,3 +151,52 @@ The `.github/workflows/publish.yml` workflow runs tests as follows:
 - There is no test framework — plain Bash assertions with `exit 1` on failure
 - The test must be self-contained; it cannot rely on files from the repo
   unless they are copied in as part of the feature install
+
+## Local Testing with act
+
+The repo provides a dedicated workflow and wrapper script for running a single
+feature's install + test cycle locally using
+[act](https://nektosact.com).
+
+### Prerequisites
+
+- Docker running locally
+- `act` installed — add `ghcr.io/savvy-web/act:0.1.0` to your
+  `devcontainer.json`, or install via the
+  [act installation guide](https://nektosact.com/installation/index.html)
+
+### Running a single feature test
+
+```bash
+pnpm run test:feature global/biome
+pnpm run test:feature global/rust
+pnpm run test:feature node/pnpm
+```
+
+Running without arguments prints available features.
+
+### How it works
+
+`scripts/test-feature.sh` calls `act workflow_dispatch` targeting
+`.github/workflows/test-feature.yml` — a minimal workflow that:
+
+1. Checks out the repo (using the local bind-mount from `.actrc`)
+2. Runs `features/<scope>/<id>/install.sh` inside a fresh ubuntu container
+3. Runs `test/<scope>/<id>/test.sh` in the same container
+
+The `.actrc` at the repo root configures act to:
+
+- Use `catthehacker/ubuntu:act-latest` as the ubuntu-latest runner image
+- Bind-mount the local workspace (no network clone, much faster)
+- Remove the container after each run (`--rm`)
+
+### Debugging a failing test
+
+If `test.sh` fails, re-run with act's verbose flag to see the full output:
+
+```bash
+act workflow_dispatch \
+  --input scope=global --input id=biome \
+  -W .github/workflows/test-feature.yml \
+  --verbose
+```

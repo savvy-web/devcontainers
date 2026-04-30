@@ -17,6 +17,7 @@ jobs:
           - test/node/claude-code
           - test/global/rust
           - test/global/zig
+          - test/global/act
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

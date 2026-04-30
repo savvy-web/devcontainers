@@ -1,0 +1,10 @@
+# Use a slim ubuntu image for the ubuntu-latest runner.
+# catthehacker/ubuntu:act-latest is the recommended act runner image.
+-P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+# Mount the local repo into the container instead of cloning from GitHub.
+# This makes act fast and works without a network connection to GitHub.
+--bind
+
+# Remove the container after the run completes.
+--rm
