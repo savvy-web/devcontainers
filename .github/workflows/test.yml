@@ -1,0 +1,26 @@
+name: Test Devcontainer Features
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test-features:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        testdir:
+          - test/node/node-pnpm
+          - test/global/biome
+          - test/global/outbound-firewall
+          - test/node/claude-code
+          - test/global/rust
+          - test/global/zig
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main

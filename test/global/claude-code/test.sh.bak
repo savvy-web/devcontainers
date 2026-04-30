@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Test: Claude Code agent install
+if ! command -v claude >/dev/null 2>&1; then
+  echo "[FAIL] Claude Code agent CLI not found" >&2
+  exit 1
+fi
+echo "[PASS] Claude Code agent install test passed."

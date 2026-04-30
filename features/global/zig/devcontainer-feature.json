@@ -1,0 +1,18 @@
+{
+	"id": "zig",
+	"version": "0.1.0",
+	"name": "Zig Compiler",
+	"description": "Installs the Zig programming language (https://ziglang.org/) globally.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/zig.md",
+	"options": {
+		"zigVersion": {
+			"type": "string",
+			"default": "0.12.0",
+			"description": "Zig version to install (e.g., 0.12.0, master)."
+		}
+	},
+	"installsAfter": [],
+	"entrypoint": "/install.sh",
+	"platforms": ["linux", "darwin"],
+	"keywords": ["zig", "compiler", "language"]
+}

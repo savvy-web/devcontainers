@@ -1,12 +1,12 @@
 {
-	"name": "@savvy-web/pnpm-module-template",
+	"name": "@savvy-web/devcontainer",
 	"version": "0.0.0",
 	"private": true,
-	"description": "A template repository for bootstrapping single Node.js packages with the Savvy Web toolchain.",
-	"homepage": "https://github.com/spencerbeggs/pnpm-module-template#readme",
+	"description": "Composable devcontainer features designed to work with Savvy Web repos locally and in Codespaces.",
+	"homepage": "https://github.com/savvy-web/devcontainers#readme",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/spencerbeggs/pnpm-module-template.git"
+		"url": "https://github.com/savvy-web/devcontainers.git"
 	},
 	"license": "MIT",
 	"author": {
@@ -24,7 +24,7 @@
 		"build:inspect": "rslib inspect --config-loader native --env-mode npm --verbose",
 		"build:prod": "rslib build --config-loader native --env-mode npm",
 		"ci:build": "CI=\"true\" turbo run build:dev build:prod --log-order=grouped --output-logs=full",
-		"ci:test": "CI=\"true\" vitest run --coverage",
+		"ci:test": "CI=\"true\" vitest run --passWithNoTests",
 		"ci:version": "savvy-changesets version && biome format --write .",
 		"commit:check": "savvy-commit check",
 		"commit:init": "savvy-commit init",
@@ -34,8 +34,7 @@
 		"lint:md": "markdownlint-cli2 '**/*.{md,mdx}' --config './lib/configs/.markdownlint-cli2.jsonc'",
 		"lint:md:fix": "markdownlint-cli2  --config './lib/configs/.markdownlint-cli2.jsonc' --fix",
 		"prepare": "husky",
-		"test": "vitest run",
-		"test:coverage": "vitest run --coverage",
+		"test": "vitest run --passWithNoTests",
 		"test:watch": "vitest --watch",
 		"typecheck": "turbo run types:check --log-prefix=none --log-order=grouped",
 		"types:check": "tsgo --noEmit"
@@ -62,27 +61,6 @@
 				"name": "node",
 				"version": "24.11.0",
 				"onFail": "ignore"
-			}
-		]
-	},
-	"publishConfig": {
-		"access": "public",
-		"directory": "dist/dev",
-		"linkDirectory": true,
-		"targets": [
-			{
-				"protocol": "npm",
-				"registry": "https://npm.pkg.github.com/",
-				"directory": "dist/npm",
-				"access": "public",
-				"provenance": true
-			},
-			{
-				"protocol": "npm",
-				"registry": "https://registry.npmjs.org/",
-				"directory": "dist/npm",
-				"access": "public",
-				"provenance": true
 			}
 		]
 	}

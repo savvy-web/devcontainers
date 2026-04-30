@@ -1,0 +1,82 @@
+name: Test & Publish Devcontainer Features
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (do not publish)"
+        required: false
+        default: "false"
+
+jobs:
+  collect-features:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: set-matrix
+        run: |
+          node .github/scripts/collect-features.js > features.json
+          echo "matrix=$(cat features.json)" >> $GITHUB_OUTPUT
+
+  filter-publish-matrix:
+    needs: collect-features
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.filter.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v4
+      - id: filter
+        run: |
+          node .github/scripts/filter-unpublished-features.js features.json filtered.json
+          echo "matrix=$(cat filtered.json)" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        continue-on-error: false
+
+  test:
+    needs: filter-publish-matrix
+    if: ${{ fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0 }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{fromJson(needs.filter-publish-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main
+      - name: Test Feature
+        run: |
+          chmod +x test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
+          ./test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
+
+  publish:
+    needs: [test, filter-publish-matrix]
+    if:
+      success() && fromJson(needs.filter-publish-matrix.outputs.matrix).length > 0
+      && github.event.inputs.dry_run != 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{fromJson(needs.filter-publish-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main
+      - name: Publish Feature
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # for testing, we will just echo the command instead of running it
+          echo "Publishing ${{ matrix.id }} version ${{ matrix.version }} from ${{ matrix.path }}"
+          # devcontainer features publish --id ${{ matrix.id }} --version ${{ matrix.version }} --path ${{ matrix.path }} --registry ghcr.io/${{ github.repository_owner }}

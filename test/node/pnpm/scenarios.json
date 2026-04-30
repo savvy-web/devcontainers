@@ -1,0 +1,16 @@
+[
+	{
+		"name": "Default install",
+		"options": {},
+		"expect": {
+			"cli": "pnpm --version"
+		}
+	},
+	{
+		"name": "Install specific versions",
+		"options": { "nodeVersion": "24.11.0", "pnpmVersion": "10.20.0" },
+		"expect": {
+			"cli": "pnpm --version | grep 10.20.0"
+		}
+	}
+]

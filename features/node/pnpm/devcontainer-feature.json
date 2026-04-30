@@ -1,0 +1,23 @@
+{
+	"id": "node-pnpm",
+	"version": "0.1.0",
+	"name": "Node.js + pnpm (strict)",
+	"description": "Installs Node.js and pnpm with strict, reproducible versions for CI and Codespaces.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/node-pnpm.md",
+	"options": {
+		"nodeVersion": {
+			"type": "string",
+			"default": "24.11.0",
+			"description": "Node.js version (absolute, no semver ranges)"
+		},
+		"pnpmVersion": {
+			"type": "string",
+			"default": "10.20.0",
+			"description": "pnpm version (absolute, no semver ranges)"
+		}
+	},
+	"installsAfter": [],
+	"entrypoint": "/install.sh",
+	"platforms": ["linux", "darwin"],
+	"keywords": ["node", "pnpm", "package manager", "ci"]
+}

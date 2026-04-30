@@ -1,0 +1,25 @@
+# Copilot Setup Steps
+#
+# This workflow dynamically determines Node.js and pnpm versions from package.json (devEngines)
+# and sets up the environment for Copilot cloud agent sessions.
+
+name: "Copilot Setup Steps"
+on:
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+  pull_request:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main
