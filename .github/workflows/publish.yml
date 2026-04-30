@@ -31,7 +31,7 @@ jobs:
         continue-on-error: false
   test:
     needs: collect
-    if: ${{ fromJson(needs.collect.outputs.matrix).length > 0 }}
+    if: ${{ needs.collect.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -48,8 +48,9 @@ jobs:
 
   publish:
     needs: [test, collect]
-    if: github.event.inputs.dry_run != true && success() &&
-      fromJson(needs.collect.outputs.matrix).length > 0
+    if: >-
+      github.event.inputs.dry_run != 'true' && success() &&
+      needs.collect.outputs.matrix != '[]'
     runs-on: ubuntu-latest
     strategy:
       matrix:
