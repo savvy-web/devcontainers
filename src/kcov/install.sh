@@ -48,10 +48,10 @@ cmake ..
 make -j"$(nproc)"
 make install
 
-echo "[INFO] Removing build-only dependencies..."
-apt-get purge -y "${BUILD_DEPS[@]}"
-# intentionally no autoremove — transitive runtime libraries installed alongside
-# the -dev packages (libdw1, libssl3, libcurl4, etc.) must remain for kcov to run
+echo "[INFO] Cleaning apt metadata..."
+# Do not purge BUILD_DEPS here: some packages in the list may already exist in
+# the base image (for example git or python3), and removing them can break
+# user expectations or other layered features. Clean apt lists only.
 rm -rf /var/lib/apt/lists/*
 
 # Validate install
