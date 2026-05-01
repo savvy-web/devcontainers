@@ -6,9 +6,10 @@ set -euo pipefail
 # Idempotent: skips install if brew is already available
 
 BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+BREW_USER="linuxbrew"
 
-if command -v brew >/dev/null 2>&1; then
-  echo "[INFO] Homebrew is already installed at $(command -v brew)"
+if [[ -x "$BREW_PREFIX/bin/brew" ]]; then
+  echo "[INFO] Homebrew is already installed at $BREW_PREFIX/bin/brew"
   exit 0
 fi
 
@@ -17,13 +18,23 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "[INFO] Installing Homebrew for Linux..."
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  # Add brew to PATH for Linux
-  if ! grep -q "$BREW_PREFIX/bin" <<< "$PATH"; then
-    echo "[INFO] Adding Homebrew to PATH..."
-    echo 'eval "$($BREW_PREFIX/bin/brew shellenv)"' >> /etc/profile.d/homebrew.sh
-    eval "$($BREW_PREFIX/bin/brew shellenv)"
+  if [[ $EUID -eq 0 ]]; then
+    # Homebrew refuses to install as root; use a dedicated non-root user
+    useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
+    # shellcheck disable=SC2016
+    su - "$BREW_USER" -s /bin/bash -c \
+      'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+  else
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+
+  # Add brew to PATH for interactive shells
+  echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
 fi
 
-echo "[INFO] Homebrew installation complete."
+if [[ ! -x "$BREW_PREFIX/bin/brew" ]]; then
+  echo "[ERROR] Homebrew binary not found at $BREW_PREFIX/bin/brew after install." >&2
+  exit 1
+fi
+
+echo "[SUCCESS] Homebrew installation complete."

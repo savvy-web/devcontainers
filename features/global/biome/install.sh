@@ -4,12 +4,15 @@ set -euo pipefail
 # Biome global installer (official binary method)
 # Docs: https://biomejs.dev/guides/manual-installation/
 
-VERSION="${VERSION:-latest}"
+VERSION="${BIOME_VERSION:-latest}"
 BIOME_BIN="/usr/local/bin/biome"
 
 if [[ "$VERSION" == "latest" ]]; then
-  # Get latest version from GitHub API
-  VERSION=$(curl -fsSL https://api.github.com/repos/biomejs/biome/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/^v//')
+  # Get latest version from GitHub API; tag format is "cli/v2.x.x" or "@biomejs/biome/2.x.x"
+  TAG=$(curl -fsSL https://api.github.com/repos/biomejs/biome/releases/latest \
+    | grep '"tag_name"' \
+    | sed -E 's/.*"([^"]+)".*/\1/')
+  VERSION=$(echo "$TAG" | sed 's|^cli/v||' | sed 's|^@biomejs/biome/||' | sed 's|^v||')
 fi
 
 ARCH=$(uname -m)
@@ -24,10 +27,11 @@ else
   exit 1
 fi
 
-BIOME_URL="https://github.com/biomejs/biome/releases/download/v${VERSION}/biome-${OS}-${ARCH}.gz"
+BIOME_URL="https://github.com/biomejs/biome/releases/download/cli/v${VERSION}/biome-${OS}-${ARCH}"
 
+echo "[INFO] Downloading Biome ${VERSION} from ${BIOME_URL}..."
 # Download and install
-curl -fsSL "$BIOME_URL" | gunzip -c > "$BIOME_BIN"
+curl -fsSL "$BIOME_URL" -o "$BIOME_BIN"
 chmod +x "$BIOME_BIN"
 
 # Validate install
@@ -38,3 +42,4 @@ fi
 
 # Print version
 biome --version
+echo "[SUCCESS] Biome ${VERSION} installed."

@@ -1,7 +1,6 @@
 {
 	"id": "claude-code",
-	"version": "0.1.0",
-	"name": "Claude Code Agent",
+	"version": "0.1.1",
 	"description": "Installs the Claude Code CLI agent globally using the official native installer.",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/claude-code.md",
 	"options": {

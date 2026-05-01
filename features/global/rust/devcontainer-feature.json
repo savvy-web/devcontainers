@@ -1,7 +1,6 @@
 {
 	"id": "rust",
-	"version": "0.1.0",
-	"name": "Rust Toolchain (Global)",
+	"version": "0.1.1",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/rust.md",
 	"description": "Installs the Rust toolchain globally using rustup. Supports toolchain selection, component install, and validation.",
 	"options": {

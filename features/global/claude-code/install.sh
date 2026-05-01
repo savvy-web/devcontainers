@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Claude Code CLI global installer (official native method)
-# Docs: https://code.claude.com/docs/en/overview
+# Claude Code CLI global installer (official npm package)
+# Docs: https://docs.anthropic.com/en/docs/claude-code/getting-started
 
 VERSION="${VERSION:-latest}"
 
 if [[ "$VERSION" == "latest" ]]; then
-  INSTALL_SCRIPT_URL="https://code.claude.com/install.sh"
+  npm install -g @anthropic-ai/claude-code
 else
-  INSTALL_SCRIPT_URL="https://code.claude.com/install.sh?version=$VERSION"
+  npm install -g "@anthropic-ai/claude-code@${VERSION}"
 fi
-
-# Download and run the official installer
-curl -fsSL "$INSTALL_SCRIPT_URL" | bash
 
 # Validate install
 if ! command -v claude &>/dev/null; then
@@ -23,3 +20,4 @@ fi
 
 # Print version
 claude --version
+echo "[SUCCESS] Claude Code CLI installed."
