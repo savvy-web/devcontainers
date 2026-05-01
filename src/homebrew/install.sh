@@ -41,7 +41,7 @@ else
     BREW_USER="$REMOTE_USER"
   else
     if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]]; then
-      echo "[INFO] Remote user '${REMOTE_USER}' does not exist in the image; falling back to linuxbrew user." >&2
+      echo "[INFO] Remote user '${REMOTE_USER}' does not exist in the image; falling back to linuxbrew user."
     fi
     BREW_USER="linuxbrew"
     useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
