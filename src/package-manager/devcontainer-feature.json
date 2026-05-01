@@ -1,6 +1,6 @@
 {
 	"id": "package-manager",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"name": "Package Manager (corepack)",
 	"description": "Installs and configures a Node.js package manager (pnpm, yarn, or npm) via corepack. Supports auto-detection from workspace package.json.",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/package-manager.md",

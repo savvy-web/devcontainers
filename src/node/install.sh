@@ -71,8 +71,14 @@ fi
 ln -sf "$NODE_DIR/bin/corepack" /usr/local/bin/corepack
 
 # Ensure globally installed npm binaries are on PATH for non-login shells.
+# Export a shared COREPACK_HOME so all users (including the non-root remoteUser
+# in Codespaces and VS Code Dev Containers) find the package managers that were
+# prepared during feature install, without needing to re-download them.
+COREPACK_DIR="/usr/local/share/corepack"
+mkdir -p "$COREPACK_DIR"
 cat >/etc/profile.d/node.sh <<EOF
 export PATH="$NODE_DIR/bin:\$PATH"
+export COREPACK_HOME="$COREPACK_DIR"
 EOF
 chmod 0644 /etc/profile.d/node.sh
 

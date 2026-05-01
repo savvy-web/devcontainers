@@ -5,7 +5,6 @@ set -euo pipefail
 # Installs Homebrew if not already present (macOS/Linux)
 # Idempotent: skips install if brew is already available
 
-BREW_USER="linuxbrew"
 OS=$(uname -s)
 ARCH=$(uname -m)
 
@@ -22,12 +21,9 @@ fi
 
 if [[ -x "$BREW_PREFIX/bin/brew" ]]; then
   echo "[INFO] Homebrew is already installed at $BREW_PREFIX/bin/brew"
-  # Ensure linuxbrew user and profile.d entry are present even on idempotent runs
-  if [[ "$OS" != "Darwin" ]]; then
-    id -u "$BREW_USER" &>/dev/null || useradd -m -s /bin/bash "$BREW_USER"
-    if [[ ! -f /etc/profile.d/homebrew.sh ]]; then
-      echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
-    fi
+  # Ensure profile.d entry is present even on idempotent runs
+  if [[ "$OS" != "Darwin" ]] && [[ ! -f /etc/profile.d/homebrew.sh ]]; then
+    echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
   fi
   exit 0
 fi
@@ -36,16 +32,28 @@ if [[ "$OS" == "Darwin" ]]; then
   echo "[INFO] Installing Homebrew for macOS..."
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-  echo "[INFO] Installing Homebrew for Linux..."
-  if [[ $EUID -eq 0 ]]; then
-    # Homebrew refuses to install as root; use a dedicated non-root user
-    useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
-    # shellcheck disable=SC2016
-    su - "$BREW_USER" -s /bin/bash -c \
-      'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+  # Homebrew on Linux must run as a non-root user and installs to
+  # /home/linuxbrew/.linuxbrew. Prefer _REMOTE_USER when set and non-root
+  # so the devcontainer user owns the Homebrew prefix and can run
+  # `brew install` directly without switching users.
+  REMOTE_USER="${_REMOTE_USER:-}"
+  if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]]; then
+    BREW_USER="$REMOTE_USER"
   else
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    BREW_USER="linuxbrew"
+    useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
   fi
+
+  echo "[INFO] Installing Homebrew for Linux as user '${BREW_USER}'..."
+  # Ensure /home/linuxbrew exists and is owned by the install user so the
+  # Homebrew installer can create the .linuxbrew prefix there regardless of
+  # which user is performing the install.
+  mkdir -p /home/linuxbrew
+  chown "$BREW_USER:" /home/linuxbrew
+
+  # shellcheck disable=SC2016
+  su - "$BREW_USER" -s /bin/bash -c \
+    'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 
   # Add brew to PATH for interactive shells
   echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
