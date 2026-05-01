@@ -12,7 +12,7 @@ install script, tests, and documentation.
 - Node.js 24+
 - pnpm 10+
 - Docker (for local feature testing with `act`)
-- `act` — install via the [`act` devcontainer feature](features/global/act/)
+- `act` — install via the [`act` devcontainer feature](features/act/)
   or from [nektosact.com](https://nektosact.com/installation/index.html)
 
 ## Development Setup
@@ -25,14 +25,16 @@ pnpm install
 
 ## Project Structure
 
+Features and tests use a flat layout — one directory per feature id. Inter-
+feature ordering is expressed via `installsAfter` in `devcontainer-feature.json`,
+not via directory scopes.
+
 ```text
 features/
-  global/   # Language-agnostic tools (Biome, Rust, Zig, act, …)
-  node/     # Node.js ecosystem tools (pnpm, …)
+  <id>/     # One directory per feature, named by feature id
 
 test/
-  global/   # Mirrors features/global/
-  node/     # Mirrors features/node/
+  <id>/     # Mirrors features/<id> — test.sh + scenarios.json
 
 docs/
   features/ # One .md doc per feature, named by feature id
@@ -63,10 +65,10 @@ scripts/
 Every feature requires exactly five files:
 
 ```text
-features/<scope>/<id>/devcontainer-feature.json
-features/<scope>/<id>/install.sh
-test/<scope>/<id>/test.sh
-test/<scope>/<id>/scenarios.json
+features/<id>/devcontainer-feature.json
+features/<id>/install.sh
+test/<id>/test.sh
+test/<id>/scenarios.json
 docs/features/<id>.md
 ```
 
@@ -77,14 +79,14 @@ files manually following the conventions in
 After creating the files, run the validation script:
 
 ```bash
-pnpm run validate-feature global/my-feature
+pnpm run validate-feature my-feature
 ```
 
 And optionally run the full install + test cycle locally (requires Docker and
 `act`):
 
 ```bash
-pnpm run test:feature global/my-feature
+pnpm run test:feature my-feature
 ```
 
 ## Bumping a Feature Version
@@ -107,8 +109,8 @@ Use the `bump-feature` Copilot skill for a guided checklist.
 
 | Script | Description |
 | :----- | :---------- |
-| `pnpm run test:feature <scope>/<id>` | Run install + test for one feature locally via act |
-| `pnpm run validate-feature <scope>/<id>` | Check five-file completeness and structural correctness |
+| `pnpm run test:feature <id>` | Run install + test for one feature locally via act |
+| `pnpm run validate-feature <id>` | Check five-file completeness and structural correctness |
 | `pnpm run lint` | Lint JS/TS/JSON files with Biome |
 | `pnpm run lint:fix` | Auto-fix lint issues |
 | `pnpm run lint:md` | Lint Markdown files with markdownlint |
@@ -119,7 +121,7 @@ All commits must follow [Conventional Commits](https://conventionalcommits.org)
 and include a DCO signoff:
 
 ```text
-feat(global/biome): bump default version to 2.5.0
+feat(biome): bump default version to 2.5.0
 
 Signed-off-by: Your Name <your.email@example.com>
 ```
@@ -131,7 +133,7 @@ Valid commit types: `feat`, `fix`, `chore`, `docs`, `ci`, `build`,
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Run `pnpm run validate-feature <scope>/<id>` to check your files
+3. Run `pnpm run validate-feature <id>` to check your files
 4. Commit with conventional format and DCO signoff
 5. Push and open a pull request
 

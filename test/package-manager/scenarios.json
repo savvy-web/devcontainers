@@ -1,0 +1,23 @@
+[
+	{
+		"name": "Default auto-detect install",
+		"options": {},
+		"expect": {
+			"cli": "corepack --version"
+		}
+	},
+	{
+		"name": "Explicit pnpm version",
+		"options": { "packageManager": "pnpm@10.20.0" },
+		"expect": {
+			"cli": "pnpm --version | grep 10.20.0"
+		}
+	},
+	{
+		"name": "Explicit yarn version",
+		"options": { "packageManager": "yarn@4.9.0" },
+		"expect": {
+			"cli": "yarn --version | grep 4.9.0"
+		}
+	}
+]

@@ -81,31 +81,29 @@ Load the nearest reference file to avoid unnecessary fetches:
 
 ### Directory Layout
 
+Features and tests use a flat layout — one directory per feature id. Inter-
+feature ordering is expressed via `installsAfter` in
+`devcontainer-feature.json`, not via directory scopes.
+
 ```text
 features/
-  <scope>/          # e.g. global, node
-    <id>/
-      devcontainer-feature.json
-      install.sh
+  <id>/                    # one directory per feature, named by feature id
+    devcontainer-feature.json
+    install.sh
 
 test/
-  <scope>/
-    <id>/
-      test.sh
-      scenarios.json
+  <id>/
+    test.sh
+    scenarios.json
 
 docs/
   features/
-    <id>.md         # one file per feature, named by feature id
+    <id>.md                # one file per feature, named by feature id
 ```
-
-Scopes in this repo are `global` (language-agnostic tools) and `node`
-(Node.js ecosystem tools). New features go into the scope that best describes
-their target runtime.
 
 ### `devcontainer-feature.json` Conventions
 
-- `id` — kebab-case, unique within the repo (e.g. `biome`, `node-pnpm`)
+- `id` — kebab-case, unique within the repo (e.g. `biome`, `package-manager`)
 - `version` — start at `0.1.0`; the publish workflow uses this to skip
   already-published versions
 - `documentationURL` — always set to
@@ -133,16 +131,15 @@ their target runtime.
 
 When creating a new feature, create all five files:
 
-1. `features/<scope>/<id>/devcontainer-feature.json`
-2. `features/<scope>/<id>/install.sh`
-3. `test/<scope>/<id>/test.sh`
-4. `test/<scope>/<id>/scenarios.json`
+1. `features/<id>/devcontainer-feature.json`
+2. `features/<id>/install.sh`
+3. `test/<id>/test.sh`
+4. `test/<id>/scenarios.json`
 5. `docs/features/<id>.md`
 
 The publish workflow discovers features by scanning for
 `devcontainer-feature.json` files. The test workflow discovers tests by
-looking for `test/<scope>/<id>/test.sh` where `scope` and `id` match the
-feature's directory structure.
+looking for `test/<id>/test.sh` matching the feature's directory name.
 
 ## Design Principles
 
@@ -184,8 +181,6 @@ feature's directory structure.
 - **`version` not bumped** — the `collect-and-filter-features.js` script skips
   a feature if its `id:version` image already exists in the registry. Bump
   `version` whenever the feature behavior changes.
-- **Wrong scope directory** — a Node.js-specific tool goes in `features/node/`,
-  not `features/global/`.
 - **Test version mismatch** — `test.sh` assertions must match the default
   version in `devcontainer-feature.json`. When bumping the default, update
   both files.

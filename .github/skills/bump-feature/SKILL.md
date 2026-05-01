@@ -36,8 +36,7 @@ Bump the feature version whenever:
 ### Step 1 — Identify the feature
 
 Ask the user which feature to bump if not already specified.
-Read `features/<scope>/<id>/devcontainer-feature.json` to find the current
-version.
+Read `features/<id>/devcontainer-feature.json` to find the current version.
 
 ### Step 2 — Determine the new version
 
@@ -59,7 +58,7 @@ Confirm the new version with the user before proceeding.
 
 Update every file that contains the old version. The full set to check:
 
-#### `features/<scope>/<id>/devcontainer-feature.json`
+#### `features/<id>/devcontainer-feature.json`
 
 Update the `"version"` field:
 
@@ -67,13 +66,13 @@ Update the `"version"` field:
 "version": "<new-version>"
 ```
 
-#### `test/<scope>/<id>/test.sh`
+#### `test/<id>/test.sh`
 
 Update any `grep "<old-version>"` assertions that check the pinned default
 tool version. Only update the version being bumped — leave other version
 strings alone.
 
-#### `test/<scope>/<id>/scenarios.json`
+#### `test/<id>/scenarios.json`
 
 Update step descriptions that mention the old version string.
 
@@ -114,17 +113,17 @@ After all edits, run a final consistency check:
 Run the validation script to catch anything missed:
 
 ```bash
-pnpm run validate-feature <scope>/<id>
+pnpm run validate-feature <id>
 ```
 
 ## Completion Checklist
 
 - [ ] `devcontainer-feature.json` `"version"` updated
-- [ ] `test/<scope>/<id>/test.sh` version assertions updated (if tool default changed)
-- [ ] `test/<scope>/<id>/scenarios.json` step descriptions updated (if version mentioned)
+- [ ] `test/<id>/test.sh` version assertions updated (if tool default changed)
+- [ ] `test/<id>/scenarios.json` step descriptions updated (if version mentioned)
 - [ ] `docs/features/<id>.md` usage snippet updated
 - [ ] `install.sh` option defaults updated (if pinned tool version changed)
-- [ ] `pnpm run validate-feature <scope>/<id>` passes
+- [ ] `pnpm run validate-feature <id>` passes
 
 ## Common Mistakes
 

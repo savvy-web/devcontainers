@@ -17,10 +17,10 @@ will cause CI or publishing to fail.
 
 | File | Purpose |
 | :--- | :------ |
-| `features/<scope>/<id>/devcontainer-feature.json` | Feature metadata and options |
-| `features/<scope>/<id>/install.sh` | Installation script |
-| `test/<scope>/<id>/test.sh` | Post-install assertions |
-| `test/<scope>/<id>/scenarios.json` | Human-readable scenario descriptions |
+| `features/<id>/devcontainer-feature.json` | Feature metadata and options |
+| `features/<id>/install.sh` | Installation script |
+| `test/<id>/test.sh` | Post-install assertions |
+| `test/<id>/scenarios.json` | Human-readable scenario descriptions |
 | `docs/features/<id>.md` | End-user documentation |
 
 ## Workflow
@@ -31,8 +31,7 @@ Ask the user for these values before generating any file:
 
 | Field | Description | Example |
 | :---- | :---------- | :------ |
-| `id` | Kebab-case unique identifier | `biome`, `node-pnpm`, `act` |
-| `scope` | `global` (language-agnostic) or `node` (Node.js ecosystem) | `global` |
+| `id` | Kebab-case unique identifier | `biome`, `package-manager`, `act` |
 | `name` | Human-readable display name | `Biome (global linter)` |
 | `description` | One-sentence description of what the feature installs | `Installs Biome globally for all runtimes.` |
 | `options` | Map of option key → `{type, default, description}` objects | see below |
@@ -43,24 +42,24 @@ If the user does not provide options, ask whether the feature has any
 configurable parameters (version strings, flags, paths). Version-pinned tools
 always get a `*Version` option with an absolute default.
 
-### Step 2 — Confirm scope assignment
-
-- `global/` — language-agnostic tools: Biome, Rust, Zig, act, outbound-firewall
-- `node/` — Node.js ecosystem tools: pnpm, Claude Code node setup
-
-If ambiguous, ask the user which scope fits.
-
-### Step 3 — Check for conflicts
+### Step 2 — Check for conflicts
 
 Before writing files:
 
-1. Verify `features/<scope>/<id>/` does not already exist
-2. Verify the `id` is not already used in another scope
-3. Check `containers.dev/features` to see if a community feature already
+1. Verify `features/<id>/` does not already exist
+2. Check `containers.dev/features` to see if a community feature already
    exists for this tool — prefer referencing an upstream feature over
    duplicating it
 
-### Step 4 — Generate all five files
+If the feature depends on another feature being installed first (for example,
+`package-manager` depends on Node.js), declare the dependency in `installsAfter`:
+rather than via a directory scope:
+
+```json
+"installsAfter": ["ghcr.io/savvy-web/node"]
+```
+
+### Step 3 — Generate all five files
 
 Generate every file in sequence, following the conventions below. Do not skip
 any file.
@@ -149,7 +148,7 @@ Rules:
 - End with `command -v <binary>` guard + version print
 - Idempotency: guard re-installs with `if ! command -v <tool>` when overwriting would break state
 
-### `test/\<scope>/\<id>/test.sh`
+### `test/\<id>/test.sh`
 
 ```bash
 #!/usr/bin/env bash
@@ -172,7 +171,7 @@ Rules:
 - `[PASS]` at the end — CI logs scan for this marker
 - No network calls, no compilation, no side effects
 
-### `test/\<scope>/\<id>/scenarios.json`
+### `test/\<id>/scenarios.json`
 
 ```json
 [
@@ -235,10 +234,10 @@ Rules:
 
 Before finishing, confirm every item:
 
-- [ ] `features/<scope>/<id>/devcontainer-feature.json` created
-- [ ] `features/<scope>/<id>/install.sh` created and marked executable
-- [ ] `test/<scope>/<id>/test.sh` created
-- [ ] `test/<scope>/<id>/scenarios.json` created
+- [ ] `features/<id>/devcontainer-feature.json` created
+- [ ] `features/<id>/install.sh` created and marked executable
+- [ ] `test/<id>/test.sh` created
+- [ ] `test/<id>/scenarios.json` created
 - [ ] `docs/features/<id>.md` created
 - [ ] `documentationURL` in JSON matches the doc path exactly
 - [ ] `install.sh` starts with `#!/usr/bin/env bash` and `set -euo pipefail`
@@ -248,13 +247,13 @@ Before finishing, confirm every item:
 After all files are created, remind the user to run the validation script:
 
 ```bash
-pnpm run validate-feature <scope>/<id>
+pnpm run validate-feature <id>
 ```
 
 And optionally test locally if `act` is installed:
 
 ```bash
-pnpm run test:feature <scope>/<id>
+pnpm run test:feature <id>
 ```
 
 ## Reference Files

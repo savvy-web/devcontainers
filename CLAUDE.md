@@ -1,3 +1,6 @@
+<!-- markdownlint-disable MD041 -->
+<coding_guidelines>
+
 # CLAUDE.md
 
 Guidance for Claude Code and Copilot cloud agents working in this repository.
@@ -14,7 +17,7 @@ tooling scripts only — it does not publish an npm package.
 
 ## Copilot Skills
 
-Three specialized skills are available in `.github/skills/`. Invoke them by
+Specialized skills are available in `.github/skills/`. Invoke them by
 name when the task matches:
 
 | Skill | When to use |
@@ -27,21 +30,28 @@ name when the task matches:
 
 ## Directory Layout
 
+Features and tests use a flat layout — one directory per feature id.
+Inter-feature ordering is expressed via `installsAfter` in
+`devcontainer-feature.json`, not via directory scopes.
+
 ```text
 features/
-  global/   # Language-agnostic tools (Biome, Rust, Zig, act, outbound-firewall, Claude Code)
-  node/     # Node.js ecosystem tools (pnpm)
+  <id>/                    # one directory per feature, named by feature id
+    devcontainer-feature.json
+    install.sh
 
 test/
-  global/   # Mirrors features/global/ — test.sh + scenarios.json per feature
-  node/     # Mirrors features/node/
+  <id>/                    # mirrors features/<id> — test.sh + scenarios.json per feature
+    test.sh
+    scenarios.json
 
 docs/
-  features/ # One .md file per feature, named by feature id
+  features/                # one .md file per feature, named by feature id
+    <id>.md
 
 scripts/
-  test-feature.sh     # Run one feature's install + test locally via act
-  validate-feature.sh # Check five-file completeness and structural rules
+  test-feature.sh          # Run one feature's install + test locally via act
+  validate-feature.sh      # Check five-file completeness and structural rules
 
 .github/
   scripts/
@@ -71,15 +81,15 @@ scripts/
 Every feature must have exactly these files:
 
 ```text
-features/<scope>/<id>/devcontainer-feature.json
-features/<scope>/<id>/install.sh            ← must be executable
-test/<scope>/<id>/test.sh
-test/<scope>/<id>/scenarios.json
+features/<id>/devcontainer-feature.json
+features/<id>/install.sh            ← must be executable
+test/<id>/test.sh
+test/<id>/scenarios.json
 docs/features/<id>.md
 ```
 
-Run `pnpm run validate-feature <scope>/<id>` to verify all five exist and
-pass structural checks before committing.
+Run `pnpm run validate-feature <id>` to verify all five exist and pass
+structural checks before committing.
 
 ## Version Bump Rule
 
@@ -89,20 +99,14 @@ exists in the registry. **Always bump `"version"` in
 `test.sh` assertions, `docs/` usage snippets, and option defaults atomically
 in the same commit.
 
-## Scopes
-
-- `features/global/` — language-agnostic tools usable in any stack
-- `features/node/` — Node.js ecosystem tools; declare `installsAfter` if
-  Node.js must already be present
-
 ## Local Testing
 
 ```bash
 # Validate structure (no Docker needed)
-pnpm run validate-feature global/biome
+pnpm run validate-feature biome
 
 # Full install + test via act (requires Docker)
-pnpm run test:feature global/biome
+pnpm run test:feature biome
 ```
 
 `scripts/test-feature.sh` calls `act workflow_dispatch` targeting
@@ -123,7 +127,7 @@ shellcheck <file>    # Shell scripts (if shellcheck is installed)
 Conventional Commits with DCO signoff:
 
 ```text
-feat(global/biome): bump default version to 2.5.0
+feat(biome): bump default version to 2.5.0
 
 Signed-off-by: Name <email>
 ```
@@ -144,5 +148,6 @@ The `publish.yml` workflow:
    `ghcr.io/savvy-web/<id>:<version>`
 
 The test matrix in `test.yml` (PR CI) is built dynamically from all
-`test/<scope>/<id>/test.sh` files by `collect-test-dirs.js` — no manual
-matrix updates are needed when a new feature is added.
+`test/<id>/test.sh` files by `collect-test-dirs.js` — no manual matrix
+updates are needed when a new feature is added.
+</coding_guidelines>

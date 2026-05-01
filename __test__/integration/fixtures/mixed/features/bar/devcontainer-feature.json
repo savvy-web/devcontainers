@@ -1,0 +1,7 @@
+{
+	"id": "bar",
+	"version": "0.2.0",
+	"name": "Bar",
+	"description": "New fixture feature.",
+	"documentationURL": "https://example.invalid/bar"
+}

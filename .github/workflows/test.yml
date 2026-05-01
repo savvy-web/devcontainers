@@ -16,10 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Runtime
-        id: runtime
-        uses: savvy-web/workflow-runtime-action@main
-
       - name: Discover test directories
         id: tests
         run: |
@@ -40,16 +36,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Runtime
-        id: runtime
-        uses: savvy-web/workflow-runtime-action@main
+      # - name: Setup Runtime
+      #   id: runtime
+      #   uses: savvy-web/workflow-runtime-action@main
 
       - name: Install feature
         env:
-          FEATURE_SCOPE: ${{ matrix.scope }}
           FEATURE_ID: ${{ matrix.id }}
         run: |
-          INSTALL_SCRIPT="features/${FEATURE_SCOPE}/${FEATURE_ID}/install.sh"
+          INSTALL_SCRIPT="features/${FEATURE_ID}/install.sh"
           if [[ ! -f "$INSTALL_SCRIPT" ]]; then
             echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
             exit 1
@@ -59,10 +54,9 @@ jobs:
 
       - name: Run tests
         env:
-          FEATURE_SCOPE: ${{ matrix.scope }}
           FEATURE_ID: ${{ matrix.id }}
         run: |
-          TEST_SCRIPT="test/${FEATURE_SCOPE}/${FEATURE_ID}/test.sh"
+          TEST_SCRIPT="test/${FEATURE_ID}/test.sh"
           if [[ ! -f "$TEST_SCRIPT" ]]; then
             echo "[ERROR] Test script not found: $TEST_SCRIPT" >&2
             exit 1

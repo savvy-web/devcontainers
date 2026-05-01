@@ -33,11 +33,10 @@ Changes that do not require a version bump:
 When bumping a version or changing an option default, always update all
 affected files together in the same commit:
 
-1. `features/<scope>/<id>/devcontainer-feature.json` — `"version"` field and
+1. `features/<id>/devcontainer-feature.json` — `"version"` field and
    option `"default"` value
-2. `test/<scope>/<id>/test.sh` — `grep "<version>"` assertions
-3. `test/<scope>/<id>/scenarios.json` — step descriptions mentioning the
-   version
+2. `test/<id>/test.sh` — `grep "<version>"` assertions
+3. `test/<id>/scenarios.json` — step descriptions mentioning the version
 4. `docs/features/<id>.md` — usage snippet and options default listing
 
 Use the `bump-feature` skill for guided step-by-step assistance.
@@ -48,14 +47,14 @@ Every feature must have exactly five files. Before committing, verify all are
 present:
 
 ```text
-features/<scope>/<id>/devcontainer-feature.json
-features/<scope>/<id>/install.sh
-test/<scope>/<id>/test.sh
-test/<scope>/<id>/scenarios.json
+features/<id>/devcontainer-feature.json
+features/<id>/install.sh
+test/<id>/test.sh
+test/<id>/scenarios.json
 docs/features/<id>.md
 ```
 
-Run `pnpm run validate-feature <scope>/<id>` to check completeness.
+Run `pnpm run validate-feature <id>` to check completeness.
 
 ## `documentationURL` Must Match Actual Doc File
 
@@ -71,12 +70,17 @@ Rules:
 - The URL must use the `https://github.com/savvy-web/devcontainers/blob/main/` prefix
 - The URL must resolve to an actual file in `docs/features/`
 - Never use a generic URL or the repository homepage
-- Run `pnpm run validate-feature <scope>/<id>` to verify the URL resolves
+- Run `pnpm run validate-feature <id>` to verify the URL resolves
 
-## Scope Assignment
+## Layout
 
-- `features/global/` — language-agnostic tools (Biome, Rust, Zig, act, Claude Code)
-- `features/node/` — Node.js ecosystem tools (pnpm)
+Features and tests use a flat layout — one directory per feature id under
+`features/<id>/` and `test/<id>/`. Inter-feature ordering is expressed via
+`installsAfter` in `devcontainer-feature.json`, not via directory scopes.
 
-Place the feature in the scope that best matches its target runtime. When in
-doubt, use `global/`.
+When a feature depends on another feature being installed first (for example,
+`package-manager` depends on Node.js), declare it in `installsAfter`:
+
+```json
+"installsAfter": ["ghcr.io/savvy-web/node"]
+```

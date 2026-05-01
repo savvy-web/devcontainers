@@ -1,9 +1,0 @@
-[
-  {
-    "name": "Claude Code agent install",
-    "steps": [
-      "Install feature",
-      "Check claude CLI is available"
-    ]
-  }
-]

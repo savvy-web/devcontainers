@@ -32,7 +32,7 @@ comes from running the feature with verbose logging:
 
 ```bash
 act workflow_dispatch \
-  --input scope=<scope> --input id=<id> \
+  --input id=<id> \
   -W .github/workflows/test-feature.yml \
   --verbose
 ```
@@ -40,7 +40,7 @@ act workflow_dispatch \
 Or, to see the raw install script output:
 
 ```bash
-bash -x features/<scope>/<id>/install.sh
+bash -x features/<id>/install.sh
 ```
 
 `-x` traces every command and its expanded arguments — essential for
@@ -60,8 +60,8 @@ The most common failure categories, in order of frequency:
 6. **Idempotency failure** — re-running the script breaks an existing install
 7. **Version assertion mismatch** — `test.sh` checks a different version than
    the default in `devcontainer-feature.json`
-8. **Wrong scope directory** — feature is in `features/global/` but should be
-   in `features/node/` or vice versa
+8. **Missing `installsAfter`** — the feature depends on another feature
+   (e.g. Node.js) being installed first but does not declare it
 
 ### Step 3 — Apply the fix
 
@@ -75,13 +75,13 @@ After applying a fix:
 1. Run the feature locally with act:
 
    ```bash
-   pnpm run test:feature <scope>/<id>
+   pnpm run test:feature <id>
    ```
 
 2. Run the validation script to catch any remaining structural issues:
 
    ```bash
-   pnpm run validate-feature <scope>/<id>
+   pnpm run validate-feature <id>
    ```
 
 3. If the failure was a version mismatch, bump the feature version using the

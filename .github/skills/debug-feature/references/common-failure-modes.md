@@ -154,7 +154,7 @@ Always include an `else` branch that errors on unsupported architectures.
 ### Detection
 
 - Error: `"Permission denied"` when running `install.sh`
-- `ls -la features/<scope>/<id>/install.sh` shows `-rw-r--r--` (no `x` bit)
+- `ls -la features/<id>/install.sh` shows `-rw-r--r--` (no `x` bit)
 
 ### Why it happens
 
@@ -165,7 +165,7 @@ not have the execute bit set. The devcontainer CLI and CI workflows run
 ### Fix
 
 ```bash
-chmod +x features/<scope>/<id>/install.sh
+chmod +x features/<id>/install.sh
 ```
 
 The `validate-feature` script (`pnpm run validate-feature`) checks for this
@@ -245,7 +245,7 @@ sudo cp -r "$ZIG_EXTRACTED"/* "$ZIG_ROOT"/
 ### Detection
 
 - Test output: `[FAIL] <binary> version mismatch`
-- `bash -x test/<scope>/<id>/test.sh` shows the grep pattern does not match
+- `bash -x test/<id>/test.sh` shows the grep pattern does not match
   the binary's actual version output
 
 ### Why it happens
@@ -284,35 +284,33 @@ all version references atomically.
 
 ---
 
-## 8. Wrong Scope Directory
+## 8. Missing `installsAfter`
 
 ### Detection
 
-- Feature ID conflicts with one in a different scope
-- Feature does not appear in the publish workflow matrix
-- CI cannot find the test script at the expected path
+- A feature's `install.sh` fails because a binary it depends on (e.g. `node`
+  or `npm`) is not on `$PATH`
+- The failure happens consistently when consumed alongside a dependency
+  feature, but the script runs fine in isolation
 
 ### Why it happens
 
-The `collect-and-filter-features.js` script discovers features by walking
-`features/<scope>/<id>/devcontainer-feature.json`. The test workflow expects
-tests at `test/<scope>/<id>/test.sh`. If the feature is in the wrong scope,
-the paths do not align.
+Devcontainer features are installed in arbitrary order unless the dependent
+feature declares `installsAfter`. If a feature shells out to another
+feature's binaries during install, it must declare that ordering dependency
+explicitly — directory layout no longer encodes scope.
 
 ### Fix
 
-Move the feature and test directories to the correct scope:
+Add the dependency feature to `installsAfter` in
+`features/<id>/devcontainer-feature.json`:
 
-```bash
-# Move feature
-git mv features/node/biome features/global/biome
-
-# Move tests
-git mv test/node/biome test/global/biome
+```json
+"installsAfter": ["ghcr.io/savvy-web/node"]
 ```
 
-Update any paths in `devcontainer-feature.json` or `documentationURL` if
-they encode the scope.
+Then bump the feature version using the `bump-feature` skill, since
+`installsAfter` changes count as a behavior change.
 
 ---
 

@@ -1,34 +1,35 @@
-import { readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-function getSubdirs(dir: string): string[] {
+function getFeatureSubdirs(dir: string): string[] {
 	return readdirSync(dir)
-		.filter((f) => statSync(join(dir, f)).isDirectory())
+		.filter((f) => {
+			const p = join(dir, f);
+			if (!statSync(p).isDirectory()) return false;
+			return existsSync(join(p, "devcontainer-feature.json"));
+		})
 		.sort();
 }
 
-function getFeatureTestPairs(featuresRoot: string, testRoot: string) {
-	const featureScopes = getSubdirs(featuresRoot);
-	const testScopes = getSubdirs(testRoot);
-	expect(testScopes).toEqual(featureScopes);
-	for (const scope of featureScopes) {
-		const features = getSubdirs(join(featuresRoot, scope));
-		const tests = getSubdirs(join(testRoot, scope));
-		expect(tests).toEqual(features);
-		for (const feature of features) {
-			const featurePath = join(featuresRoot, scope, feature);
-			const testPath = join(testRoot, scope, feature);
-			expect(statSync(featurePath).isDirectory()).toBe(true);
-			expect(statSync(testPath).isDirectory()).toBe(true);
-		}
-	}
+function getTestSubdirs(dir: string): string[] {
+	return readdirSync(dir)
+		.filter((f) => {
+			const p = join(dir, f);
+			if (!statSync(p).isDirectory()) return false;
+			return existsSync(join(p, "test.sh"));
+		})
+		.sort();
 }
 
 describe("feature folder structure", () => {
-	it("matches between features/ and test/", () => {
+	it("every test directory has a matching feature", () => {
 		const featuresRoot = join(__dirname, "../../features");
 		const testRoot = join(__dirname, "../../test");
-		getFeatureTestPairs(featuresRoot, testRoot);
+		const features = new Set(getFeatureSubdirs(featuresRoot));
+		const tests = getTestSubdirs(testRoot);
+		for (const id of tests) {
+			expect(features.has(id), `test/${id}/ has no matching features/${id}/devcontainer-feature.json`).toBe(true);
+		}
 	});
 });

@@ -1,0 +1,17 @@
+{
+	"id": "node",
+	"version": "0.1.0",
+	"name": "Node.js",
+	"description": "Installs and configures the Node.js runtime globally.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/node.md",
+	"options": {
+		"nodeVersion": {
+			"type": "string",
+			"default": "24.11.0",
+			"description": "The version of Node.js to install. Must be an absolute version (e.g. 24.11.0); semver ranges are not supported."
+		}
+	},
+	"entrypoint": "/install.sh",
+	"platforms": ["linux"],
+	"keywords": ["node", "javascript", "runtime", "development"]
+}

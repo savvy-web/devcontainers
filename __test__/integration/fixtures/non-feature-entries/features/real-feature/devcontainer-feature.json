@@ -1,0 +1,7 @@
+{
+	"id": "real-feature",
+	"version": "0.1.0",
+	"name": "Real Feature",
+	"description": "The only valid feature in this fixture.",
+	"documentationURL": "https://example.invalid/real-feature"
+}

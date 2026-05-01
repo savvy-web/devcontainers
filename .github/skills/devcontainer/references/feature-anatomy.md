@@ -197,29 +197,24 @@ is safe; no guard is needed.
 
 ## Full Example: `devcontainer-feature.json`
 
-The `node-pnpm` feature demonstrates all common fields:
+The `package-manager` feature demonstrates all common fields:
 
 ```json
 {
-  "id": "node-pnpm",
+  "id": "package-manager",
   "version": "0.1.0",
-  "name": "Node.js + pnpm (strict)",
-  "description": "Installs Node.js and pnpm with strict, reproducible versions for CI and Codespaces.",
-  "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/node-pnpm.md",
+  "name": "Package Manager (corepack)",
+  "description": "Installs and configures a Node.js package manager (pnpm, yarn, or npm) via corepack.",
+  "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/package-manager.md",
   "options": {
-    "nodeVersion": {
+    "packageManager": {
       "type": "string",
-      "default": "24.11.0",
-      "description": "Node.js version (absolute, no semver ranges)"
-    },
-    "pnpmVersion": {
-      "type": "string",
-      "default": "10.20.0",
-      "description": "pnpm version (absolute, no semver ranges)"
+      "default": "auto",
+      "description": "Either 'auto' or a corepack spec like 'pnpm@10.33.2'"
     }
   },
-  "installsAfter": [],
-  "platforms": ["linux", "darwin"],
-  "keywords": ["node", "pnpm", "package manager", "ci"]
+  "installsAfter": ["ghcr.io/savvy-web/node"],
+  "platforms": ["linux"],
+  "keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"]
 }
 ```

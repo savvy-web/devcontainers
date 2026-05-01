@@ -5,9 +5,9 @@ set -euo pipefail
 # correctness.
 #
 # Usage:
-#   pnpm run validate-feature <scope>/<id>
-#   pnpm run validate-feature global/biome
-#   pnpm run validate-feature node/pnpm
+#   pnpm run validate-feature <id>
+#   pnpm run validate-feature biome
+#   pnpm run validate-feature package-manager
 #
 # Exit codes:
 #   0 — all checks passed
@@ -16,18 +16,18 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-TARGET="${1:-}"
+ID="${1:-}"
 
-if [[ -z "$TARGET" ]]; then
-  echo "Usage: $0 <scope>/<id>"
+if [[ -z "$ID" ]]; then
+  echo "Usage: $0 <id>"
   echo ""
   echo "Examples:"
-  echo "  $0 global/biome"
-  echo "  $0 global/rust"
-  echo "  $0 node/pnpm"
+  echo "  $0 biome"
+  echo "  $0 rust"
+  echo "  $0 package-manager"
   echo ""
   echo "Available features:"
-  find "${REPO_ROOT}/features" -name "devcontainer-feature.json" \
+  find "${REPO_ROOT}/features" -mindepth 2 -maxdepth 2 -name "devcontainer-feature.json" \
     | sed "s|${REPO_ROOT}/features/||" \
     | sed 's|/devcontainer-feature.json||' \
     | sort \
@@ -35,11 +35,8 @@ if [[ -z "$TARGET" ]]; then
   exit 1
 fi
 
-SCOPE="${TARGET%%/*}"
-ID="${TARGET##*/}"
-
-FEATURE_DIR="${REPO_ROOT}/features/${SCOPE}/${ID}"
-TEST_DIR="${REPO_ROOT}/test/${SCOPE}/${ID}"
+FEATURE_DIR="${REPO_ROOT}/features/${ID}"
+TEST_DIR="${REPO_ROOT}/test/${ID}"
 DOC_FILE="${REPO_ROOT}/docs/features/${ID}.md"
 JSON_FILE="${FEATURE_DIR}/devcontainer-feature.json"
 INSTALL_FILE="${FEATURE_DIR}/install.sh"
@@ -57,7 +54,7 @@ pass() {
   echo "[PASS] $1"
 }
 
-echo "Validating feature: ${SCOPE}/${ID}"
+echo "Validating feature: ${ID}"
 echo ""
 
 # ── Five-file completeness ────────────────────────────────────────────────────
@@ -65,7 +62,7 @@ echo ""
 if [[ -f "$JSON_FILE" ]]; then
   pass "devcontainer-feature.json exists"
 else
-  fail "devcontainer-feature.json not found at: features/${SCOPE}/${ID}/devcontainer-feature.json"
+  fail "devcontainer-feature.json not found at: features/${ID}/devcontainer-feature.json"
 fi
 
 # Derive the feature id and doc file path from the JSON.
@@ -86,19 +83,19 @@ fi
 if [[ -f "$INSTALL_FILE" ]]; then
   pass "install.sh exists"
 else
-  fail "install.sh not found at: features/${SCOPE}/${ID}/install.sh"
+  fail "install.sh not found at: features/${ID}/install.sh"
 fi
 
 if [[ -f "$TEST_SH" ]]; then
   pass "test.sh exists"
 else
-  fail "test.sh not found at: test/${SCOPE}/${ID}/test.sh"
+  fail "test.sh not found at: test/${ID}/test.sh"
 fi
 
 if [[ -f "$SCENARIOS_FILE" ]]; then
   pass "scenarios.json exists"
 else
-  fail "scenarios.json not found at: test/${SCOPE}/${ID}/scenarios.json"
+  fail "scenarios.json not found at: test/${ID}/scenarios.json"
 fi
 
 if [[ -f "$DOC_FILE" ]]; then
@@ -168,8 +165,7 @@ if [[ -f "$JSON_FILE" ]]; then
     fail "documentationURL points to a file that does not exist: ${DOC_URL}"
   fi
 
-  # Check feature id is non-empty (no requirement that it matches directory name —
-  # a feature may be namespaced differently, e.g. id=node-pnpm in dir node/pnpm)
+  # Check feature id is non-empty
   if [[ -n "$FEATURE_JSON_ID" ]]; then
     pass "feature id is set: ${FEATURE_JSON_ID}"
   else
@@ -223,9 +219,9 @@ fi
 
 echo ""
 if [[ $ERRORS -eq 0 ]]; then
-  echo "[SUCCESS] All checks passed for ${SCOPE}/${ID}."
+  echo "[SUCCESS] All checks passed for ${ID}."
   exit 0
 else
-  echo "[FAIL] ${ERRORS} check(s) failed for ${SCOPE}/${ID}." >&2
+  echo "[FAIL] ${ERRORS} check(s) failed for ${ID}." >&2
   exit 1
 fi

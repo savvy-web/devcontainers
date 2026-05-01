@@ -12,7 +12,9 @@
 		"**/dist",
 		"**/CHANGELOG.md",
 		"**/.claude/plans",
-		"**/docs/superpowers/**"
+		"**/docs/superpowers/**",
+		"**/__test__/fixtures/**",
+		"**/__test__/**/fixtures/**"
 	],
 	"customRules": ["@savvy-web/changesets/markdownlint"],
 	"config": {

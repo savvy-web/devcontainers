@@ -1,0 +1,7 @@
+{
+	"id": "baz",
+	"version": "0.3.0",
+	"name": "Baz",
+	"description": "New fixture feature.",
+	"documentationURL": "https://example.invalid/baz"
+}

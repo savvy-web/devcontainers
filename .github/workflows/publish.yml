@@ -46,17 +46,17 @@ jobs:
         id: test
         continue-on-error: true
         run: |
-          chmod +x test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
-          ./test/${{ matrix.scope }}/${{ matrix.id }}/test.sh
+          chmod +x test/${{ matrix.id }}/test.sh
+          ./test/${{ matrix.id }}/test.sh
       - name: Save result
         run: |
           mkdir -p /tmp/results
-          echo "${{ steps.test.outcome }}" > /tmp/results/${{ matrix.scope }}-${{ matrix.id }}.txt
+          echo "${{ steps.test.outcome }}" > /tmp/results/${{ matrix.id }}.txt
       - name: Upload result
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: test-result-${{ matrix.scope }}-${{ matrix.id }}
-          path: /tmp/results/${{ matrix.scope }}-${{ matrix.id }}.txt
+          name: test-result-${{ matrix.id }}
+          path: /tmp/results/${{ matrix.id }}.txt
       - name: Fail if test failed
         if: steps.test.outcome == 'failure'
         run: exit 1
@@ -72,7 +72,7 @@ jobs:
       all_passed: ${{ steps.check.outputs.all_passed }}
     steps:
       - name: Download all results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: test-result-*
           path: /tmp/results
@@ -123,9 +123,9 @@ jobs:
         include: ${{fromJson(needs.collect.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Runtime
-        id: runtime
-        uses: savvy-web/workflow-runtime-action@main
+      # - name: Setup Runtime
+      #   id: runtime
+      #   uses: savvy-web/workflow-runtime-action@main
       - name: Publish Feature
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

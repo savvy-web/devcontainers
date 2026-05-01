@@ -5,19 +5,18 @@ Reference for the two-file test convention used in this repository:
 
 ## File Locations
 
-Tests live alongside the feature they cover, mirroring the `features/`
+Tests live alongside the feature they cover, mirroring the flat `features/`
 directory structure:
 
 ```text
 test/
-  <scope>/
-    <id>/
-      test.sh        # executable shell assertions
-      scenarios.json # human-readable scenario descriptions
+  <id>/
+    test.sh        # executable shell assertions
+    scenarios.json # human-readable scenario descriptions
 ```
 
 Both files are required. The CI publish workflow discovers tests by resolving
-`test/<scope>/<id>/test.sh` from the feature's scope and id.
+`test/<id>/test.sh` from the feature id.
 
 ## `scenarios.json`
 
@@ -136,10 +135,9 @@ The `.github/workflows/publish.yml` workflow runs tests as follows:
 1. **`collect`** job — `collect-and-filter-features.js` builds a JSON matrix
    of features not yet published at their current version
 2. **`test`** job — fan-out matrix job that runs
-   `test/<scope>/<id>/test.sh` for each feature in the matrix
-3. Result is written to `/tmp/results/<scope>-<id>.txt` as `success` or
-   `failure` and uploaded as an artifact named
-   `test-result-<scope>-<id>`
+   `test/<id>/test.sh` for each feature in the matrix
+3. Result is written to `/tmp/results/<id>.txt` as `success` or
+   `failure` and uploaded as an artifact named `test-result-<id>`
 4. **`summarize`** job — downloads all result artifacts, writes a Markdown
    table to `$GITHUB_STEP_SUMMARY`, and fails (blocking publish) if any test
    failed
@@ -168,9 +166,9 @@ feature's install + test cycle locally using
 ### Running a single feature test
 
 ```bash
-pnpm run test:feature global/biome
-pnpm run test:feature global/rust
-pnpm run test:feature node/pnpm
+pnpm run test:feature biome
+pnpm run test:feature rust
+pnpm run test:feature package-manager
 ```
 
 Running without arguments prints available features.
@@ -181,8 +179,8 @@ Running without arguments prints available features.
 `.github/workflows/test-feature.yml` — a minimal workflow that:
 
 1. Checks out the repo (using the local bind-mount from `.actrc`)
-2. Runs `features/<scope>/<id>/install.sh` inside a fresh ubuntu container
-3. Runs `test/<scope>/<id>/test.sh` in the same container
+2. Runs `features/<id>/install.sh` inside a fresh ubuntu container
+3. Runs `test/<id>/test.sh` in the same container
 
 The `.actrc` at the repo root configures act to:
 
@@ -196,7 +194,7 @@ If `test.sh` fails, re-run with act's verbose flag to see the full output:
 
 ```bash
 act workflow_dispatch \
-  --input scope=global --input id=biome \
+  --input id=biome \
   -W .github/workflows/test-feature.yml \
   --verbose
 ```
