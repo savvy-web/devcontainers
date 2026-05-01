@@ -49,4 +49,13 @@ fi
 rustc --version
 cargo --version
 
+# Transfer ownership of toolchain directories to the remote user so they can
+# run `cargo install` and `rustup` without elevated privileges in Codespaces
+# and VS Code Dev Containers.
+REMOTE_USER="${_REMOTE_USER:-}"
+if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]] && id -u "$REMOTE_USER" &>/dev/null; then
+  chown -R "${REMOTE_USER}" "${RUSTUP_HOME}" "${CARGO_HOME}"
+  echo "[INFO] Transferred toolchain ownership to ${REMOTE_USER}."
+fi
+
 echo "[SUCCESS] Rust toolchain ($TOOLCHAIN) and components installed."

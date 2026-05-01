@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ZIG_VERSION=${ZIG_VERSION:-0.12.0}
+# The devcontainer CLI injects feature options uppercased with no separator
+# (e.g. zigVersion -> ZIGVERSION). Accept both forms for flexibility.
+ZIG_VERSION="${ZIGVERSION:-${ZIG_VERSION:-0.12.0}}"
 ZIG_ROOT="/usr/local/zig"
 ZIG_BIN="$ZIG_ROOT/zig"
 
@@ -56,11 +58,11 @@ tar -C "$TMPDIR" -xf "$TMPDIR/zig.tar.xz"
 # Find extracted dir
 ZIG_EXTRACTED=$(find "$TMPDIR" -maxdepth 1 -type d -name "zig-*" | head -n 1)
 
-# Install
-sudo rm -rf "$ZIG_ROOT"
-sudo mkdir -p "$ZIG_ROOT"
-sudo cp -r "$ZIG_EXTRACTED"/* "$ZIG_ROOT"/
-sudo ln -sf "$ZIG_BIN" /usr/local/bin/zig
+# Install (feature scripts run as root; sudo is not needed)
+rm -rf "$ZIG_ROOT"
+mkdir -p "$ZIG_ROOT"
+cp -r "$ZIG_EXTRACTED"/* "$ZIG_ROOT"/
+ln -sf "$ZIG_BIN" /usr/local/bin/zig
 
 # Validate
 zig version

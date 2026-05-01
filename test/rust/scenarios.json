@@ -1,6 +1,1 @@
-[
-	{
-		"name": "Rust toolchain install",
-		"steps": ["Install feature", "Check rustc is available", "Check cargo is available"]
-	}
-]
+{}

@@ -44,14 +44,14 @@ test/
   <id>/                    # mirrors src/<id> — test.sh + scenarios.json per feature
     test.sh
     scenarios.json
+lib/                       # config files and repo-level helpers
+    scripts/
+      test-feature.sh          # Run one feature's install + test locally via act
+      validate-feature.sh      # Check five-file completeness and structural rules
 
 docs/
   features/                # one .md file per feature, named by feature id
     <id>.md
-
-scripts/
-  test-feature.sh          # Run one feature's install + test locally via act
-  validate-feature.sh      # Check five-file completeness and structural rules
 
 .github/
   scripts/
@@ -59,7 +59,7 @@ scripts/
   workflows/
     test.yml                  # PR CI — auto-discovers all features and tests them
     publish.yml               # Publish to ghcr.io (manual trigger)
-    test-feature.yml          # Single-feature test used by scripts/test-feature.sh
+    test-feature.yml          # Single-feature test used by lib/scripts/test-feature.sh
     copilot-setup-steps.yml   # Copilot agent environment (Node, pnpm, devcontainer CLI)
   skills/
     devcontainer/             # Devcontainer spec + repo conventions
@@ -81,7 +81,7 @@ Every feature must have exactly these files:
 
 ```text
 src/<id>/devcontainer-feature.json
-src/<id>/install.sh            ← must be executable
+src/<id>/install.sh
 test/<id>/test.sh
 test/<id>/scenarios.json
 docs/features/<id>.md
@@ -89,6 +89,22 @@ docs/features/<id>.md
 
 Run `pnpm run validate-feature <id>` to verify all five exist and pass
 structural checks before committing.
+
+## Executable Bits
+
+Shell scripts are stored in git **without** the executable bit (`100644`, not
+`100755`). Do **not** run `chmod +x` on scripts or use
+`git update-index --chmod=+x`. The bits are managed automatically:
+
+- **Local dev** — a Husky `post-checkout`/`post-merge` hook runs
+  `git ls-files -z '*.sh' | xargs -0 chmod +x` after every checkout and
+  merge, and `core.fileMode` is set to `false` so git ignores the local
+  mode change.
+- **CI** — the test and publish workflows set the bits before invoking any
+  script.
+
+Agents running `validate-feature` may see an informational note about
+executable bits; this is expected and safe to ignore.
 
 ## Version Bump Rule
 
@@ -105,7 +121,7 @@ in the same commit.
 pnpm run validate-feature biome
 
 # Full install + test via act (requires Docker)
-pnpm run test:feature biome
+pnpm run feature:test biome
 ```
 
 `scripts/test-feature.sh` calls `act workflow_dispatch` targeting

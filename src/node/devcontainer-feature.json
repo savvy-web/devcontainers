@@ -1,6 +1,6 @@
 {
 	"id": "node",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"name": "Node.js",
 	"description": "Installs and configures the Node.js runtime globally.",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/node.md",

@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# This test file is executed against an auto-generated devcontainer that
+# installs the 'claude-code' feature with default options (version=latest).
+#
+# Run with:
+#   devcontainer features test -f claude-code --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-# Test Claude Code global feature
+set -e
 
-if ! command -v claude &>/dev/null; then
-  echo "[FAIL] claude CLI not found in PATH"
-  exit 1
-fi
+source dev-container-features-test-lib
 
-claude --version
+check "claude CLI is installed" bash -c "claude --version | grep 'Claude Code'"
 
-echo "[PASS] Claude Code install test passed."
+reportResults

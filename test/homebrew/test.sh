@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# Auto-generated scenario test for the 'homebrew' feature.
+# The base image (mcr.microsoft.com/devcontainers/base:ubuntu) sets
+# _REMOTE_USER=vscode, so install.sh runs the Homebrew installer as the
+# vscode user. Homebrew is always installed to /home/linuxbrew/.linuxbrew
+# on Linux regardless of which user runs the installer.
+#
+# Run with:
+#   devcontainer features test -f homebrew --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-# Test: Homebrew global feature
-# Homebrew refuses to run as root; verify via the linuxbrew user
+set -e
 
-BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+source dev-container-features-test-lib
 
-if [[ ! -x "$BREW_PREFIX/bin/brew" ]]; then
-  echo "[FAIL] brew binary not found at $BREW_PREFIX/bin/brew" >&2
-  exit 1
-fi
+BREW_BIN="/home/linuxbrew/.linuxbrew/bin/brew"
 
-# Run brew as the linuxbrew user (brew refuses to run as root)
-su - linuxbrew -s /bin/bash -c "$BREW_PREFIX/bin/brew --version" \
-  | grep Homebrew \
-  || { echo "[FAIL] brew --version did not output expected Homebrew version string" >&2; exit 1; }
+check "brew binary exists" test -x "$BREW_BIN"
+check "brew is functional" "$BREW_BIN" --version
+check "brew version output includes Homebrew" bash -c "$BREW_BIN --version | grep Homebrew"
 
-echo "[PASS] Homebrew installed and working."
+reportResults

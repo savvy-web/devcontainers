@@ -1,23 +1,20 @@
-[
-	{
-		"name": "Default auto-detect install",
-		"options": {},
-		"expect": {
-			"cli": "corepack --version"
+{
+	"explicit_pnpm": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"node": {},
+			"package-manager": {
+				"packageManager": "pnpm@10.20.0"
+			}
 		}
 	},
-	{
-		"name": "Explicit pnpm version",
-		"options": { "packageManager": "pnpm@10.20.0" },
-		"expect": {
-			"cli": "pnpm --version | grep 10.20.0"
-		}
-	},
-	{
-		"name": "Explicit yarn version",
-		"options": { "packageManager": "yarn@4.9.0" },
-		"expect": {
-			"cli": "yarn --version | grep 4.9.0"
+	"explicit_yarn": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"node": {},
+			"package-manager": {
+				"packageManager": "yarn@4.9.0"
+			}
 		}
 	}
-]
+}

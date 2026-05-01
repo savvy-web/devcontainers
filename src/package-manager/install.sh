@@ -52,6 +52,13 @@ if ! command -v corepack &>/dev/null; then
   exit 1
 fi
 
+# Use a shared COREPACK_HOME so all users (including the non-root remoteUser in
+# Codespaces and VS Code Dev Containers) can access the prepared package manager
+# without re-downloading it. The node feature creates this directory and exports
+# it via /etc/profile.d/node.sh; we honour the same path here.
+export COREPACK_HOME="${COREPACK_HOME:-/usr/local/share/corepack}"
+mkdir -p "$COREPACK_HOME"
+
 # ── Resolve the package manager spec ──────────────────────────────────────────
 
 PM_SPEC=""

@@ -1,6 +1,1 @@
-[
-	{
-		"name": "act global install",
-		"steps": ["Install feature", "Check act version is 0.2.76"]
-	}
-]
+{}

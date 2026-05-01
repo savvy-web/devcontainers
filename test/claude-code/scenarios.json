@@ -1,16 +1,1 @@
-[
-	{
-		"name": "Default install",
-		"options": {},
-		"expect": {
-			"cli": "claude --version"
-		}
-	},
-	{
-		"name": "Install specific version",
-		"options": { "version": "0.1.0" },
-		"expect": {
-			"cli": "claude --version | grep 0.1.0"
-		}
-	}
-]
+{}

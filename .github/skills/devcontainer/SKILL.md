@@ -126,6 +126,10 @@ docs/
 - End with a validation step: `command -v <binary>` or `<binary> --version`
 - Print `[ERROR]` to stderr and `exit 1` on unrecoverable failures
 - Print `[INFO]` for progress steps
+- Use `_REMOTE_USER` (not `_CONTAINER_USER`) to transfer directory ownership to
+  the devcontainer user after installing to user-writable paths. Always guard
+  for the unset and root cases — see `references/feature-anatomy.md` §User
+  Environment Variables for the canonical pattern
 
 ### Feature Bootstrap Checklist
 
@@ -173,8 +177,12 @@ looking for `test/<id>/test.sh` matching the feature's directory name.
 - **Env var not set** — the devcontainer CLI injects option values as env vars
   but they may be empty strings, not unset. Always use
   `VAR="${OPTION_VAR:-default}"` to handle both the unset and empty-string case.
-- **Missing execute permission** — `install.sh` must be executable
-  (`chmod +x`). The publish workflow runs it directly.
+- **Executable bits not committed** — shell scripts are stored in git without
+  the executable bit (`100644`). Do **not** run `chmod +x` or
+  `git update-index --chmod=+x`. Husky hooks set the bits on checkout/merge
+  locally; CI workflows set them before running scripts. The
+  `validate-feature` script may note missing bits — this is expected and safe
+  to ignore.
 - **Semver ranges** — option defaults like `">=20"` or `"^24"` are not
   reproducible. Always use an exact version string.
 - **Missing `documentationURL`** — all features must link to their doc page.

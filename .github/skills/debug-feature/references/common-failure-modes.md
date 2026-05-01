@@ -149,27 +149,36 @@ Always include an `else` branch that errors on unsupported architectures.
 
 ---
 
-## 4. Missing Execute Permission
+## 4. Execute Permission on Installed Binaries
 
 ### Detection
 
-- Error: `"Permission denied"` when running `install.sh`
-- `ls -la src/<id>/install.sh` shows `-rw-r--r--` (no `x` bit)
+- Error: `"Permission denied"` when running a binary the feature installed
+  (e.g. `/usr/local/bin/biome`)
+- `ls -la /usr/local/bin/<binary>` shows `-rw-r--r--` (no `x` bit)
 
 ### Why it happens
 
-Files created with a text editor or copied without preserving permissions may
-not have the execute bit set. The devcontainer CLI and CI workflows run
-`install.sh` directly.
+The feature's `install.sh` downloaded or copied a binary but did not mark it
+executable with `chmod +x`.
 
 ### Fix
 
+Add `chmod +x` or use `install -m 0755` in `install.sh` when placing the
+binary:
+
 ```bash
-chmod +x src/<id>/install.sh
+chmod +x "$BINARY_PATH"
+# or
+install -m 0755 "$TMP/binary" /usr/local/bin/binary
 ```
 
-The `validate-feature` script (`pnpm run validate-feature`) checks for this
-and reports it as an error.
+**Note:** this is about the *installed binary*, not `install.sh` itself.
+`install.sh` and all other `*.sh` files in the repository are stored **without**
+the executable bit in git (`100644`). The Husky `post-checkout`/`post-merge`
+hooks set the bit locally; CI workflows set it before running the scripts.
+Never run `chmod +x src/<id>/install.sh` or
+`git update-index --chmod=+x src/<id>/install.sh`.
 
 ---
 
@@ -318,7 +327,7 @@ Then bump the feature version using the `bump-feature` skill, since
 
 ### Detection
 
-- `pnpm run test:feature` exits with `"act is not installed"`
+- `pnpm run feature:test` exits with `"act is not installed"`
 - `docker: command not found`
 
 ### Fix

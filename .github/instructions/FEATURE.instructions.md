@@ -36,14 +36,15 @@ affected files together in the same commit:
 1. `src/<id>/devcontainer-feature.json` — `"version"` field and
    option `"default"` value
 2. `test/<id>/test.sh` — `grep "<version>"` assertions
-3. `test/<id>/scenarios.json` — step descriptions mentioning the version
-4. `docs/features/<id>.md` — usage snippet and options default listing
+3. `test/<id>/scenarios.json` — scenario option values mentioning the version
+4. `test/<id>/<scenario_name>.sh` — `grep "<version>"` assertions in scenario scripts
+5. `docs/features/<id>.md` — usage snippet and options default listing
 
 Use the `bump-feature` skill for guided step-by-step assistance.
 
 ## Five-File Completeness Rule
 
-Every feature must have exactly five files. Before committing, verify all are
+Every feature must have at least these five files. Before committing, verify all are
 present:
 
 ```text
@@ -54,7 +55,15 @@ test/<id>/scenarios.json
 docs/features/<id>.md
 ```
 
+If `scenarios.json` is non-empty (contains scenario keys), each key also
+requires a matching `test/<id>/<scenario_name>.sh` assertion script.
+
 Run `pnpm run validate-feature <id>` to check completeness.
+
+**Note on executable bits:** scripts are stored as `100644` (non-executable)
+in git. The Husky `post-checkout`/`post-merge` hooks set the bits locally and
+CI workflows set them before running. Do **not** run `chmod +x` or
+`git update-index --chmod=+x` — the bits are intentionally absent in git.
 
 ## `documentationURL` Must Match Actual Doc File
 

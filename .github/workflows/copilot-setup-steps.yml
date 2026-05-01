@@ -2,17 +2,17 @@
 #
 # Prepares the environment for Copilot cloud agent sessions working on this
 # repository. Installs Node.js, pnpm, the devcontainer CLI, and shellcheck so
-# the agent can run scripts/validate-feature.sh and pnpm run lint without
+# the agent can run lib/scripts/validate-feature.sh and pnpm run lint without
 # manual setup.
 
 name: "Copilot Setup Steps"
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, copilot/*]
     paths: [.github/workflows/copilot-setup-steps.yml]
   pull_request:
-    branches: [main]
+    branches: [main, copilot/*]
     paths: [.github/workflows/copilot-setup-steps.yml]
 
 jobs:

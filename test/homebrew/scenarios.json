@@ -1,10 +1,9 @@
-[
-	{
-		"name": "Homebrew is installed if not present",
-		"steps": ["Install feature", "Check brew --version outputs 'Homebrew'"]
-	},
-	{
-		"name": "Homebrew is idempotent",
-		"steps": ["Install feature a second time", "Verify install.sh exits cleanly"]
+{
+	"remote_user_vscode": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"homebrew": {}
+		},
+		"remoteUser": "vscode"
 	}
-]
+}

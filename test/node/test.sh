@@ -1,32 +1,19 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# This test file is executed against an auto-generated devcontainer that
+# installs the 'node' feature with default options (nodeVersion=24.11.0).
+#
+# Run with:
+#   devcontainer features test -f node --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-# Test: Node.js global install
-if ! command -v node &>/dev/null; then
-  echo "[FAIL] node not found in PATH" >&2
-  exit 1
-fi
+set -e
 
-if ! command -v npm &>/dev/null; then
-  echo "[FAIL] npm not found in PATH" >&2
-  exit 1
-fi
+source dev-container-features-test-lib
 
-if ! command -v npx &>/dev/null; then
-  echo "[FAIL] npx not found in PATH" >&2
-  exit 1
-fi
+check "node is installed" node --version
+check "npm is installed" npm --version
+check "npx is installed" npx --version
+check "corepack is installed" corepack --version
+check "node default version is 24.11.0" bash -c "node -v | grep 'v24.11.0'"
 
-if ! command -v corepack &>/dev/null; then
-  echo "[FAIL] corepack not found in PATH" >&2
-  exit 1
-fi
-
-# Pinned default version from devcontainer-feature.json
-ACTUAL_VERSION="$(node -v)"
-if [[ "$ACTUAL_VERSION" != "v24.11.0" ]]; then
-  echo "[FAIL] Node.js version mismatch: expected v24.11.0, got $ACTUAL_VERSION" >&2
-  exit 1
-fi
-
-echo "[PASS] Node.js global install test passed."
+reportResults
