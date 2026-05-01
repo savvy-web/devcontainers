@@ -24,8 +24,10 @@ if [[ -x "$BREW_PREFIX/bin/brew" ]]; then
   echo "[INFO] Homebrew is already installed at $BREW_PREFIX/bin/brew"
   # Ensure linuxbrew user and profile.d entry are present even on idempotent runs
   if [[ "$OS" != "Darwin" ]]; then
-    useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
-    echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
+    id -u "$BREW_USER" &>/dev/null || useradd -m -s /bin/bash "$BREW_USER"
+    if [[ ! -f /etc/profile.d/homebrew.sh ]]; then
+      echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
+    fi
   fi
   exit 0
 fi
