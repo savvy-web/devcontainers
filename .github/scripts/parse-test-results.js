@@ -24,7 +24,10 @@ try {
 }
 
 const idx = log.indexOf("TEST REPORT");
-const section = idx >= 0 ? log.slice(idx) : log;
+// If the CLI crashed or changed output format, treat as a parse failure
+// rather than silently succeeding with an empty result set.
+const reportFound = idx >= 0;
+const section = reportFound ? log.slice(idx) : "";
 const passed = [...section.matchAll(/Passed:\s+'([^']+)'/g)].map((m) => m[1]);
 const failed = [...section.matchAll(/Failed:\s+'([^']+)'/g)].map((m) => m[1]);
 
@@ -32,7 +35,7 @@ const result = {
 	passed,
 	failed,
 	total: passed.length + failed.length,
-	allPassed: failed.length === 0,
+	allPassed: reportFound && failed.length === 0,
 };
 
 writeFileSync(outPath, JSON.stringify(result, null, 2));
