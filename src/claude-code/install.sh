@@ -20,8 +20,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 # when necessary so claude is available to all users.
 if ! command -v claude &>/dev/null; then
   for candidate in \
-    "/root/.local/bin/claude" \
-    "/root/.anthropic/bin/claude" \
+    "${HOME}/.local/bin/claude" \
+    "${HOME}/.anthropic/bin/claude" \
     "/usr/local/bin/claude"; do
     if [[ -x "$candidate" ]]; then
       ln -sf "$candidate" /usr/local/bin/claude
