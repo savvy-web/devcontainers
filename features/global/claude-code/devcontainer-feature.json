@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "Claude Code Agent",
 	"description": "Installs the Claude Code CLI agent globally using the official native installer.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/claude-code-global.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/claude-code.md",
 	"options": {
 		"version": {
 			"type": "string",

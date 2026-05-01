@@ -17,7 +17,7 @@ Language-agnostic tools available in any devcontainer.
 | ------- | ----------- | ---- |
 | `act` | Installs [act](https://nektosact.com) for running GitHub Actions locally | [docs](docs/features/act.md) |
 | `biome` | Installs [Biome](https://biomejs.dev) globally for linting and formatting | [docs](docs/features/biome.md) |
-| `claude-code` | Installs the [Claude Code](https://code.claude.com) CLI agent | [docs](docs/features/claude-code-global.md) |
+| `claude-code` | Installs the [Claude Code](https://code.claude.com) CLI agent | [docs](docs/features/claude-code.md) |
 | `homebrew` | Installs [Homebrew](https://brew.sh) (macOS/Linux) | [docs](docs/features/homebrew.md) |
 | `outbound-firewall` | Configures outbound firewall rules for Codespaces | [docs](docs/features/outbound-firewall.md) |
 | `rust` | Installs the Rust toolchain via rustup | [docs](docs/features/rust.md) |

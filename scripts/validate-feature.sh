@@ -69,8 +69,7 @@ else
 fi
 
 # Derive the feature id and doc file path from the JSON.
-# The doc file path is derived from the documentationURL in the JSON, since
-# the feature id may not match the doc filename (e.g. claude-code-global.md).
+# The doc filename must match the feature id (e.g. claude-code.md for id=claude-code).
 if [[ -f "$JSON_FILE" ]]; then
   FEATURE_JSON_ID=$(node -e "const j=JSON.parse(require('fs').readFileSync('${JSON_FILE}','utf8')); process.stdout.write(j.id||'')" 2>/dev/null)
   DOC_URL_FOR_PATH=$(node -e "const j=JSON.parse(require('fs').readFileSync('${JSON_FILE}','utf8')); process.stdout.write(j.documentationURL||'')" 2>/dev/null)

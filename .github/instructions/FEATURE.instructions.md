@@ -60,9 +60,8 @@ Run `pnpm run validate-feature <scope>/<id>` to check completeness.
 ## `documentationURL` Must Match Actual Doc File
 
 The `documentationURL` field in `devcontainer-feature.json` must always point
-to an existing file in `docs/features/`. The filename conventionally matches
-the feature `id`, but exceptions are allowed when a feature needs a
-disambiguated name (e.g. `claude-code-global.md` for `features/global/claude-code`).
+to an existing file in `docs/features/`. The filename must match the feature
+`id` exactly (e.g. `claude-code.md` for `id: "claude-code"`).
 
 ```json
 "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/<id>.md"
