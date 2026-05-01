@@ -81,7 +81,7 @@ Every feature must have exactly these files:
 
 ```text
 src/<id>/devcontainer-feature.json
-src/<id>/install.sh            ← must be executable
+src/<id>/install.sh
 test/<id>/test.sh
 test/<id>/scenarios.json
 docs/features/<id>.md
@@ -89,6 +89,22 @@ docs/features/<id>.md
 
 Run `pnpm run validate-feature <id>` to verify all five exist and pass
 structural checks before committing.
+
+## Executable Bits
+
+Shell scripts are stored in git **without** the executable bit (`100644`, not
+`100755`). Do **not** run `chmod +x` on scripts or use
+`git update-index --chmod=+x`. The bits are managed automatically:
+
+- **Local dev** — a Husky `post-checkout`/`post-merge` hook runs
+  `git ls-files -z '*.sh' | xargs -0 chmod +x` after every checkout and
+  merge, and `core.fileMode` is set to `false` so git ignores the local
+  mode change.
+- **CI** — the test and publish workflows set the bits before invoking any
+  script.
+
+Agents running `validate-feature` may see an informational note about
+executable bits; this is expected and safe to ignore.
 
 ## Version Bump Rule
 

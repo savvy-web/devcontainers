@@ -55,12 +55,11 @@ The most common failure categories, in order of frequency:
 1. **Env var not injected** — option value is empty or unset
 2. **Architecture mismatch** — wrong binary for the platform
 3. **Broken download URL** — upstream URL pattern changed or version not found
-4. **Missing execute permission** — `install.sh` is not executable
-5. **Missing `set -euo pipefail`** — silent failures masked by `|| true`
-6. **Idempotency failure** — re-running the script breaks an existing install
-7. **Version assertion mismatch** — `test.sh` checks a different version than
+4. **Missing `set -euo pipefail`** — silent failures masked by `|| true`
+5. **Idempotency failure** — re-running the script breaks an existing install
+6. **Version assertion mismatch** — `test.sh` checks a different version than
    the default in `devcontainer-feature.json`
-8. **Missing `installsAfter`** — the feature depends on another feature
+7. **Missing `installsAfter`** — the feature depends on another feature
    (e.g. Node.js) being installed first but does not declare it
 
 ### Step 3 — Apply the fix
@@ -119,7 +118,7 @@ If the error is not immediately obvious, work through these questions:
 
 - Does the script end with `command -v <binary>` or `<binary> --version`?
 - If the binary is installed to a non-standard path, is that path on `$PATH`?
-- Is the binary installed with execute permission (`chmod +x`)?
+- Is the binary installed with execute permission (`chmod +x` on the installed binary in `/usr/local/bin`, not the `install.sh` source file)?
 
 **Idempotency:**
 

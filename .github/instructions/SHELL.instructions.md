@@ -94,6 +94,20 @@ fi
 For tools installed to a fixed path where overwriting is safe, no guard is
 needed.
 
+## Executable Bits
+
+Shell scripts are stored in git **without** the executable bit. Do **not**
+run `chmod +x` on any `.sh` file, and do **not** use
+`git update-index --chmod=+x`.
+
+Executable bits are managed outside of git:
+
+- **Local dev** — Husky `post-checkout`/`post-merge` hooks apply
+  `chmod +x` on all tracked `*.sh` files automatically.
+- **CI** — the test and publish workflows set the bits before invoking scripts.
+
+Agents must never treat a missing executable bit as a bug to fix.
+
 ## Linting
 
 After editing a shell script, run shellcheck if it is available:

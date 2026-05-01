@@ -235,7 +235,7 @@ Rules:
 Before finishing, confirm every item:
 
 - [ ] `src/<id>/devcontainer-feature.json` created
-- [ ] `src/<id>/install.sh` created and marked executable
+- [ ] `src/<id>/install.sh` created (executable bit is **not** committed; Husky/CI handles it)
 - [ ] `test/<id>/test.sh` created
 - [ ] `test/<id>/scenarios.json` created
 - [ ] `docs/features/<id>.md` created

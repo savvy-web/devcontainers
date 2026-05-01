@@ -11,7 +11,7 @@ directory structure:
 ```text
 test/
   <id>/
-    test.sh        # executable shell assertions
+    test.sh        # shell assertions (executable bit set by Husky/CI, not committed)
     scenarios.json # human-readable scenario descriptions
 ```
 
@@ -59,7 +59,8 @@ An array of scenario objects. Each object describes one logical test scenario.
 ## `test.sh`
 
 An executable Bash script that runs assertions after the feature is installed
-in the devcontainer.
+in the devcontainer. The executable bit is set by Husky (locally) and by CI
+workflows — scripts are stored in git without the bit (`100644`).
 
 ### Structure
 

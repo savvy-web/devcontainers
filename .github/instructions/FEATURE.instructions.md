@@ -56,6 +56,11 @@ docs/features/<id>.md
 
 Run `pnpm run validate-feature <id>` to check completeness.
 
+**Note on executable bits:** scripts are stored as `100644` (non-executable)
+in git. The Husky `post-checkout`/`post-merge` hooks set the bits locally and
+CI workflows set them before running. Do **not** run `chmod +x` or
+`git update-index --chmod=+x` — the bits are intentionally absent in git.
+
 ## `documentationURL` Must Match Actual Doc File
 
 The `documentationURL` field in `devcontainer-feature.json` must always point
