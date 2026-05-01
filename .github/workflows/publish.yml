@@ -42,6 +42,17 @@ jobs:
       # - name: Setup Runtime
       #   id: runtime
       #   uses: savvy-web/workflow-runtime-action@main
+      - name: Install feature
+        env:
+          FEATURE_ID: ${{ matrix.id }}
+        run: |
+          INSTALL_SCRIPT="features/${FEATURE_ID}/install.sh"
+          if [[ ! -f "$INSTALL_SCRIPT" ]]; then
+            echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
+            exit 1
+          fi
+          chmod +x "$INSTALL_SCRIPT"
+          sudo bash "$INSTALL_SCRIPT"
       - name: Test Feature
         id: test
         continue-on-error: true
