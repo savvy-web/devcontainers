@@ -13,6 +13,6 @@ set -e
 source dev-container-features-test-lib
 
 check "kcov is installed" bash -c "command -v kcov"
-check "kcov default version is 43" bash -c "kcov --version 2>&1 | grep -E 'v?43'"
+check "kcov default version is 43" bash -c "kcov --version 2>&1 | grep -E 'v43([^0-9]|$)'"
 
 reportResults
