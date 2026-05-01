@@ -4,9 +4,9 @@ set -euo pipefail
 # Test a single devcontainer feature locally using the devcontainer CLI.
 #
 # Usage:
-#   pnpm run test:feature <id>
-#   pnpm run test:feature biome
-#   pnpm run test:feature package-manager
+#   pnpm run feature:test <id>
+#   pnpm run feature:test biome
+#   pnpm run feature:test package-manager
 #
 # Requires:
 #   - Docker running locally
@@ -18,7 +18,7 @@ set -euo pipefail
 # pass/fail markers.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 ID="${1:-}"
 

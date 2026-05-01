@@ -5,7 +5,6 @@
 	"description": "Installs the Claude Code CLI agent globally via the official native installer (curl | bash). Does not require Node.js or npm.",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/claude-code.md",
 	"installsAfter": [],
-	"entrypoint": "/install.sh",
 	"platforms": ["linux", "darwin"],
 	"keywords": ["claude", "ai", "agent", "global"]
 }

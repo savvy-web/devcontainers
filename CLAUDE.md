@@ -44,14 +44,14 @@ test/
   <id>/                    # mirrors src/<id> — test.sh + scenarios.json per feature
     test.sh
     scenarios.json
+lib/                       # config files and repo-level helpers
+    scripts/
+      test-feature.sh          # Run one feature's install + test locally via act
+      validate-feature.sh      # Check five-file completeness and structural rules
 
 docs/
   features/                # one .md file per feature, named by feature id
     <id>.md
-
-scripts/
-  test-feature.sh          # Run one feature's install + test locally via act
-  validate-feature.sh      # Check five-file completeness and structural rules
 
 .github/
   scripts/
@@ -59,7 +59,7 @@ scripts/
   workflows/
     test.yml                  # PR CI — auto-discovers all features and tests them
     publish.yml               # Publish to ghcr.io (manual trigger)
-    test-feature.yml          # Single-feature test used by scripts/test-feature.sh
+    test-feature.yml          # Single-feature test used by lib/scripts/test-feature.sh
     copilot-setup-steps.yml   # Copilot agent environment (Node, pnpm, devcontainer CLI)
   skills/
     devcontainer/             # Devcontainer spec + repo conventions
@@ -121,7 +121,7 @@ in the same commit.
 pnpm run validate-feature biome
 
 # Full install + test via act (requires Docker)
-pnpm run test:feature biome
+pnpm run feature:test biome
 ```
 
 `scripts/test-feature.sh` calls `act workflow_dispatch` targeting

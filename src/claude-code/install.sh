@@ -35,5 +35,6 @@ if ! command -v claude &>/dev/null; then
   exit 1
 fi
 
+
 claude --version
 echo "[SUCCESS] Claude Code CLI installed."

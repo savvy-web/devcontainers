@@ -17,7 +17,7 @@ Systematic triage guide for diagnosing failing `install.sh` scripts,
 
 Use this skill when:
 
-- `install.sh` exits with a non-zero code during `pnpm run test:feature`
+- `install.sh` exits with a non-zero code during `pnpm run feature:test`
 - A `test.sh` assertion fails (`[FAIL]` in output or non-zero exit)
 - The publish workflow's `test` job fails
 - A feature installs successfully locally but fails in CI
@@ -74,7 +74,7 @@ After applying a fix:
 1. Run the feature locally with act:
 
    ```bash
-   pnpm run test:feature <id>
+   pnpm run feature:test <id>
    ```
 
 2. Run the validation script to catch any remaining structural issues:

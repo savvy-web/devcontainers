@@ -10,6 +10,6 @@ set -e
 
 source dev-container-features-test-lib
 
-check "claude CLI is installed" claude --version
+check "claude CLI is installed" bash -c "claude --version | grep 'Claude Code'"
 
 reportResults

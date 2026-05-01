@@ -253,7 +253,7 @@ pnpm run validate-feature <id>
 And optionally test locally if `act` is installed:
 
 ```bash
-pnpm run test:feature <id>
+pnpm run feature:test <id>
 ```
 
 ## Reference Files

@@ -28,6 +28,8 @@
 		"ci:version": "savvy-changesets version && biome format --write .",
 		"commit:check": "savvy-commit check",
 		"commit:init": "savvy-commit init",
+		"feature:test": "bash lib/scripts/test-feature.sh",
+		"feature:validate": "bash lib/scripts/validate-feature.sh",
 		"lint": "biome check --max-diagnostics=none",
 		"lint:fix": "biome check --write --max-diagnostics=none",
 		"lint:fix:unsafe": "biome check --write --unsafe --max-diagnostics=none",
@@ -35,8 +37,6 @@
 		"lint:md:fix": "markdownlint-cli2  --config './lib/configs/.markdownlint-cli2.jsonc' --fix",
 		"prepare": "husky",
 		"test": "vitest run --passWithNoTests",
-		"test:feature": "bash scripts/test-feature.sh",
-		"validate-feature": "bash scripts/validate-feature.sh",
 		"test:watch": "vitest --watch",
 		"typecheck": "turbo run types:check --log-prefix=none --log-order=grouped",
 		"types:check": "tsgo --noEmit"

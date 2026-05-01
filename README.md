@@ -74,15 +74,15 @@ scripts locally without pushing to CI.
 feature to your own devcontainer).
 
 ```bash
-pnpm run test:feature biome
-pnpm run test:feature rust
-pnpm run test:feature package-manager
+pnpm run feature:test biome
+pnpm run feature:test rust
+pnpm run feature:test package-manager
 
 # No argument prints available features
-pnpm run test:feature
+pnpm run feature:test
 ```
 
-`scripts/test-feature.sh` calls `act workflow_dispatch` against
+`lib/scripts/test-feature.sh` calls `act workflow_dispatch` against
 `.github/workflows/test-feature.yml`, which installs the feature and
 runs its `test.sh` inside a fresh Ubuntu container. The `.actrc` at the
 repo root configures act to use a slim ubuntu image and bind-mount the

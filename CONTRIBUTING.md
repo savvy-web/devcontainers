@@ -36,12 +36,13 @@ src/
 test/
   <id>/     # Mirrors src/<id> — test.sh + scenarios.json
 
+lib/                       # config files and repo-level helpers
+    scripts/
+      test-feature.sh          # Run one feature's install + test locally via act
+      validate-feature.sh      # Check five-file completeness and structural rules
+
 docs/
   features/ # One .md doc per feature, named by feature id
-
-scripts/
-  test-feature.sh     # Run a single feature's install + test locally
-  validate-feature.sh # Validate a feature's five-file completeness
 
 .github/
   scripts/
@@ -85,7 +86,7 @@ And optionally run the full install + test cycle locally (requires Docker and
 `act`):
 
 ```bash
-pnpm run test:feature my-feature
+pnpm run feature:test my-feature
 ```
 
 ## Bumping a Feature Version
@@ -108,7 +109,7 @@ Use the `bump-feature` Copilot skill for a guided checklist.
 
 | Script | Description |
 | :----- | :---------- |
-| `pnpm run test:feature <id>` | Run install + test for one feature locally via act |
+| `pnpm run feature:test <id>` | Run install + test for one feature locally via act |
 | `pnpm run validate-feature <id>` | Check five-file completeness and structural correctness |
 | `pnpm run lint` | Lint JS/TS/JSON files with Biome |
 | `pnpm run lint:fix` | Auto-fix lint issues |

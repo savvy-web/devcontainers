@@ -327,7 +327,7 @@ Then bump the feature version using the `bump-feature` skill, since
 
 ### Detection
 
-- `pnpm run test:feature` exits with `"act is not installed"`
+- `pnpm run feature:test` exits with `"act is not installed"`
 - `docker: command not found`
 
 ### Fix
