@@ -18,8 +18,9 @@ fi
 rustup toolchain install "$TOOLCHAIN"
 rustup default "$TOOLCHAIN"
 
-# Install components
-IFS=" " read -ra COMPS <<< "$COMPONENTS"
+# Install components (support both space- and comma-separated for compatibility)
+COMPONENTS_NORMALIZED="${COMPONENTS//,/ }"
+IFS=" " read -ra COMPS <<< "$COMPONENTS_NORMALIZED"
 for comp in "${COMPS[@]}"; do
   [[ -z "$comp" ]] && continue
   rustup component add "$comp" || true
