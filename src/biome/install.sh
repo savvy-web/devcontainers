@@ -4,7 +4,7 @@ set -euo pipefail
 # Biome global installer (official binary method)
 # Docs: https://biomejs.dev/guides/manual-installation/
 
-VERSION="${BIOMEVERSION:-2.4.13}"
+VERSION="${BIOMEVERSION:-${BIOME_VERSION:-2.4.13}}"
 BIOME_BIN="/usr/local/bin/biome"
 
 if [[ "$VERSION" == "latest" ]]; then
