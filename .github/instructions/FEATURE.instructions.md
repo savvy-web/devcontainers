@@ -57,22 +57,27 @@ docs/features/<id>.md
 
 Run `pnpm run validate-feature <scope>/<id>` to check completeness.
 
-## `documentationURL` Must Match Actual Path
+## `documentationURL` Must Match Actual Doc File
 
 The `documentationURL` field in `devcontainer-feature.json` must always point
-to the correct doc file:
+to an existing file in `docs/features/`. The filename conventionally matches
+the feature `id`, but exceptions are allowed when a feature needs a
+disambiguated name (e.g. `claude-code-global.md` for `features/global/claude-code`).
 
 ```json
 "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/<id>.md"
 ```
 
-If the feature `id` is `my-tool`, the URL must end in `my-tool.md`. Never
-use a generic path or the homepage URL.
+Rules:
+- The URL must use the `https://github.com/savvy-web/devcontainers/blob/main/` prefix
+- The URL must resolve to an actual file in `docs/features/`
+- Never use a generic URL or the repository homepage
+- Run `pnpm run validate-feature <scope>/<id>` to verify the URL resolves
 
 ## Scope Assignment
 
-- `features/global/` — language-agnostic tools (Biome, Rust, Zig, act)
-- `features/node/` — Node.js ecosystem tools (pnpm, Claude Code)
+- `features/global/` — language-agnostic tools (Biome, Rust, Zig, act, Claude Code)
+- `features/node/` — Node.js ecosystem tools (pnpm)
 
 Place the feature in the scope that best matches its target runtime. When in
 doubt, use `global/`.

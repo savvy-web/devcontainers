@@ -68,4 +68,4 @@ jobs:
             exit 1
           fi
           chmod +x "$TEST_SCRIPT"
-          bash "$TEST_SCRIPT"
+          sudo bash "$TEST_SCRIPT"

@@ -181,6 +181,12 @@ fi
 # ── test.sh structural checks ─────────────────────────────────────────────────
 
 if [[ -f "$TEST_SH" ]]; then
+  if [[ -x "$TEST_SH" ]]; then
+    pass "test.sh is executable"
+  else
+    fail "test.sh is not executable (run: chmod +x ${TEST_SH})"
+  fi
+
   FIRST_LINE=$(head -1 "$TEST_SH")
   if [[ "$FIRST_LINE" == "#!/usr/bin/env bash" ]]; then
     pass "test.sh shebang is correct"
