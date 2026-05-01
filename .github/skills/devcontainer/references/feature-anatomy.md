@@ -181,6 +181,39 @@ biome --version
 
 Errors go to stderr (`>&2`). Info and success go to stdout.
 
+### User Environment Variables
+
+Feature scripts run as root. The devcontainer CLI injects these variables so
+scripts can transfer ownership or run commands as the actual container user:
+
+| Variable | Value |
+| :------- | :---- |
+| `_REMOTE_USER` | The `remoteUser` setting in `devcontainer.json`. If `remoteUser` is not set, this equals `_CONTAINER_USER`. This is the user VS Code / Codespaces will run as. |
+| `_CONTAINER_USER` | The container's user (set via `USER` in the Dockerfile, `user:` in `docker-compose.yml`, or `containerUser` in `devcontainer.json`). |
+| `_REMOTE_USER_HOME` | Home directory of `_REMOTE_USER`. |
+| `_CONTAINER_USER_HOME` | Home directory of `_CONTAINER_USER`. |
+
+**Use `_REMOTE_USER`** whenever you need to transfer ownership of a directory
+so the devcontainer user can write to it (e.g. `RUSTUP_HOME`, `CARGO_HOME`).
+Always guard for the unset and root cases:
+
+```bash
+REMOTE_USER="${_REMOTE_USER:-}"
+if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]] && id -u "$REMOTE_USER" &>/dev/null; then
+  chown -R "$REMOTE_USER" /some/dir
+  echo "[INFO] Transferred ownership to $REMOTE_USER."
+fi
+```
+
+This guard handles three edge cases:
+
+- `_REMOTE_USER` is unset (container doesn't use feature user env vars)
+- `_REMOTE_USER` is `root` (no chown needed; root already owns everything)
+- The user account doesn't exist yet at install time (defensive `id -u` check)
+
+For tools that install to system-wide paths owned by root (e.g.
+`/usr/local/bin/biome`), no chown is needed — the binary is world-executable.
+
 ### Idempotency Guard
 
 When re-running the installer would break an existing installation, guard it:

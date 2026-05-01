@@ -126,6 +126,10 @@ docs/
 - End with a validation step: `command -v <binary>` or `<binary> --version`
 - Print `[ERROR]` to stderr and `exit 1` on unrecoverable failures
 - Print `[INFO]` for progress steps
+- Use `_REMOTE_USER` (not `_CONTAINER_USER`) to transfer directory ownership to
+  the devcontainer user after installing to user-writable paths. Always guard
+  for the unset and root cases — see `references/feature-anatomy.md` §User
+  Environment Variables for the canonical pattern
 
 ### Feature Bootstrap Checklist
 
