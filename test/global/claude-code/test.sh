@@ -9,3 +9,5 @@ if ! command -v claude &>/dev/null; then
 fi
 
 claude --version
+
+echo "[PASS] Claude Code install test passed."

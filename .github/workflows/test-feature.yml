@@ -1,0 +1,46 @@
+name: Test Feature (Local)
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Feature scope (e.g. global, node)"
+        required: true
+        default: global
+      id:
+        description: "Feature id (e.g. biome, rust)"
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install feature
+        env:
+          FEATURE_SCOPE: ${{ inputs.scope }}
+          FEATURE_ID: ${{ inputs.id }}
+        run: |
+          INSTALL_SCRIPT="features/${FEATURE_SCOPE}/${FEATURE_ID}/install.sh"
+          if [[ ! -f "$INSTALL_SCRIPT" ]]; then
+            echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
+            exit 1
+          fi
+          chmod +x "$INSTALL_SCRIPT"
+          sudo bash "$INSTALL_SCRIPT"
+
+      - name: Run tests
+        env:
+          FEATURE_SCOPE: ${{ inputs.scope }}
+          FEATURE_ID: ${{ inputs.id }}
+        run: |
+          TEST_SCRIPT="test/${FEATURE_SCOPE}/${FEATURE_ID}/test.sh"
+          if [[ ! -f "$TEST_SCRIPT" ]]; then
+            echo "[ERROR] Test script not found: $TEST_SCRIPT" >&2
+            exit 1
+          fi
+          chmod +x "$TEST_SCRIPT"
+          sudo bash "$TEST_SCRIPT"

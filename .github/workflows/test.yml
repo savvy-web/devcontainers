@@ -6,17 +6,12 @@ on:
     #   branches: [main]
 
 jobs:
-  test-features:
+  collect:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        testdir:
-          - test/node/node-pnpm
-          - test/global/biome
-          - test/global/outbound-firewall
-          - test/node/claude-code
-          - test/global/rust
-          - test/global/zig
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.tests.outputs.matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -24,3 +19,53 @@ jobs:
       - name: Setup Runtime
         id: runtime
         uses: savvy-web/workflow-runtime-action@main
+
+      - name: Discover test directories
+        id: tests
+        run: |
+          matrix=$(node .github/scripts/collect-test-dirs.js)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  test-features:
+    needs: collect
+    if: ${{ needs.collect.outputs.matrix != '[]' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.collect.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Runtime
+        id: runtime
+        uses: savvy-web/workflow-runtime-action@main
+
+      - name: Install feature
+        env:
+          FEATURE_SCOPE: ${{ matrix.scope }}
+          FEATURE_ID: ${{ matrix.id }}
+        run: |
+          INSTALL_SCRIPT="features/${FEATURE_SCOPE}/${FEATURE_ID}/install.sh"
+          if [[ ! -f "$INSTALL_SCRIPT" ]]; then
+            echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
+            exit 1
+          fi
+          chmod +x "$INSTALL_SCRIPT"
+          sudo bash "$INSTALL_SCRIPT"
+
+      - name: Run tests
+        env:
+          FEATURE_SCOPE: ${{ matrix.scope }}
+          FEATURE_ID: ${{ matrix.id }}
+        run: |
+          TEST_SCRIPT="test/${FEATURE_SCOPE}/${FEATURE_ID}/test.sh"
+          if [[ ! -f "$TEST_SCRIPT" ]]; then
+            echo "[ERROR] Test script not found: $TEST_SCRIPT" >&2
+            exit 1
+          fi
+          chmod +x "$TEST_SCRIPT"
+          sudo bash "$TEST_SCRIPT"

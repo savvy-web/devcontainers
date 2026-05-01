@@ -1,173 +1,139 @@
-<!-- TODO: Rewrite this file for your package. See the lint-staged repo for a
-     good example: https://github.com/savvy-web/lint-staged/blob/main/CONTRIBUTING.md -->
-
+<!-- markdownlint-disable MD041 -->
 # Contributing
 
-Thank you for your interest in contributing to `@savvy-web/pnpm-module-template`!
-This document provides guidelines and instructions for development.
+Thank you for your interest in contributing to `savvy-web/devcontainers`!
 
-## Using This Template
-
-1. Click **Use this template** on GitHub to create a new repository
-2. Update `name`, `description`, `homepage`, and `repository` in `package.json`
-3. Replace the demo code in `src/lib/` with your implementation
-4. Update `README.md` and `CONTRIBUTING.md` for your package
-5. Run `pnpm install && pnpm test` to verify everything works
+This repository publishes composable devcontainer features to
+`ghcr.io/savvy-web/<id>`. Each feature is a self-contained directory with an
+install script, tests, and documentation.
 
 ## Prerequisites
 
 - Node.js 24+
 - pnpm 10+
+- Docker (for local feature testing with `act`)
+- `act` — install via the [`act` devcontainer feature](features/global/act/)
+  or from [nektosact.com](https://nektosact.com/installation/index.html)
 
 ## Development Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/savvy-web/pnpm-module-template.git
-cd pnpm-module-template
-
-# Install dependencies
+git clone https://github.com/savvy-web/devcontainers.git
+cd devcontainers
 pnpm install
-
-# Build the package
-pnpm run build
-
-# Run tests
-pnpm run test
 ```
 
 ## Project Structure
 
 ```text
-pnpm-module-template/
-├── src/                            # Source code
-│   ├── index.ts                    # Entry point — re-exports public API
-│   └── lib/                        # Implementation code
-├── __test__/                       # All test files
-│   ├── lib/                        # Mirrors src/lib/ structure
-│   └── utils/                      # Shared test helpers (excluded from discovery)
-├── lib/
-│   └── configs/                    # Shared configuration files
-└── dist/                           # Build output
-    ├── dev/                        # Development build
-    └── npm/                        # Production build for npm
+features/
+  global/   # Language-agnostic tools (Biome, Rust, Zig, act, …)
+  node/     # Node.js ecosystem tools (pnpm, …)
+
+test/
+  global/   # Mirrors features/global/
+  node/     # Mirrors features/node/
+
+docs/
+  features/ # One .md doc per feature, named by feature id
+
+scripts/
+  test-feature.sh     # Run a single feature's install + test locally
+  validate-feature.sh # Validate a feature's five-file completeness
+
+.github/
+  scripts/
+    collect-and-filter-features.js  # Builds publish matrix (skips already-published versions)
+    collect-test-dirs.js            # Builds test matrix from discovered test.sh files
+  workflows/
+    test.yml            # PR CI — auto-discovers and runs all feature tests
+    publish.yml         # Publish features to ghcr.io (manual trigger)
+    test-feature.yml    # Single-feature test via act (local use)
+    copilot-setup-steps.yml  # Copilot cloud agent environment setup
+  skills/
+    devcontainer/   # Devcontainer spec and repo conventions skill
+    github-actions/ # GitHub Actions workflow skill
+    new-feature/    # Scaffold a new feature (all five files)
+    bump-feature/   # Bump a feature version atomically
+    debug-feature/  # Diagnose failing install.sh or test.sh
 ```
+
+## Creating a New Feature
+
+Every feature requires exactly five files:
+
+```text
+features/<scope>/<id>/devcontainer-feature.json
+features/<scope>/<id>/install.sh
+test/<scope>/<id>/test.sh
+test/<scope>/<id>/scenarios.json
+docs/features/<id>.md
+```
+
+Use the `new-feature` Copilot skill for guided scaffolding, or create the
+files manually following the conventions in
+`.github/skills/devcontainer/references/feature-anatomy.md`.
+
+After creating the files, run the validation script:
+
+```bash
+pnpm run validate-feature global/my-feature
+```
+
+And optionally run the full install + test cycle locally (requires Docker and
+`act`):
+
+```bash
+pnpm run test:feature global/my-feature
+```
+
+## Bumping a Feature Version
+
+The publish workflow skips features whose `id:version` OCI image already
+exists in the registry. You must bump the version whenever the feature's
+behavior changes.
+
+Always update all version references together:
+
+1. `"version"` in `devcontainer-feature.json`
+2. `grep "<version>"` assertions in `test.sh` (if tool default changed)
+3. Version string in `docs/features/<id>.md` usage snippet
+4. Option default in `devcontainer-feature.json` (if pinned tool version
+   changed)
+
+Use the `bump-feature` Copilot skill for a guided checklist.
 
 ## Available Scripts
 
 | Script | Description |
-| --- | --- |
-| `pnpm run build` | Build all outputs (dev + prod) |
-| `pnpm run build:dev` | Build development output only |
-| `pnpm run build:prod` | Build production output only |
-| `pnpm run test` | Run all tests with coverage |
-| `pnpm run test:watch` | Run tests in watch mode |
-| `pnpm run lint` | Check code with Biome |
+| :----- | :---------- |
+| `pnpm run test:feature <scope>/<id>` | Run install + test for one feature locally via act |
+| `pnpm run validate-feature <scope>/<id>` | Check five-file completeness and structural correctness |
+| `pnpm run lint` | Lint JS/TS/JSON files with Biome |
 | `pnpm run lint:fix` | Auto-fix lint issues |
-| `pnpm run lint:md` | Check markdown with markdownlint |
-| `pnpm run typecheck` | Type-check with tsgo |
+| `pnpm run lint:md` | Lint Markdown files with markdownlint |
 
-To run a specific test file:
+## Commit Format
 
-```bash
-pnpm vitest run __test__/index.test.ts
-```
-
-## Code Quality
-
-This project uses:
-
-- **Biome** for linting and formatting
-- **Commitlint** for enforcing conventional commits
-- **Husky** for Git hooks
-- **markdownlint-cli2** for markdown linting
-- **tsgo** (native TypeScript) for type checking
-
-### Commit Format
-
-All commits must follow the [Conventional Commits](https://conventionalcommits.org)
-specification and include a DCO signoff:
+All commits must follow [Conventional Commits](https://conventionalcommits.org)
+and include a DCO signoff:
 
 ```text
-feat: add new feature
+feat(global/biome): bump default version to 2.5.0
 
 Signed-off-by: Your Name <your.email@example.com>
 ```
 
-### Pre-commit Hooks
-
-The following checks run automatically:
-
-- **pre-commit**: Runs lint-staged
-- **commit-msg**: Validates commit message format
-- **pre-push**: Runs tests
-
-## Testing
-
-Tests use [Vitest](https://vitest.dev) with v8 coverage configured via
-`@savvy-web/vitest`.
-
-```bash
-# Run all tests
-pnpm run test
-
-# Run tests in watch mode
-pnpm run test:watch
-
-# Run a specific test file
-pnpm vitest run __test__/index.test.ts
-
-# Run tests matching a pattern
-pnpm vitest run -t "Greeter"
-```
-
-Test files are classified by suffix:
-
-| Suffix | Kind |
-| --- | --- |
-| `.test.ts` | unit |
-| `.e2e.test.ts` | e2e |
-| `.int.test.ts` | integration |
-
-## TypeScript
-
-- Uses `tsgo` (native TypeScript) for type checking
-- Strict mode enabled
-- Import extensions required (`.js` for ESM)
-
-### Import Conventions
-
-```typescript
-// Use .js extensions for relative imports (ESM requirement)
-import { myFunction } from "./lib/helpers.js";
-
-// Use node: protocol for Node.js built-ins
-import { readFileSync } from "node:fs";
-
-// Separate type imports from value imports
-import type { MyType } from "./lib/types.js";
-import { MyClass } from "./lib/types.js";
-```
-
-### TSDoc Requirements
-
-All exported classes, functions, and interfaces must have TSDoc documentation.
-See `src/lib/greeter.ts` for a complete example demonstrating:
-
-- `@public` / `@internal` API boundary markers
-- `@remarks` and `@privateRemarks` for detailed context
-- `@link` and `@see` for cross-references
-- `@example` blocks with complete, importable TypeScript programs
+Valid commit types: `feat`, `fix`, `chore`, `docs`, `ci`, `build`,
+`test`, `refactor`, `perf`, `style`, `revert`, `ai`, `release`.
 
 ## Submitting Changes
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Make your changes
-4. Run tests: `pnpm run test`
-5. Run linting: `pnpm run lint:fix`
-6. Commit with conventional format and DCO signoff
-7. Push and open a pull request
+3. Run `pnpm run validate-feature <scope>/<id>` to check your files
+4. Commit with conventional format and DCO signoff
+5. Push and open a pull request
 
 ## License
 
