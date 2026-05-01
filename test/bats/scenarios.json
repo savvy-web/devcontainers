@@ -1,1 +1,14 @@
-{}
+{
+	"verify_assert": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"bats": {}
+		}
+	},
+	"verify_mock": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"bats": {}
+		}
+	}
+}
