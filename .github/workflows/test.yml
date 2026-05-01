@@ -41,6 +41,8 @@ jobs:
       #   uses: savvy-web/workflow-runtime-action@main
 
       - name: Install feature
+        id: install
+        continue-on-error: true
         env:
           FEATURE_ID: ${{ matrix.id }}
         run: |
@@ -50,9 +52,12 @@ jobs:
             exit 1
           fi
           chmod +x "$INSTALL_SCRIPT"
-          sudo bash "$INSTALL_SCRIPT"
+          sudo bash "$INSTALL_SCRIPT" 2>&1 | tee /tmp/install.log
 
       - name: Run tests
+        id: test
+        continue-on-error: true
+        if: steps.install.outcome == 'success'
         env:
           FEATURE_ID: ${{ matrix.id }}
         run: |
@@ -62,4 +67,66 @@ jobs:
             exit 1
           fi
           chmod +x "$TEST_SCRIPT"
-          sudo bash "$TEST_SCRIPT"
+          sudo bash "$TEST_SCRIPT" 2>&1 | tee /tmp/test.log
+
+      - name: Write step summary
+        if: always()
+        run: |
+          {
+            echo "## ${{ matrix.id }}"
+            echo ""
+            if [[ "${{ steps.install.outcome }}" == "failure" ]]; then
+              echo "❌ **Install failed**"
+              echo ""
+              echo "<details><summary>Install log</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/install.log 2>/dev/null || echo "No install log captured"
+              echo '```'
+              echo "</details>"
+            elif [[ "${{ steps.test.outcome }}" == "failure" ]]; then
+              echo "✅ Install succeeded — ❌ **Test failed**"
+              echo ""
+              echo "<details><summary>Install log</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/install.log 2>/dev/null || echo "No install log captured"
+              echo '```'
+              echo "</details>"
+              echo ""
+              echo "<details><summary>Test log</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/test.log 2>/dev/null || echo "No test log captured"
+              echo '```'
+              echo "</details>"
+            else
+              echo "✅ Install and test passed"
+              echo ""
+              echo "<details><summary>Install log</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/install.log 2>/dev/null || echo "No install log captured"
+              echo '```'
+              echo "</details>"
+              echo ""
+              echo "<details><summary>Test log</summary>"
+              echo ""
+              echo '```'
+              cat /tmp/test.log 2>/dev/null || echo "No test log captured"
+              echo '```'
+              echo "</details>"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail if install failed
+        if: steps.install.outcome == 'failure'
+        run: |
+          echo "::error::Install failed for ${{ matrix.id }}. See step summary for details."
+          exit 1
+
+      - name: Fail if test failed
+        if: steps.test.outcome == 'failure'
+        run: |
+          echo "::error::Test failed for ${{ matrix.id }}. See step summary for details."
+          exit 1
