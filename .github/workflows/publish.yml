@@ -44,6 +44,7 @@ jobs:
       #   uses: savvy-web/workflow-runtime-action@main
       - name: Install feature
         id: install
+        timeout-minutes: 3
         continue-on-error: true
         env:
           FEATURE_ID: ${{ matrix.id }}
@@ -57,6 +58,7 @@ jobs:
           sudo bash "$INSTALL_SCRIPT" 2>&1 | tee /tmp/install.log
       - name: Test Feature
         id: test
+        timeout-minutes: 3
         continue-on-error: true
         run: |
           chmod +x test/${{ matrix.id }}/test.sh

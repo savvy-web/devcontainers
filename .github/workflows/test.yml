@@ -42,6 +42,7 @@ jobs:
 
       - name: Install feature
         id: install
+        timeout-minutes: 3
         continue-on-error: true
         env:
           FEATURE_ID: ${{ matrix.id }}
@@ -56,6 +57,7 @@ jobs:
 
       - name: Run tests
         id: test
+        timeout-minutes: 3
         continue-on-error: true
         if: steps.install.outcome == 'success'
         env:
