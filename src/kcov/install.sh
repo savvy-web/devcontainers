@@ -50,7 +50,8 @@ make install
 
 echo "[INFO] Removing build-only dependencies..."
 apt-get purge -y "${BUILD_DEPS[@]}"
-apt-get autoremove -y
+# intentionally no autoremove — transitive runtime libraries installed alongside
+# the -dev packages (libdw1, libssl3, libcurl4, etc.) must remain for kcov to run
 rm -rf /var/lib/apt/lists/*
 
 # Validate install
