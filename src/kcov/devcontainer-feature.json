@@ -1,0 +1,17 @@
+{
+	"id": "kcov",
+	"version": "0.1.0",
+	"name": "kcov",
+	"description": "Builds and installs kcov from source for shell script and binary code coverage.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/kcov.md",
+	"options": {
+		"kcovVersion": {
+			"type": "string",
+			"default": "43",
+			"description": "kcov version to install. Accepts with or without a leading 'v' (e.g. '43' or 'v43'). Use 'latest' to auto-detect the latest stable release."
+		}
+	},
+	"installsAfter": [],
+	"platforms": ["linux"],
+	"keywords": ["kcov", "coverage", "bash", "shell", "testing"]
+}
