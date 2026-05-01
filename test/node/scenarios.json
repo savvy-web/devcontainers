@@ -1,16 +1,1 @@
-[
-	{
-		"name": "Default install",
-		"options": {},
-		"expect": {
-			"cli": "node --version | grep 24.11.0"
-		}
-	},
-	{
-		"name": "Install pinned version",
-		"options": { "nodeVersion": "24.11.0" },
-		"expect": {
-			"cli": "node --version | grep 24.11.0"
-		}
-	}
-]
+{}

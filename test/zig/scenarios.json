@@ -1,12 +1,10 @@
-[
-	{
-		"name": "Default install (0.12.0)",
-		"options": {},
-		"validate": ["zig version | grep 0.12.0"]
-	},
-	{
-		"name": "Install master build",
-		"options": { "zigVersion": "master" },
-		"validate": ["zig version"]
+{
+	"explicit_version": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"zig": {
+				"zigVersion": "0.13.0"
+			}
+		}
 	}
-]
+}

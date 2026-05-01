@@ -1,6 +1,10 @@
-[
-	{
-		"name": "Biome global install",
-		"steps": ["Install feature", "Check Biome version is 2.4.13"]
+{
+	"install_custom_version": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"biome": {
+				"biomeVersion": "2.4.12"
+			}
+		}
 	}
-]
+}

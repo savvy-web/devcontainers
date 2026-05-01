@@ -1,26 +1,20 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# This test file is executed against an auto-generated devcontainer that
+# installs the 'homebrew' feature as root (_REMOTE_USER=root). In that
+# case, install.sh creates a dedicated 'linuxbrew' account and installs
+# Homebrew under /home/linuxbrew/.linuxbrew.
+#
+# Run with:
+#   devcontainer features test -f homebrew --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-# Test: Homebrew global feature
-# Homebrew refuses to run as root; verify via the install user
+set -e
 
-BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+source dev-container-features-test-lib
 
-if [[ ! -x "$BREW_PREFIX/bin/brew" ]]; then
-  echo "[FAIL] brew binary not found at $BREW_PREFIX/bin/brew" >&2
-  exit 1
-fi
+BREW_BIN="/home/linuxbrew/.linuxbrew/bin/brew"
 
-# Mirror the install.sh user selection: prefer _REMOTE_USER when set and
-# non-root, otherwise fall back to the dedicated linuxbrew account.
-BREW_USER="${_REMOTE_USER:-}"
-if [[ -z "$BREW_USER" || "$BREW_USER" == "root" ]]; then
-  BREW_USER="linuxbrew"
-fi
+check "brew binary exists" test -x "$BREW_BIN"
+check "brew runs via linuxbrew user" bash -c "su - linuxbrew -s /bin/bash -c '/home/linuxbrew/.linuxbrew/bin/brew --version' | grep Homebrew"
 
-# Run brew as the install user (brew refuses to run as root)
-su - "$BREW_USER" -s /bin/bash -c "$BREW_PREFIX/bin/brew --version" \
-  | grep Homebrew \
-  || { echo "[FAIL] brew --version did not output expected Homebrew version string" >&2; exit 1; }
-
-echo "[PASS] Homebrew installed and working."
+reportResults

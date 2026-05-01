@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# This test file is executed against an auto-generated devcontainer that
+# installs the 'act' feature with default options (actVersion=0.2.76).
+#
+# Run with:
+#   devcontainer features test -f act --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-act --version || { echo "[FAIL] act not found in PATH" >&2; exit 1; }
-act --version | grep "0.2.76" || { echo "[FAIL] act version mismatch" >&2; exit 1; }
-echo "[PASS] act install test passed."
+set -e
+
+source dev-container-features-test-lib
+
+check "act is installed" act --version
+check "act default version is 0.2.76" bash -c "act --version | grep '0.2.76'"
+
+reportResults

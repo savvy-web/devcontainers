@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# This test file is executed against an auto-generated devcontainer that
+# installs the 'zig' feature with default options (zigVersion=0.12.0).
+#
+# Run with:
+#   devcontainer features test -f zig --skip-scenarios \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu .
 
-# Test: Zig compiler install
-zig version | grep "0.12.0" || { echo "[FAIL] Zig version mismatch" >&2; exit 1; }
+set -e
 
-echo "[PASS] Zig install test passed."
+source dev-container-features-test-lib
+
+check "zig is installed" zig version
+check "zig default version is 0.12.0" bash -c "zig version | grep '0.12.0'"
+
+reportResults

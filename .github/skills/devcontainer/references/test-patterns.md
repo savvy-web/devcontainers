@@ -1,7 +1,10 @@
 # Test Patterns
 
-Reference for the two-file test convention used in this repository:
-`test.sh` and `scenarios.json`.
+Reference for the three-file test convention used in this repository,
+following the official `devcontainer features test` CLI pattern:
+`test.sh`, `scenarios.json`, and per-scenario `<name>.sh` scripts.
+
+See also: [devcontainer features test CLI docs](https://github.com/devcontainers/cli/blob/main/docs/features/test.md)
 
 ## File Locations
 
@@ -11,191 +14,205 @@ directory structure:
 ```text
 test/
   <id>/
-    test.sh        # shell assertions (executable bit set by Husky/CI, not committed)
-    scenarios.json # human-readable scenario descriptions
+    test.sh                # auto-generated default test (default options)
+    scenarios.json         # map of scenario names → devcontainer.json fragments
+    <scenario_name>.sh     # one assertion script per entry in scenarios.json
 ```
 
-Both files are required. The CI publish workflow discovers tests by resolving
-`test/<id>/test.sh` from the feature id.
+`test.sh` and `scenarios.json` are always required (five-file rule). Each key
+in `scenarios.json` requires a matching `<key>.sh` assertion script.
 
-## `scenarios.json`
+## `test.sh` — Default (Auto-Generated) Test
 
-An array of scenario objects. Each object describes one logical test scenario.
-
-### Schema
-
-```json
-[
-  {
-    "name": "Human-readable scenario name",
-    "steps": [
-      "Step one description",
-      "Step two description"
-    ]
-  }
-]
-```
-
-### Rules
-
-- At least one scenario per feature
-- `name` — short, title-case, describes what the scenario verifies
-- `steps` — ordered list of what the test checks; mirrors the assertions in
-  `test.sh`
-- Not executed by CI — this file is documentation and a checklist for humans
-  reviewing the test
-
-### Example
-
-```json
-[
-  {
-    "name": "Biome global install",
-    "steps": ["Install feature", "Check Biome version is 2.4.12"]
-  }
-]
-```
-
-## `test.sh`
-
-An executable Bash script that runs assertions after the feature is installed
-in the devcontainer. The executable bit is set by Husky (locally) and by CI
-workflows — scripts are stored in git without the bit (`100644`).
+The auto-generated test builds a container that installs the feature with
+**default options** and then runs `test.sh` inside it. It must use
+`dev-container-features-test-lib` for `check` and `reportResults`.
 
 ### Structure
 
 ```bash
 #!/usr/bin/env bash
-set -euo pipefail
+# Brief comment describing what this test verifies
+set -e
 
-# Assertion 1: binary is in PATH
-<binary> --version || { echo "[FAIL] <binary> not found" >&2; exit 1; }
+# Import test library provided by the devcontainer CLI
+source dev-container-features-test-lib
 
-# Assertion 2: version matches the pinned default
-<binary> --version | grep "<expected-version>" \
-  || { echo "[FAIL] <binary> version mismatch" >&2; exit 1; }
+check "binary is installed" <binary> --version
+check "version matches default" bash -c "<binary> --version | grep '<default-version>'"
 
-echo "[PASS] <Feature name> test passed."
+reportResults
 ```
 
 ### Rules
 
-- `#!/usr/bin/env bash` + `set -euo pipefail` — same as `install.sh`
-- One assertion per binary or property to verify
-- Use `|| { echo "[FAIL] <message>" >&2; exit 1; }` to emit a clear failure
-  message before exiting
-- Print `[PASS]` at the end so CI logs show a clear success marker
-- Version assertions must use `grep` against the exact default version string
-  defined in `devcontainer-feature.json`
+- `#!/usr/bin/env bash` + `set -e` (not `set -euo pipefail` — the test lib
+  uses unset variables internally)
+- `source dev-container-features-test-lib` before any `check` calls
+- `check "<LABEL>" <cmd> [args...]` — runs the command; records pass/fail
+  based on exit code; always returns 0 so the script continues on failure
+- For output-content checks, wrap in `bash -c "cmd | grep 'pattern'"`
+- `reportResults` at the end — prints the summary and exits non-zero if any
+  `check` failed
 - Keep tests fast — no network calls, no compilation, no side effects
-
-### What to Test
-
-| Check | Example assertion |
-| :---- | :---------------- |
-| Binary exists in `$PATH` | `command -v biome` or `biome --version` |
-| Version matches pinned default | `biome --version \| grep "2.4.12"` |
-| Key subcommand available | `cargo --version`, `rustc --version` |
-
-### What Not to Test
-
-- Full functional behavior (e.g. linting a real file, compiling code)
-- Network connectivity or registry access
-- Side effects of options other than the default
-
-Functional tests belong in integration test suites, not in feature tests.
-Keep feature tests hermetic and fast.
 
 ### Example: Biome
 
 ```bash
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
+source dev-container-features-test-lib
 
-# Test: Biome global install
-biome --version | grep "2.3.14" || { echo "[FAIL] Biome version mismatch" >&2; exit 1; }
-echo "[PASS] Biome global install test passed."
+check "biome is installed" biome --version
+check "biome default version is 2.4.13" bash -c "biome --version | grep '2.4.13'"
+
+reportResults
 ```
 
-### Example: Rust (multiple binaries)
+## `scenarios.json` — Scenario Definitions
+
+A JSON **object** (not array) where each key is a scenario name and the value
+is a `devcontainer.json` fragment. The scenario name also serves as the
+filename for the assertion script that runs inside the built container.
+
+### Schema
+
+```json
+{
+  "<scenario_name>": {
+    "image": "<base-image>",
+    "features": {
+      "<feature-id>": { "<option>": "<value>" }
+    },
+    "remoteUser": "<optional-non-root-user>"
+  }
+}
+```
+
+### Rules
+
+- Keys are `snake_case` scenario names — they become assertion script filenames
+- Each scenario must have a matching `<scenario_name>.sh` assertion script
+- Use `"image": "mcr.microsoft.com/devcontainers/base:ubuntu"` as the default
+  base image (provides a `vscode` non-root user and common tools)
+- To test a feature with a non-root `remoteUser`, set `"remoteUser": "vscode"` —
+  the `_REMOTE_USER` env var will be `vscode` during install
+- To test a feature that depends on another local feature (e.g. `package-manager`
+  requires `node`), list both in `"features"` using short IDs (`"node"` maps to
+  `./src/node`)
+- Use `{}` when there are no meaningful option variants to test
+
+### Example: biome
+
+```json
+{
+  "install_custom_version": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "biome": { "biomeVersion": "2.4.12" }
+    }
+  }
+}
+```
+
+### Example: package-manager (cross-feature dependency)
+
+```json
+{
+  "explicit_pnpm": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "node": {},
+      "package-manager": { "packageManager": "pnpm@10.20.0" }
+    }
+  }
+}
+```
+
+## `<scenario_name>.sh` — Scenario Assertion Scripts
+
+One script per key in `scenarios.json`. Same structure as `test.sh`, but
+assertions verify the scenario's specific options rather than defaults.
+
+### Example: `install_custom_version.sh`
 
 ```bash
 #!/usr/bin/env bash
-set -euo pipefail
+# Scenario: install a non-default biome version (biomeVersion=2.4.12)
+set -e
+source dev-container-features-test-lib
 
-# Test: Rust toolchain install
-rustc --version || { echo "[FAIL] rustc not found" >&2; exit 1; }
-cargo --version || { echo "[FAIL] cargo not found" >&2; exit 1; }
-echo "[PASS] Rust toolchain install test passed."
+check "biome is installed" biome --version
+check "custom biome version is 2.4.12" bash -c "biome --version | grep '2.4.12'"
+
+reportResults
 ```
+
+## Running Tests
+
+### `devcontainer features test` CLI modes
+
+| Mode | CLI flags | What it does |
+| :--- | :-------- | :----------- |
+| Auto-generated | (default) | Builds a container with the feature at default options; runs `test.sh` |
+| Scenarios | (default) | Builds one container per entry in `scenarios.json`; runs `<name>.sh` |
+| Skip auto-gen | `--skip-autogenerated` | Runs only scenario tests |
+| Skip scenarios | `--skip-scenarios` | Runs only the auto-generated test |
+
+`--skip-duplicated` is always passed to skip the duplicate-install stress test
+(no `duplicate.sh` files exist in this repo).
+
+### Local testing
+
+```bash
+# Test a single feature (all modes: auto-generated + scenarios)
+pnpm run test:feature biome
+
+# Runs:
+#   devcontainer features test -f biome \
+#     -i mcr.microsoft.com/devcontainers/base:ubuntu \
+#     --skip-duplicated .
+```
+
+Requires Docker and `@devcontainers/cli` (`npm install -g @devcontainers/cli`).
+
+### Features with local `installsAfter` dependencies
+
+`package-manager` declares `"installsAfter": ["ghcr.io/savvy-web/node"]`.
+Because the auto-generated test only installs the tested feature, `corepack`
+would be missing. `scripts/test-feature.sh` and `test.yml` detect this by
+reading `installsAfter` and automatically add `--skip-autogenerated` for such
+features. Scenarios for these features explicitly list the required dependency
+in their `"features"` map.
 
 ## CI Integration
 
-The `.github/workflows/publish.yml` workflow runs tests as follows:
+`test.yml` (PR CI) runs `devcontainer features test` per feature:
 
-1. **`collect`** job — `collect-and-filter-features.js` builds a JSON matrix
-   of features not yet published at their current version
-2. **`test`** job — fan-out matrix job that runs
-   `test/<id>/test.sh` for each feature in the matrix
-3. Result is written to `/tmp/results/<id>.txt` as `success` or
-   `failure` and uploaded as an artifact named `test-result-<id>`
-4. **`summarize`** job — downloads all result artifacts, writes a Markdown
-   table to `$GITHUB_STEP_SUMMARY`, and fails (blocking publish) if any test
-   failed
+1. **`discover`** job — scans `src/` and `test/` to build a dynamic matrix of
+   `[{ id, skipAutogenerated }]` entries; `skipAutogenerated` is `true` when
+   `installsAfter` references a local `ghcr.io/savvy-web/` feature
+2. **`test`** job — fan-out matrix; installs `@devcontainers/cli`; runs
+   `devcontainer features test -f <id> -i <base-image> [--skip-autogenerated] --skip-duplicated .`
+3. Output is collected per job with `::group::` for the test log and written
+   to `$GITHUB_STEP_SUMMARY` — each feature gets a `✅` or `❌` heading
 
-### Implications for Test Authors
+The `publish.yml` test job follows the same pattern before publishing to GHCR.
 
-- A non-zero exit code from `test.sh` is treated as a test failure
-- The test script runs inside the devcontainer that has the feature installed
-- There is no test framework — plain Bash assertions with `exit 1` on failure
-- The test must be self-contained; it cannot rely on files from the repo
-  unless they are copied in as part of the feature install
+## What to Test
 
-## Local Testing with act
+| Check | Example assertion |
+| :---- | :---------------- |
+| Binary exists in `$PATH` | `check "binary is installed" <binary> --version` |
+| Version matches pinned default | `check "version is X" bash -c "<binary> --version \| grep 'X'"` |
+| Key subcommand available | `check "cargo is installed" cargo --version` |
+| File exists at expected path | `check "binary exists" test -x "/path/to/binary"` |
 
-The repo provides a dedicated workflow and wrapper script for running a single
-feature's install + test cycle locally using
-[act](https://nektosact.com).
+## What Not to Test
 
-### Prerequisites
+- Full functional behavior (e.g. linting a real file, compiling code)
+- Network connectivity or registry access after install
+- Side effects of options that are already tested by the default
 
-- Docker running locally
-- `act` installed — add `ghcr.io/savvy-web/act:0.1.0` to your
-  `devcontainer.json`, or install via the
-  [act installation guide](https://nektosact.com/installation/index.html)
-
-### Running a single feature test
-
-```bash
-pnpm run test:feature biome
-pnpm run test:feature rust
-pnpm run test:feature package-manager
-```
-
-Running without arguments prints available features.
-
-### How it works
-
-`scripts/test-feature.sh` calls `act workflow_dispatch` targeting
-`.github/workflows/test-feature.yml` — a minimal workflow that:
-
-1. Checks out the repo (using the local bind-mount from `.actrc`)
-2. Runs `src/<id>/install.sh` inside a fresh ubuntu container
-3. Runs `test/<id>/test.sh` in the same container
-
-The `.actrc` at the repo root configures act to:
-
-- Use `catthehacker/ubuntu:act-latest` as the ubuntu-latest runner image
-- Bind-mount the local workspace (no network clone, much faster)
-- Remove the container after each run (`--rm`)
-
-### Debugging a failing test
-
-If `test.sh` fails, re-run with act's verbose flag to see the full output:
-
-```bash
-act workflow_dispatch \
-  --input id=biome \
-  -W .github/workflows/test-feature.yml \
-  --verbose
-```
+Functional tests belong in integration test suites, not in feature tests.
+Keep feature tests hermetic and fast.
