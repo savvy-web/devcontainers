@@ -5,15 +5,32 @@ set -euo pipefail
 # Installs Homebrew if not already present (macOS/Linux)
 # Idempotent: skips install if brew is already available
 
-BREW_PREFIX="/home/linuxbrew/.linuxbrew"
 BREW_USER="linuxbrew"
+OS=$(uname -s)
+ARCH=$(uname -m)
+
+# Determine the Homebrew prefix based on OS and architecture
+if [[ "$OS" == "Darwin" ]]; then
+  if [[ "$ARCH" == "arm64" ]]; then
+    BREW_PREFIX="/opt/homebrew"
+  else
+    BREW_PREFIX="/usr/local"
+  fi
+else
+  BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+fi
 
 if [[ -x "$BREW_PREFIX/bin/brew" ]]; then
   echo "[INFO] Homebrew is already installed at $BREW_PREFIX/bin/brew"
+  # Ensure linuxbrew user and profile.d entry are present even on idempotent runs
+  if [[ "$OS" != "Darwin" ]]; then
+    useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
+    echo "eval \"\$($BREW_PREFIX/bin/brew shellenv)\"" > /etc/profile.d/homebrew.sh
+  fi
   exit 0
 fi
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
+if [[ "$OS" == "Darwin" ]]; then
   echo "[INFO] Installing Homebrew for macOS..."
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else

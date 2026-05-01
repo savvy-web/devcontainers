@@ -6,6 +6,11 @@ set -euo pipefail
 
 VERSION="${VERSION:-latest}"
 
+if ! command -v npm &>/dev/null; then
+  echo "[ERROR] npm is required but not found in PATH. Install Node.js before using this feature." >&2
+  exit 1
+fi
+
 if [[ "$VERSION" == "latest" ]]; then
   npm install -g @anthropic-ai/claude-code
 else

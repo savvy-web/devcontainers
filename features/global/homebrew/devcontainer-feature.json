@@ -1,6 +1,7 @@
 {
 	"id": "homebrew",
 	"version": "0.1.1",
+	"name": "Homebrew",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/homebrew.md",
 	"description": "Installs Homebrew (macOS/Linux) globally. Skips if already installed.",
 	"options": {},
