@@ -3,4 +3,4 @@ set -euo pipefail
 
 zig version
 
-echo "[SUCCESS] Zig validated."
+echo "[PASS] Zig install test passed."

@@ -9,3 +9,5 @@ if ! command -v pnpm &>/dev/null; then
 fi
 
 pnpm --version
+
+echo "[PASS] Node.js + pnpm install test passed."

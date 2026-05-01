@@ -1,7 +1,9 @@
 # Copilot Setup Steps
 #
-# This workflow dynamically determines Node.js and pnpm versions from package.json (devEngines)
-# and sets up the environment for Copilot cloud agent sessions.
+# Prepares the environment for Copilot cloud agent sessions working on this
+# repository. Installs Node.js, pnpm, the devcontainer CLI, and shellcheck so
+# the agent can run scripts/validate-feature.sh and pnpm run lint without
+# manual setup.
 
 name: "Copilot Setup Steps"
 on:
@@ -25,3 +27,18 @@ jobs:
       - name: Setup Runtime
         id: runtime
         uses: savvy-web/workflow-runtime-action@main
+
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y shellcheck
+
+      - name: Verify tools
+        run: |
+          node --version
+          pnpm --version
+          devcontainer --version
+          shellcheck --version

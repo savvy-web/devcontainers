@@ -1,26 +1,10 @@
-{
-	"scenarios": [
-		{
-			"name": "Homebrew is installed if not present",
-			"steps": [
-				{
-					"command": "brew --version",
-					"expect": "Homebrew"
-				}
-			]
-		},
-		{
-			"name": "Homebrew is idempotent",
-			"steps": [
-				{
-					"command": "brew --version",
-					"expect": "Homebrew"
-				},
-				{
-					"command": "/bin/bash features/global/homebrew/install.sh",
-					"expect": "already installed"
-				}
-			]
-		}
-	]
-}
+[
+	{
+		"name": "Homebrew is installed if not present",
+		"steps": ["Install feature", "Check brew --version outputs 'Homebrew'"]
+	},
+	{
+		"name": "Homebrew is idempotent",
+		"steps": ["Install feature a second time", "Verify install.sh exits cleanly"]
+	}
+]
