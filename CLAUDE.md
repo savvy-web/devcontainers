@@ -29,8 +29,8 @@ name when the task matches:
 
 ```text
 features/
-  global/   # Language-agnostic tools (Biome, Rust, Zig, act, outbound-firewall)
-  node/     # Node.js ecosystem tools (pnpm, Claude Code)
+  global/   # Language-agnostic tools (Biome, Rust, Zig, act, outbound-firewall, Claude Code)
+  node/     # Node.js ecosystem tools (pnpm)
 
 test/
   global/   # Mirrors features/global/ — test.sh + scenarios.json per feature

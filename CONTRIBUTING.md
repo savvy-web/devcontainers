@@ -28,7 +28,7 @@ pnpm install
 ```text
 features/
   global/   # Language-agnostic tools (Biome, Rust, Zig, act, …)
-  node/     # Node.js ecosystem tools (pnpm, Claude Code, …)
+  node/     # Node.js ecosystem tools (pnpm, …)
 
 test/
   global/   # Mirrors features/global/
