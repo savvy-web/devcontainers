@@ -25,19 +25,15 @@ if [[ "$VERSION" == "latest" ]]; then
   echo "[INFO] Latest stable kcov version: ${VERSION}"
 fi
 
+BUILD_DEPS=(
+  cmake gcc g++ git python3
+  libssl-dev binutils-dev libdw-dev libcurl4-openssl-dev
+  zlib1g-dev pkg-config
+)
+
 echo "[INFO] Installing kcov ${VERSION} build dependencies..."
 apt-get update -y
-apt-get install -y --no-install-recommends \
-  cmake \
-  gcc \
-  g++ \
-  libssl-dev \
-  binutils-dev \
-  libdw-dev \
-  libcurl4-openssl-dev \
-  zlib1g-dev \
-  pkg-config \
-  git
+apt-get install -y --no-install-recommends "${BUILD_DEPS[@]}"
 
 echo "[INFO] Building kcov v${VERSION} from source..."
 TMPDIR=$(mktemp -d)
@@ -49,8 +45,13 @@ git clone --depth 1 --branch "v${VERSION}" \
 mkdir "$TMPDIR/kcov/build"
 cd "$TMPDIR/kcov/build"
 cmake ..
-make
+make -j"$(nproc)"
 make install
+
+echo "[INFO] Removing build-only dependencies..."
+apt-get purge -y "${BUILD_DEPS[@]}"
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
 
 # Validate install
 if ! command -v kcov &>/dev/null; then

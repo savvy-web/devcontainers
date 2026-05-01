@@ -33,6 +33,7 @@ echo "[INFO] Installing bats-support v${BATS_SUPPORT_VER}..."
 git clone --depth 1 --branch "v${BATS_SUPPORT_VER}" \
   https://github.com/bats-core/bats-support.git "$TMPDIR/bats-support"
 mkdir -p /usr/local/lib/bats-support
+rm -rf "$TMPDIR/bats-support/.git"
 cp -r "$TMPDIR/bats-support/." /usr/local/lib/bats-support/
 
 # Install bats-assert
@@ -40,6 +41,7 @@ echo "[INFO] Installing bats-assert v${BATS_ASSERT_VER}..."
 git clone --depth 1 --branch "v${BATS_ASSERT_VER}" \
   https://github.com/bats-core/bats-assert.git "$TMPDIR/bats-assert"
 mkdir -p /usr/local/lib/bats-assert
+rm -rf "$TMPDIR/bats-assert/.git"
 cp -r "$TMPDIR/bats-assert/." /usr/local/lib/bats-assert/
 
 # Install bats-mock
@@ -57,6 +59,11 @@ if [[ ! -f /usr/local/lib/bats-mock/load.bash ]]; then
   printf 'source "$(dirname "${BASH_SOURCE[0]}")/stub.bash"\n' \
     > /usr/local/lib/bats-mock/load.bash
 fi
+
+echo "[INFO] Removing git (build-only dependency)..."
+apt-get purge -y git
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
 
 # Validate install
 if ! command -v bats &>/dev/null; then
