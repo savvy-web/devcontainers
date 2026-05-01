@@ -1,8 +1,8 @@
 {
 	"id": "claude-code",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"name": "Claude Code Agent",
-	"description": "Installs the Claude Code CLI agent globally using the official native installer.",
+	"description": "Installs the Claude Code CLI agent globally via the official npm package (@anthropic-ai/claude-code).",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/claude-code.md",
 	"options": {
 		"version": {

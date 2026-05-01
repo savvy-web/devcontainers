@@ -8,8 +8,8 @@ PNPM_VERSION=${PNPM_VERSION:-}
 
 # If PNPM_VERSION is not set, try to detect from package.json
 if [[ -z "$PNPM_VERSION" ]]; then
-  if [[ -f /workspaces/$(basename $(pwd))/package.json ]]; then
-    PKG_JSON="/workspaces/$(basename $(pwd))/package.json"
+  if [[ -f /workspaces/"$(basename "$(pwd)")"/package.json ]]; then
+    PKG_JSON="/workspaces/$(basename "$(pwd)")/package.json"
   elif [[ -f ./package.json ]]; then
     PKG_JSON=./package.json
   else
@@ -18,7 +18,8 @@ if [[ -z "$PNPM_VERSION" ]]; then
   if [[ -n "$PKG_JSON" ]]; then
     PM_FIELD=$(grep '"packageManager"' "$PKG_JSON" | head -1 | sed 's/.*: *"\([^"]*\)".*/\1/')
     if [[ "$PM_FIELD" == pnpm@* ]]; then
-      PNPM_VERSION=$(echo "$PM_FIELD" | sed 's/pnpm@\([0-9.]*\).*/\1/')
+      PNPM_VERSION="${PM_FIELD#pnpm@}"
+      PNPM_VERSION="${PNPM_VERSION%%[^0-9.]*}"
       echo "[INFO] Detected pnpm version $PNPM_VERSION from package.json."
     elif [[ -n "$PM_FIELD" ]]; then
       echo "[ERROR] packageManager field is present but not pnpm: $PM_FIELD" >&2
@@ -60,35 +61,17 @@ fi
 
 export PATH="$NODE_DIR/bin:$PATH"
 
+# Symlink node/npm/npx to /usr/local/bin so they are available in subsequent steps
+ln -sf "$NODE_DIR/bin/node" /usr/local/bin/node
+ln -sf "$NODE_DIR/bin/npm" /usr/local/bin/npm
+ln -sf "$NODE_DIR/bin/npx" /usr/local/bin/npx
 
-# Install corepack if needed (Node >= 16.17.0, but only bundled by default in Node >= 16.17.0 and < 25.0.0)
-NODE_MAJOR=$(node -v | sed 's/v\([0-9]*\).*/\1/')
-NODE_MINOR=$(node -v | sed 's/v[0-9]*\.\([0-9]*\).*/\1/')
-
-if (( NODE_MAJOR < 16 )); then
-  echo "[ERROR] Node.js >= 16.17.0 is required for corepack/pnpm support." >&2
-  exit 1
-fi
-
-# Node >= 25.0.0: corepack is NOT bundled, must install manually
-if (( NODE_MAJOR >= 25 )); then
-  if ! command -v corepack >/dev/null 2>&1; then
-    echo "[INFO] Installing corepack (not bundled in Node >= 25)..."
-    npm install -g corepack
-  fi
-else
-  # Node < 25: corepack should be present, but enable if needed
-  if ! command -v corepack >/dev/null 2>&1; then
-    echo "[ERROR] corepack not found in PATH for Node.js $NODE_VERSION" >&2
-    exit 1
-  fi
-  corepack enable || true
-fi
-
-
-# Now install pnpm with corepack
+# Install pnpm via npm — avoids corepack's interactive download prompts entirely
 echo "[INFO] Installing pnpm $PNPM_VERSION..."
-corepack prepare pnpm@$PNPM_VERSION --activate
+npm install -g "pnpm@${PNPM_VERSION}"
+
+# Symlink pnpm to /usr/local/bin so it is available in subsequent steps
+ln -sf "$NODE_DIR/bin/pnpm" /usr/local/bin/pnpm
 
 # Validate versions
 node -v | grep "$NODE_VERSION" || { echo "[ERROR] Node.js version mismatch" >&2; exit 1; }

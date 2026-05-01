@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Claude Code CLI global installer (official native method)
-# Docs: https://code.claude.com/docs/en/overview
+# Claude Code CLI global installer (official npm package)
+# Docs: https://docs.anthropic.com/en/docs/claude-code/getting-started
 
 VERSION="${VERSION:-latest}"
 
-if [[ "$VERSION" == "latest" ]]; then
-  INSTALL_SCRIPT_URL="https://code.claude.com/install.sh"
-else
-  INSTALL_SCRIPT_URL="https://code.claude.com/install.sh?version=$VERSION"
+if ! command -v npm &>/dev/null; then
+  echo "[ERROR] npm is required but not found in PATH. Install Node.js before using this feature." >&2
+  exit 1
 fi
 
-# Download and run the official installer
-curl -fsSL "$INSTALL_SCRIPT_URL" | bash
+if [[ "$VERSION" == "latest" ]]; then
+  npm install -g @anthropic-ai/claude-code
+else
+  npm install -g "@anthropic-ai/claude-code@${VERSION}"
+fi
 
 # Validate install
 if ! command -v claude &>/dev/null; then
@@ -23,3 +25,4 @@ fi
 
 # Print version
 claude --version
+echo "[SUCCESS] Claude Code CLI installed."
