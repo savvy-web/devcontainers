@@ -8,6 +8,8 @@ on:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrix: ${{ steps.tests.outputs.matrix }}
     steps:
@@ -28,6 +30,8 @@ jobs:
     needs: collect
     if: ${{ needs.collect.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
