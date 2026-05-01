@@ -19,7 +19,18 @@ jobs:
       - name: Discover test directories
         id: tests
         run: |
-          matrix=$(node .github/scripts/collect-test-dirs.js)
+          # Discover all feature ids that have a test.sh under test/<id>/
+          matrix=$(node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const testRoot = path.resolve('test');
+            if (!fs.existsSync(testRoot)) { process.stdout.write('[]'); process.exit(0); }
+            const entries = fs.readdirSync(testRoot)
+              .filter(f => fs.statSync(path.join(testRoot, f)).isDirectory())
+              .filter(f => fs.existsSync(path.join(testRoot, f, 'test.sh')))
+              .map(id => ({ id, testdir: 'test/' + id }));
+            process.stdout.write(JSON.stringify(entries));
+          ")
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   test-features:
@@ -47,7 +58,7 @@ jobs:
         env:
           FEATURE_ID: ${{ matrix.id }}
         run: |
-          INSTALL_SCRIPT="features/${FEATURE_ID}/install.sh"
+          INSTALL_SCRIPT="src/${FEATURE_ID}/install.sh"
           if [[ ! -f "$INSTALL_SCRIPT" ]]; then
             echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
             exit 1

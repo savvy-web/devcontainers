@@ -17,8 +17,8 @@ will cause CI or publishing to fail.
 
 | File | Purpose |
 | :--- | :------ |
-| `features/<id>/devcontainer-feature.json` | Feature metadata and options |
-| `features/<id>/install.sh` | Installation script |
+| `src/<id>/devcontainer-feature.json` | Feature metadata and options |
+| `src/<id>/install.sh` | Installation script |
 | `test/<id>/test.sh` | Post-install assertions |
 | `test/<id>/scenarios.json` | Human-readable scenario descriptions |
 | `docs/features/<id>.md` | End-user documentation |
@@ -46,7 +46,7 @@ always get a `*Version` option with an absolute default.
 
 Before writing files:
 
-1. Verify `features/<id>/` does not already exist
+1. Verify `src/<id>/` does not already exist
 2. Check `containers.dev/features` to see if a community feature already
    exists for this tool — prefer referencing an upstream feature over
    duplicating it
@@ -234,8 +234,8 @@ Rules:
 
 Before finishing, confirm every item:
 
-- [ ] `features/<id>/devcontainer-feature.json` created
-- [ ] `features/<id>/install.sh` created and marked executable
+- [ ] `src/<id>/devcontainer-feature.json` created
+- [ ] `src/<id>/install.sh` created and marked executable
 - [ ] `test/<id>/test.sh` created
 - [ ] `test/<id>/scenarios.json` created
 - [ ] `docs/features/<id>.md` created

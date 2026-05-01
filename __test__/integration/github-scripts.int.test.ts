@@ -164,15 +164,15 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 			}
 		});
 
-		it("emits absolute feature paths pointing at the fixture's features directory", () => {
+		it("emits absolute feature paths pointing at the fixture's src directory", () => {
 			result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
 				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
 			});
-			const fooPath = join(fixture("mixed"), "features");
+			const srcPath = join(fixture("mixed"), "src");
 			for (const entry of result.stdoutJson) {
-				expect(entry.path.startsWith(fooPath)).toBe(true);
-				expect(entry.path).toContain(`/features/${entry.id}`);
+				expect(entry.path.startsWith(srcPath)).toBe(true);
+				expect(entry.path).toContain(`/src/${entry.id}`);
 			}
 		});
 	});

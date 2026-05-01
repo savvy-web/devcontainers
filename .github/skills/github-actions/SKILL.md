@@ -88,7 +88,7 @@ When helping with this workflow:
 
 - Check `.github/scripts/collect-and-filter-features.js` and `filter-unpublished-features.js` for the matrix-building logic
 - Feature test scripts live at `test/<feature-id>/test.sh`
-- Feature definitions live under `features/<feature-id>/`
+- Feature definitions live under `src/<feature-id>/`
 
 ## Answer Shape
 

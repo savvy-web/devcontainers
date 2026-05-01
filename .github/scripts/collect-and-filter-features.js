@@ -4,7 +4,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const org = process.env.GITHUB_REPOSITORY_OWNER || "savvy-web";
-const featuresRoot = resolve(import.meta.dirname, "../../features");
+const featuresRoot = resolve(import.meta.dirname, "../../src");
 const results = [];
 
 for (const feature of readdirSync(featuresRoot)) {

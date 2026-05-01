@@ -36,7 +36,7 @@ Bump the feature version whenever:
 ### Step 1 — Identify the feature
 
 Ask the user which feature to bump if not already specified.
-Read `features/<id>/devcontainer-feature.json` to find the current version.
+Read `src/<id>/devcontainer-feature.json` to find the current version.
 
 ### Step 2 — Determine the new version
 
@@ -58,7 +58,7 @@ Confirm the new version with the user before proceeding.
 
 Update every file that contains the old version. The full set to check:
 
-#### `features/<id>/devcontainer-feature.json`
+#### `src/<id>/devcontainer-feature.json`
 
 Update the `"version"` field:
 

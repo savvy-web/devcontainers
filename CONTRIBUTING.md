@@ -12,7 +12,7 @@ install script, tests, and documentation.
 - Node.js 24+
 - pnpm 10+
 - Docker (for local feature testing with `act`)
-- `act` — install via the [`act` devcontainer feature](features/act/)
+- `act` — install via the [`act` devcontainer feature](src/act/)
   or from [nektosact.com](https://nektosact.com/installation/index.html)
 
 ## Development Setup
@@ -30,11 +30,11 @@ feature ordering is expressed via `installsAfter` in `devcontainer-feature.json`
 not via directory scopes.
 
 ```text
-features/
+src/
   <id>/     # One directory per feature, named by feature id
 
 test/
-  <id>/     # Mirrors features/<id> — test.sh + scenarios.json
+  <id>/     # Mirrors src/<id> — test.sh + scenarios.json
 
 docs/
   features/ # One .md doc per feature, named by feature id
@@ -46,7 +46,6 @@ scripts/
 .github/
   scripts/
     collect-and-filter-features.js  # Builds publish matrix (skips already-published versions)
-    collect-test-dirs.js            # Builds test matrix from discovered test.sh files
   workflows/
     test.yml            # PR CI — auto-discovers and runs all feature tests
     publish.yml         # Publish features to ghcr.io (manual trigger)
@@ -65,8 +64,8 @@ scripts/
 Every feature requires exactly five files:
 
 ```text
-features/<id>/devcontainer-feature.json
-features/<id>/install.sh
+src/<id>/devcontainer-feature.json
+src/<id>/install.sh
 test/<id>/test.sh
 test/<id>/scenarios.json
 docs/features/<id>.md

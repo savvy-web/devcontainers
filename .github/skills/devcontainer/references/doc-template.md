@@ -104,7 +104,6 @@ The doc file name must match the feature `id` exactly:
 | :----------- | :------- |
 | `biome` | `docs/features/biome.md` |
 | `package-manager` | `docs/features/package-manager.md` |
-| `outbound-firewall` | `docs/features/outbound-firewall.md` |
 
 The `documentationURL` in `devcontainer-feature.json` must point to this file:
 

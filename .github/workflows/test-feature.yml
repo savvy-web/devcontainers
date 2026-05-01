@@ -20,7 +20,7 @@ jobs:
         env:
           FEATURE_ID: ${{ inputs.id }}
         run: |
-          INSTALL_SCRIPT="features/${FEATURE_ID}/install.sh"
+          INSTALL_SCRIPT="src/${FEATURE_ID}/install.sh"
           if [[ ! -f "$INSTALL_SCRIPT" ]]; then
             echo "[ERROR] Install script not found: $INSTALL_SCRIPT" >&2
             exit 1

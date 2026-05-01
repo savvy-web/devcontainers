@@ -1,6 +1,0 @@
-[
-	{
-		"name": "Outbound firewall block all",
-		"steps": ["Install feature with blockAll=true", "Check OUTPUT chain has DROP rule"]
-	}
-]

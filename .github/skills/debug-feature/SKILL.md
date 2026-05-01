@@ -40,7 +40,7 @@ act workflow_dispatch \
 Or, to see the raw install script output:
 
 ```bash
-bash -x features/<id>/install.sh
+bash -x src/<id>/install.sh
 ```
 
 `-x` traces every command and its expanded arguments — essential for

@@ -17,7 +17,6 @@ Features are published to the GitHub Container Registry at
 | `homebrew` | Installs [Homebrew](https://brew.sh) (macOS/Linux) | [docs](docs/features/homebrew.md) |
 | `node` | Installs the Node.js runtime | [docs](docs/features/node.md) |
 | `package-manager` | Installs a Node.js package manager (pnpm, yarn, npm) via corepack | [docs](docs/features/package-manager.md) |
-| `outbound-firewall` | Configures outbound firewall rules for Codespaces | [docs](docs/features/outbound-firewall.md) |
 | `rust` | Installs the Rust toolchain via rustup | [docs](docs/features/rust.md) |
 | `zig` | Installs the [Zig](https://ziglang.org) compiler | [docs](docs/features/zig.md) |
 
@@ -47,11 +46,11 @@ feature ordering is expressed via `installsAfter` in
 `devcontainer-feature.json`, not via directory scopes.
 
 ```text
-features/
+src/
   <id>/       # one directory per feature, named by feature id
 
 test/
-  <id>/       # mirrors features/<id> — test.sh + scenarios.json
+  <id>/       # mirrors src/<id> — test.sh + scenarios.json
 
 docs/
   features/   # one markdown file per feature

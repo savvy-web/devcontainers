@@ -1,11 +1,11 @@
 ---
-applyTo: "features/**"
+applyTo: "src/**"
 excludeAgent: "code-review"
 ---
 
 # Copilot Agent Instructions for Devcontainer Features
 
-When the Copilot cloud agent creates or edits any file under `features/`,
+When the Copilot cloud agent creates or edits any file under `src/`,
 it must follow these rules automatically.
 
 ## Version Bump Rule
@@ -33,7 +33,7 @@ Changes that do not require a version bump:
 When bumping a version or changing an option default, always update all
 affected files together in the same commit:
 
-1. `features/<id>/devcontainer-feature.json` — `"version"` field and
+1. `src/<id>/devcontainer-feature.json` — `"version"` field and
    option `"default"` value
 2. `test/<id>/test.sh` — `grep "<version>"` assertions
 3. `test/<id>/scenarios.json` — step descriptions mentioning the version
@@ -47,8 +47,8 @@ Every feature must have exactly five files. Before committing, verify all are
 present:
 
 ```text
-features/<id>/devcontainer-feature.json
-features/<id>/install.sh
+src/<id>/devcontainer-feature.json
+src/<id>/install.sh
 test/<id>/test.sh
 test/<id>/scenarios.json
 docs/features/<id>.md
@@ -75,7 +75,7 @@ Rules:
 ## Layout
 
 Features and tests use a flat layout — one directory per feature id under
-`features/<id>/` and `test/<id>/`. Inter-feature ordering is expressed via
+`src/<id>/` and `test/<id>/`. Inter-feature ordering is expressed via
 `installsAfter` in `devcontainer-feature.json`, not via directory scopes.
 
 When a feature depends on another feature being installed first (for example,

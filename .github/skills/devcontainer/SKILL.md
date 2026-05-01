@@ -86,7 +86,7 @@ feature ordering is expressed via `installsAfter` in
 `devcontainer-feature.json`, not via directory scopes.
 
 ```text
-features/
+src/
   <id>/                    # one directory per feature, named by feature id
     devcontainer-feature.json
     install.sh
@@ -111,7 +111,7 @@ docs/
 - `installsAfter` — use to declare ordering dependencies on other features
   (e.g. `["ghcr.io/devcontainers/features/common-utils"]`)
 - `platforms` — always an array; use `["linux", "darwin"]` unless the feature
-  is Linux-only (e.g. `outbound-firewall` is `["linux"]`)
+  is Linux-only (e.g. `["linux"]` for kernel-dependent features)
 - Absolute version pinning — never use semver ranges in option defaults; pin
   to an exact version like `"24.11.0"`, not `">=24"`
 
@@ -131,8 +131,8 @@ docs/
 
 When creating a new feature, create all five files:
 
-1. `features/<id>/devcontainer-feature.json`
-2. `features/<id>/install.sh`
+1. `src/<id>/devcontainer-feature.json`
+2. `src/<id>/install.sh`
 3. `test/<id>/test.sh`
 4. `test/<id>/scenarios.json`
 5. `docs/features/<id>.md`

@@ -24,12 +24,12 @@ function getTestSubdirs(dir: string): string[] {
 
 describe("feature folder structure", () => {
 	it("every test directory has a matching feature", () => {
-		const featuresRoot = join(__dirname, "../../features");
+		const featuresRoot = join(__dirname, "../../src");
 		const testRoot = join(__dirname, "../../test");
 		const features = new Set(getFeatureSubdirs(featuresRoot));
 		const tests = getTestSubdirs(testRoot);
 		for (const id of tests) {
-			expect(features.has(id), `test/${id}/ has no matching features/${id}/devcontainer-feature.json`).toBe(true);
+			expect(features.has(id), `test/${id}/ has no matching src/${id}/devcontainer-feature.json`).toBe(true);
 		}
 	});
 });

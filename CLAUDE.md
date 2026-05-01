@@ -35,13 +35,13 @@ Inter-feature ordering is expressed via `installsAfter` in
 `devcontainer-feature.json`, not via directory scopes.
 
 ```text
-features/
+src/
   <id>/                    # one directory per feature, named by feature id
     devcontainer-feature.json
     install.sh
 
 test/
-  <id>/                    # mirrors features/<id> — test.sh + scenarios.json per feature
+  <id>/                    # mirrors src/<id> — test.sh + scenarios.json per feature
     test.sh
     scenarios.json
 
@@ -56,7 +56,6 @@ scripts/
 .github/
   scripts/
     collect-and-filter-features.js  # Builds publish matrix (skips existing versions)
-    collect-test-dirs.js            # Builds test matrix from discovered test.sh files
   workflows/
     test.yml                  # PR CI — auto-discovers all features and tests them
     publish.yml               # Publish to ghcr.io (manual trigger)
@@ -81,8 +80,8 @@ scripts/
 Every feature must have exactly these files:
 
 ```text
-features/<id>/devcontainer-feature.json
-features/<id>/install.sh            ← must be executable
+src/<id>/devcontainer-feature.json
+src/<id>/install.sh            ← must be executable
 test/<id>/test.sh
 test/<id>/scenarios.json
 docs/features/<id>.md
@@ -148,6 +147,6 @@ The `publish.yml` workflow:
    `ghcr.io/savvy-web/<id>:<version>`
 
 The test matrix in `test.yml` (PR CI) is built dynamically from all
-`test/<id>/test.sh` files by `collect-test-dirs.js` — no manual matrix
+`test/<id>/test.sh` files via inline discovery — no manual matrix
 updates are needed when a new feature is added.
 </coding_guidelines>

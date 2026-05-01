@@ -154,7 +154,7 @@ Always include an `else` branch that errors on unsupported architectures.
 ### Detection
 
 - Error: `"Permission denied"` when running `install.sh`
-- `ls -la features/<id>/install.sh` shows `-rw-r--r--` (no `x` bit)
+- `ls -la src/<id>/install.sh` shows `-rw-r--r--` (no `x` bit)
 
 ### Why it happens
 
@@ -165,7 +165,7 @@ not have the execute bit set. The devcontainer CLI and CI workflows run
 ### Fix
 
 ```bash
-chmod +x features/<id>/install.sh
+chmod +x src/<id>/install.sh
 ```
 
 The `validate-feature` script (`pnpm run validate-feature`) checks for this
@@ -303,7 +303,7 @@ explicitly — directory layout no longer encodes scope.
 ### Fix
 
 Add the dependency feature to `installsAfter` in
-`features/<id>/devcontainer-feature.json`:
+`src/<id>/devcontainer-feature.json`:
 
 ```json
 "installsAfter": ["ghcr.io/savvy-web/node"]

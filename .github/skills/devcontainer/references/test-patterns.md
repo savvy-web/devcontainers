@@ -5,7 +5,7 @@ Reference for the two-file test convention used in this repository:
 
 ## File Locations
 
-Tests live alongside the feature they cover, mirroring the flat `features/`
+Tests live alongside the feature they cover, mirroring the flat `src/`
 directory structure:
 
 ```text
@@ -179,7 +179,7 @@ Running without arguments prints available features.
 `.github/workflows/test-feature.yml` — a minimal workflow that:
 
 1. Checks out the repo (using the local bind-mount from `.actrc`)
-2. Runs `features/<id>/install.sh` inside a fresh ubuntu container
+2. Runs `src/<id>/install.sh` inside a fresh ubuntu container
 3. Runs `test/<id>/test.sh` in the same container
 
 The `.actrc` at the repo root configures act to:

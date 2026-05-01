@@ -27,15 +27,15 @@ if [[ -z "$ID" ]]; then
   echo "  $0 package-manager"
   echo ""
   echo "Available features:"
-  find "${REPO_ROOT}/features" -mindepth 2 -maxdepth 2 -name "devcontainer-feature.json" \
-    | sed "s|${REPO_ROOT}/features/||" \
+  find "${REPO_ROOT}/src" -mindepth 2 -maxdepth 2 -name "devcontainer-feature.json" \
+    | sed "s|${REPO_ROOT}/src/||" \
     | sed 's|/devcontainer-feature.json||' \
     | sort \
     | sed 's|^|  |'
   exit 1
 fi
 
-FEATURE_DIR="${REPO_ROOT}/features/${ID}"
+FEATURE_DIR="${REPO_ROOT}/src/${ID}"
 TEST_DIR="${REPO_ROOT}/test/${ID}"
 DOC_FILE="${REPO_ROOT}/docs/features/${ID}.md"
 JSON_FILE="${FEATURE_DIR}/devcontainer-feature.json"
@@ -62,7 +62,7 @@ echo ""
 if [[ -f "$JSON_FILE" ]]; then
   pass "devcontainer-feature.json exists"
 else
-  fail "devcontainer-feature.json not found at: features/${ID}/devcontainer-feature.json"
+  fail "devcontainer-feature.json not found at: src/${ID}/devcontainer-feature.json"
 fi
 
 # Derive the feature id and doc file path from the JSON.
@@ -83,7 +83,7 @@ fi
 if [[ -f "$INSTALL_FILE" ]]; then
   pass "install.sh exists"
 else
-  fail "install.sh not found at: features/${ID}/install.sh"
+  fail "install.sh not found at: src/${ID}/install.sh"
 fi
 
 if [[ -f "$TEST_SH" ]]; then

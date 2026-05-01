@@ -25,19 +25,19 @@ if [[ -z "$ID" ]]; then
   echo "  $0 package-manager"
   echo ""
   echo "Available features:"
-  find "${REPO_ROOT}/features" -mindepth 2 -maxdepth 2 -name "devcontainer-feature.json" \
-    | sed "s|${REPO_ROOT}/features/||" \
+  find "${REPO_ROOT}/src" -mindepth 2 -maxdepth 2 -name "devcontainer-feature.json" \
+    | sed "s|${REPO_ROOT}/src/||" \
     | sed 's|/devcontainer-feature.json||' \
     | sort \
     | sed 's|^|  |'
   exit 1
 fi
 
-FEATURE_DIR="${REPO_ROOT}/features/${ID}"
+FEATURE_DIR="${REPO_ROOT}/src/${ID}"
 TEST_DIR="${REPO_ROOT}/test/${ID}"
 
 if [[ ! -f "${FEATURE_DIR}/devcontainer-feature.json" ]]; then
-  echo "[ERROR] Feature not found: features/${ID}" >&2
+  echo "[ERROR] Feature not found: src/${ID}" >&2
   echo "        Run '$0' without arguments to see available features." >&2
   exit 1
 fi
