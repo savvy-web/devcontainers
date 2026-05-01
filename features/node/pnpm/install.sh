@@ -87,8 +87,9 @@ fi
 
 
 # Now install pnpm with corepack
+# COREPACK_ENABLE_DOWNLOAD_PROMPT=0 prevents an interactive prompt that would hang CI
 echo "[INFO] Installing pnpm $PNPM_VERSION..."
-corepack prepare pnpm@$PNPM_VERSION --activate
+COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack prepare "pnpm@$PNPM_VERSION" --activate
 
 # Validate versions
 node -v | grep "$NODE_VERSION" || { echo "[ERROR] Node.js version mismatch" >&2; exit 1; }
