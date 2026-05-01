@@ -80,6 +80,11 @@ jobs:
           echo "::group::devcontainer features test ${ARGS[*]} ."
           devcontainer features test "${ARGS[@]}" . 2>&1 | tee /tmp/test.log
           echo "::endgroup::"
+          # devcontainer features test exits 0 even when individual scenarios
+          # fail. Detect scenario failures from the TEST REPORT in the output.
+          if grep -qF "❌ Failed:" /tmp/test.log 2>/dev/null; then
+            exit 1
+          fi
 
       - name: Write step summary
         if: always()

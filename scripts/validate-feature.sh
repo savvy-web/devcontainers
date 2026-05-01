@@ -217,11 +217,11 @@ fi
 if [[ -f "$SCENARIOS_FILE" ]]; then
   if node -e "
     const j = JSON.parse(require('fs').readFileSync('${SCENARIOS_FILE}', 'utf8'));
-    if (Array.isArray(j)) process.exit(1);
+    if (!j || typeof j !== 'object' || Array.isArray(j)) process.exit(1);
   " 2>/dev/null; then
     pass "scenarios.json is a valid object"
   else
-    fail "scenarios.json must be a JSON object (not an array) — keys are scenario names"
+    fail "scenarios.json must be a JSON object (not an array or primitive) — keys are scenario names"
   fi
 
   # Verify each scenario key has a matching .sh assertion script

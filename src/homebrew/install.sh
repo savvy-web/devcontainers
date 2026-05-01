@@ -37,9 +37,12 @@ else
   # so the devcontainer user owns the Homebrew prefix and can run
   # `brew install` directly without switching users.
   REMOTE_USER="${_REMOTE_USER:-}"
-  if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]]; then
+  if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]] && id -u "$REMOTE_USER" >/dev/null 2>&1; then
     BREW_USER="$REMOTE_USER"
   else
+    if [[ -n "$REMOTE_USER" && "$REMOTE_USER" != "root" ]]; then
+      echo "[INFO] Remote user '${REMOTE_USER}' does not exist in the image; falling back to linuxbrew user." >&2
+    fi
     BREW_USER="linuxbrew"
     useradd -m -s /bin/bash "$BREW_USER" 2>/dev/null || true
   fi

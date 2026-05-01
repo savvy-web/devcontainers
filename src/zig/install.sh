@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ZIG_VERSION=${ZIG_VERSION:-0.12.0}
+# The devcontainer CLI injects feature options uppercased with no separator
+# (e.g. zigVersion -> ZIGVERSION). Accept both forms for flexibility.
+ZIG_VERSION="${ZIGVERSION:-${ZIG_VERSION:-0.12.0}}"
 ZIG_ROOT="/usr/local/zig"
 ZIG_BIN="$ZIG_ROOT/zig"
 
