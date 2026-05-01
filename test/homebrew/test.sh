@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# This test file is executed against an auto-generated devcontainer that
-# installs the 'homebrew' feature as root (_REMOTE_USER=root). In that
-# case, install.sh creates a dedicated 'linuxbrew' account and installs
-# Homebrew under /home/linuxbrew/.linuxbrew.
+# Auto-generated scenario test for the 'homebrew' feature.
+# The base image (mcr.microsoft.com/devcontainers/base:ubuntu) sets
+# _REMOTE_USER=vscode, so install.sh runs the Homebrew installer as the
+# vscode user. Homebrew is always installed to /home/linuxbrew/.linuxbrew
+# on Linux regardless of which user runs the installer.
 #
 # Run with:
 #   devcontainer features test -f homebrew --skip-scenarios \
@@ -15,6 +16,7 @@ source dev-container-features-test-lib
 BREW_BIN="/home/linuxbrew/.linuxbrew/bin/brew"
 
 check "brew binary exists" test -x "$BREW_BIN"
-check "brew runs via linuxbrew user" bash -c "su - linuxbrew -s /bin/bash -c '/home/linuxbrew/.linuxbrew/bin/brew --version' | grep Homebrew"
+check "brew is functional" "$BREW_BIN" --version
+check "brew version output includes Homebrew" bash -c "$BREW_BIN --version | grep Homebrew"
 
 reportResults

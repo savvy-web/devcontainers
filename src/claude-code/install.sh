@@ -1,28 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Claude Code CLI global installer (official npm package)
-# Docs: https://docs.anthropic.com/en/docs/claude-code/getting-started
+# Claude Code CLI — native installer
+# Docs: https://code.claude.com/docs/en/setup
+#
+# Installation via @anthropic-ai/claude-code on npm is deprecated.
+# This feature uses the official curl | bash installer instead.
 
-VERSION="${VERSION:-latest}"
-
-if ! command -v npm &>/dev/null; then
-  echo "[ERROR] npm is required but not found in PATH. Install Node.js before using this feature." >&2
-  exit 1
+if command -v claude &>/dev/null; then
+  echo "[INFO] Claude Code CLI already installed: $(claude --version)"
+  exit 0
 fi
 
-if [[ "$VERSION" == "latest" ]]; then
-  npm install -g @anthropic-ai/claude-code
-else
-  npm install -g "@anthropic-ai/claude-code@${VERSION}"
+echo "[INFO] Installing Claude Code CLI via native installer..."
+curl -fsSL https://claude.ai/install.sh | bash
+
+# The native installer may place the binary outside the calling shell's PATH
+# (e.g. ~/.local/bin). Search known locations and symlink into /usr/local/bin
+# when necessary so claude is available to all users.
+if ! command -v claude &>/dev/null; then
+  for candidate in \
+    "/root/.local/bin/claude" \
+    "/root/.anthropic/bin/claude" \
+    "/usr/local/bin/claude"; do
+    if [[ -x "$candidate" ]]; then
+      ln -sf "$candidate" /usr/local/bin/claude
+      break
+    fi
+  done
 fi
 
-# Validate install
 if ! command -v claude &>/dev/null; then
   echo "[ERROR] Claude Code CLI not found in PATH after install." >&2
   exit 1
 fi
 
-# Print version
 claude --version
 echo "[SUCCESS] Claude Code CLI installed."
