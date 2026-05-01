@@ -4,7 +4,7 @@ Installs Biome globally for all runtimes. Strict version, reproducible, and idem
 
 ## Options
 
-- `biomeVersion`: Biome version (absolute, no semver ranges). Default: `2.4.12`
+- `biomeVersion`: Biome version (absolute, no semver ranges). Default: `2.4.13`
 
 ## Usage
 

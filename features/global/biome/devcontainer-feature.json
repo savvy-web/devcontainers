@@ -1,13 +1,13 @@
 {
 	"id": "biome",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"name": "Biome (global linter)",
 	"description": "Installs Biome globally for all runtimes. Strict version, reproducible, and idempotent.",
 	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/biome.md",
 	"options": {
 		"biomeVersion": {
 			"type": "string",
-			"default": "2.4.12",
+			"default": "2.4.13",
 			"description": "Biome version (absolute, no semver ranges)"
 		}
 	},

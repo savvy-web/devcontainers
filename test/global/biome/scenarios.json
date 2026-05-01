@@ -1,6 +1,6 @@
 [
 	{
 		"name": "Biome global install",
-		"steps": ["Install feature", "Check Biome version is 2.4.12"]
+		"steps": ["Install feature", "Check Biome version is 2.4.13"]
 	}
 ]
