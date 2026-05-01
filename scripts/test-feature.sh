@@ -73,4 +73,32 @@ echo "[INFO] Testing feature: ${ID}"
 echo ""
 
 cd "${REPO_ROOT}"
-devcontainer features test "${ARGS[@]}" .
+TEST_LOG=$(mktemp)
+RESULTS_JSON=$(mktemp)
+trap 'rm -f "$TEST_LOG" "$RESULTS_JSON"' EXIT
+
+set +e
+devcontainer features test "${ARGS[@]}" . 2>&1 | tee "$TEST_LOG"
+CLI_EXIT=${PIPESTATUS[0]}
+set -e
+
+# Parse the TEST REPORT section into a structured JSON results file so that
+# failure detection does not rely on grepping for emoji characters.
+node "${REPO_ROOT}/.github/scripts/parse-test-results.js" "$TEST_LOG" "$RESULTS_JSON" \
+  2>/dev/null || echo '{"passed":[],"failed":[],"total":0,"allPassed":false}' > "$RESULTS_JSON"
+
+if [[ "$CLI_EXIT" -ne 0 ]]; then
+  exit "$CLI_EXIT"
+fi
+
+ALL_PASSED=$(node -e "
+  try {
+    const r = JSON.parse(require('fs').readFileSync('$RESULTS_JSON', 'utf8'));
+    process.stdout.write(String(r.allPassed));
+  } catch (e) { process.stdout.write('false'); }
+" 2>/dev/null || echo "false")
+
+if [[ "$ALL_PASSED" != "true" ]]; then
+  echo "[ERROR] devcontainer features test reported one or more failed scenarios." >&2
+  exit 1
+fi

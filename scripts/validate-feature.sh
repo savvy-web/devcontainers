@@ -193,7 +193,9 @@ if [[ -f "$TEST_SH" ]]; then
     fail "test.sh first line must be '#!/usr/bin/env bash', got: ${FIRST_LINE}"
   fi
 
-  if grep -q "set -e" "$TEST_SH"; then
+  if grep -Eq '^[[:space:]]*set[[:space:]]+-euo[[:space:]]+pipefail' "$TEST_SH"; then
+    fail "test.sh must use 'set -e' specifically; found 'set -euo pipefail' which enables '-u' (the test lib uses unset variables internally)"
+  elif grep -Eq '^[[:space:]]*set[[:space:]]+-e[[:space:]]*$' "$TEST_SH"; then
     pass "test.sh has 'set -e'"
   else
     fail "test.sh is missing 'set -e'"
