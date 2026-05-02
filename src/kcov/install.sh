@@ -33,9 +33,11 @@ BUILD_DEPS=(
 
 # Some CI environments (e.g. GitHub Actions Docker-in-Docker) inject a
 # /etc/resolv.conf that cannot resolve public hostnames. Prepend well-known
-# public nameservers unconditionally so that apt mirrors always resolve.
-{ printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new
-cp /tmp/resolv.conf.new /etc/resolv.conf
+# public nameservers so that apt mirrors always resolve. Skip silently when
+# /etc/resolv.conf is read-only (e.g. macOS Docker Desktop / Lima).
+if { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new; then
+  cp /tmp/resolv.conf.new /etc/resolv.conf 2>/dev/null || true
+fi
 
 echo "[INFO] Installing kcov ${VERSION} build dependencies..."
 apt-get update -y
