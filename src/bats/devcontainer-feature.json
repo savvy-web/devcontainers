@@ -1,0 +1,32 @@
+{
+	"id": "bats",
+	"version": "0.1.0",
+	"name": "bats (Bash Automated Testing System)",
+	"description": "Installs bats-core, bats-support, bats-assert, and bats-mock for shell script testing.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/bats.md",
+	"options": {
+		"batsVersion": {
+			"type": "string",
+			"default": "1.13.0",
+			"description": "bats-core version to install. Accepts with or without a leading 'v' (e.g. '1.13.0' or 'v1.13.0')."
+		},
+		"batsSupportVersion": {
+			"type": "string",
+			"default": "0.3.0",
+			"description": "bats-support version to install. Accepts with or without a leading 'v'."
+		},
+		"batsAssertVersion": {
+			"type": "string",
+			"default": "2.2.4",
+			"description": "bats-assert version to install. Accepts with or without a leading 'v'."
+		},
+		"batsMockVersion": {
+			"type": "string",
+			"default": "1.2.5",
+			"description": "bats-mock version to install. Accepts with or without a leading 'v'."
+		}
+	},
+	"installsAfter": ["ghcr.io/savvy-web/kcov"],
+	"platforms": ["linux"],
+	"keywords": ["bats", "testing", "bash", "shell", "coverage", "mock"]
+}
