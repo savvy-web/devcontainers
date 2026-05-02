@@ -22,16 +22,15 @@ _GIT_PREINSTALLED=false
 if dpkg -s git &>/dev/null 2>&1; then
   _GIT_PREINSTALLED=true
 else
-  # Some CI environments (e.g. GitHub Actions Docker-in-Docker) inject a
-  # /etc/resolv.conf that cannot resolve public hostnames. Prepend well-known
-  # public nameservers so that apt mirrors always resolve. Skip silently when
-  # /etc/resolv.conf is read-only (e.g. macOS Docker Desktop / Lima).
-  if { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new; then
-    cp /tmp/resolv.conf.new /etc/resolv.conf 2>/dev/null || true
-  fi
   echo "[INFO] Installing git..."
-  apt-get update -y
-  apt-get install -y --no-install-recommends git
+  if ! apt-get update -y; then
+    echo "[ERROR] apt-get update failed. Check the container's DNS and apt repository configuration." >&2
+    exit 1
+  fi
+  if ! apt-get install -y --no-install-recommends git; then
+    echo "[ERROR] Failed to install git via apt-get." >&2
+    exit 1
+  fi
 fi
 
 TMPDIR=$(mktemp -d)
