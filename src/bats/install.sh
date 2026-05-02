@@ -15,9 +15,18 @@ BATS_SUPPORT_VER="${BATS_SUPPORT_VER#v}"
 BATS_ASSERT_VER="${BATS_ASSERT_VER#v}"
 BATS_MOCK_VER="${BATS_MOCK_VER#v}"
 
+# Some CI environments (e.g. GitHub Actions Docker-in-Docker) inject a
+# /etc/resolv.conf that cannot resolve public hostnames. Prepend well-known
+# public nameservers before any network operations so both apt and git clone
+# can resolve upstream hosts. Skip silently when /etc/resolv.conf is read-only
+# (e.g. macOS Docker Desktop / Lima).
+if { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new; then
+  cp /tmp/resolv.conf.new /etc/resolv.conf 2>/dev/null || true
+fi
+
 # Remember whether git was already present so we don't remove it from the base image later.
 # If git is already installed (e.g. mcr.microsoft.com/devcontainers/base:ubuntu ships it),
-# skip apt entirely — avoids a network round-trip and DNS failures in CI.
+# skip apt entirely — avoids a network round-trip.
 _GIT_PREINSTALLED=false
 if dpkg -s git &>/dev/null 2>&1; then
   _GIT_PREINSTALLED=true
