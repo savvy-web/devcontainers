@@ -32,7 +32,14 @@ BUILD_DEPS=(
 )
 
 echo "[INFO] Installing kcov ${VERSION} build dependencies..."
-apt-get update -y
+# If apt-get update fails (e.g. transient DNS failure inside Docker), prepend
+# public DNS to /etc/resolv.conf and retry once before giving up.
+if ! apt-get update -y; then
+  echo "[WARN] apt-get update failed; adding public DNS fallback (8.8.8.8) and retrying..."
+  { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new
+  cp /tmp/resolv.conf.new /etc/resolv.conf
+  apt-get update -y
+fi
 apt-get install -y --no-install-recommends "${BUILD_DEPS[@]}"
 
 echo "[INFO] Building kcov v${VERSION} from source..."

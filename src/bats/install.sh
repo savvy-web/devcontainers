@@ -15,15 +15,24 @@ BATS_SUPPORT_VER="${BATS_SUPPORT_VER#v}"
 BATS_ASSERT_VER="${BATS_ASSERT_VER#v}"
 BATS_MOCK_VER="${BATS_MOCK_VER#v}"
 
-# Remember whether git was already present so we don't remove it from the base image later
+# Remember whether git was already present so we don't remove it from the base image later.
+# If git is already installed (e.g. mcr.microsoft.com/devcontainers/base:ubuntu ships it),
+# skip apt entirely — avoids a network round-trip and DNS failures in CI.
 _GIT_PREINSTALLED=false
 if dpkg -s git &>/dev/null 2>&1; then
   _GIT_PREINSTALLED=true
+else
+  echo "[INFO] Installing git..."
+  # If apt-get update fails (e.g. transient DNS failure inside Docker), prepend
+  # public DNS to /etc/resolv.conf and retry once before giving up.
+  if ! apt-get update -y; then
+    echo "[WARN] apt-get update failed; adding public DNS fallback (8.8.8.8) and retrying..."
+    { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new
+    cp /tmp/resolv.conf.new /etc/resolv.conf
+    apt-get update -y
+  fi
+  apt-get install -y --no-install-recommends git
 fi
-
-echo "[INFO] Ensuring git is available..."
-apt-get update -y
-apt-get install -y --no-install-recommends git
 
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
