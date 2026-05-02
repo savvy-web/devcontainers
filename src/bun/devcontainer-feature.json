@@ -1,0 +1,17 @@
+{
+	"id": "bun",
+	"version": "0.1.0",
+	"name": "Bun Runtime",
+	"description": "Installs the Bun JavaScript runtime globally.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/bun.md",
+	"options": {
+		"bunVersion": {
+			"type": "string",
+			"default": "1.3.13",
+			"description": "Bun version to install (e.g., 1.3.13)."
+		}
+	},
+	"installsAfter": [],
+	"platforms": ["linux", "darwin"],
+	"keywords": ["bun", "javascript", "typescript", "runtime"]
+}

@@ -1,0 +1,10 @@
+{
+	"install_custom_version": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"deno": {
+				"denoVersion": "2.6.0"
+			}
+		}
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"install_custom_version": {
+		"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+		"features": {
+			"bun": {
+				"bunVersion": "1.2.0"
+			}
+		}
+	}
+}

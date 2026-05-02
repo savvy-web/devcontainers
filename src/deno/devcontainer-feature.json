@@ -1,0 +1,17 @@
+{
+	"id": "deno",
+	"version": "0.1.0",
+	"name": "Deno Runtime",
+	"description": "Installs the Deno JavaScript and TypeScript runtime globally.",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/deno.md",
+	"options": {
+		"denoVersion": {
+			"type": "string",
+			"default": "2.7.14",
+			"description": "Deno version to install (e.g., 2.7.14)."
+		}
+	},
+	"installsAfter": [],
+	"platforms": ["linux", "darwin"],
+	"keywords": ["deno", "javascript", "typescript", "runtime"]
+}
