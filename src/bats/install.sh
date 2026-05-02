@@ -15,7 +15,13 @@ BATS_SUPPORT_VER="${BATS_SUPPORT_VER#v}"
 BATS_ASSERT_VER="${BATS_ASSERT_VER#v}"
 BATS_MOCK_VER="${BATS_MOCK_VER#v}"
 
-echo "[INFO] Installing git..."
+# Remember whether git was already present so we don't remove it from the base image later
+_GIT_PREINSTALLED=false
+if dpkg -s git &>/dev/null 2>&1; then
+  _GIT_PREINSTALLED=true
+fi
+
+echo "[INFO] Ensuring git is available..."
 apt-get update -y
 apt-get install -y --no-install-recommends git
 
@@ -60,9 +66,11 @@ if [[ ! -f /usr/local/lib/bats-mock/load.bash ]]; then
     > /usr/local/lib/bats-mock/load.bash
 fi
 
-echo "[INFO] Removing git (build-only dependency)..."
-apt-get purge -y git
-apt-get autoremove -y
+if [[ "$_GIT_PREINSTALLED" == "false" ]]; then
+  echo "[INFO] Removing git (installed by this feature, not present in base image)..."
+  apt-get purge -y git
+fi
+# no autoremove — avoids removing transitive runtime libraries from the base image
 rm -rf /var/lib/apt/lists/*
 
 # Validate install
