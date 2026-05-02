@@ -31,15 +31,14 @@ BUILD_DEPS=(
   zlib1g-dev pkg-config
 )
 
+# Some CI environments (e.g. GitHub Actions Docker-in-Docker) inject a
+# /etc/resolv.conf that cannot resolve public hostnames. Prepend well-known
+# public nameservers unconditionally so that apt mirrors always resolve.
+{ printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new
+cp /tmp/resolv.conf.new /etc/resolv.conf
+
 echo "[INFO] Installing kcov ${VERSION} build dependencies..."
-# If apt-get update fails (e.g. transient DNS failure inside Docker), prepend
-# public DNS to /etc/resolv.conf and retry once before giving up.
-if ! apt-get update -y; then
-  echo "[WARN] apt-get update failed; adding public DNS fallback (8.8.8.8) and retrying..."
-  { printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n'; cat /etc/resolv.conf; } > /tmp/resolv.conf.new
-  cp /tmp/resolv.conf.new /etc/resolv.conf
-  apt-get update -y
-fi
+apt-get update -y
 apt-get install -y --no-install-recommends "${BUILD_DEPS[@]}"
 
 echo "[INFO] Building kcov v${VERSION} from source..."
