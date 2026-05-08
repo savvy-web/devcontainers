@@ -11,13 +11,13 @@ on:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     outputs:
       matrix: ${{ steps.features.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
-      # - name: Setup Runtime
-      #   id: runtime
-      #   uses: savvy-web/workflow-runtime-action@main
       - name: Set up Docker
         uses: docker/setup-buildx-action@v4
       - id: features
@@ -33,15 +33,15 @@ jobs:
     needs: collect
     if: ${{ needs.collect.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     strategy:
       fail-fast: false
       matrix:
         include: ${{fromJson(needs.collect.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
-      # - name: Setup Runtime
-      #   id: runtime
-      #   uses: savvy-web/workflow-runtime-action@main
       - name: Install devcontainer CLI
         run: npm install -g @devcontainers/cli
       - name: Test Feature
@@ -186,13 +186,10 @@ jobs:
         include: ${{fromJson(needs.collect.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
-      # - name: Setup Runtime
-      #   id: runtime
-      #   uses: savvy-web/workflow-runtime-action@main
       - name: Publish Feature
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # for testing, we will just echo the command instead of running it
           echo "Publishing ${{ matrix.id }} version ${{ matrix.version }} from ${{ matrix.path }}"
-          # devcontainer features publish --id ${{ matrix.id }} --version ${{ matrix.version }} --path ${{ matrix.path }} --registry ghcr.io/${{ github.repository_owner }}
+          devcontainer features publish --id ${{ matrix.id }} --version ${{ matrix.version }} --path ${{ matrix.path }} --registry ghcr.io/${{ github.repository_owner }}
