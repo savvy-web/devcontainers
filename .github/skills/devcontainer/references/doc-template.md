@@ -77,18 +77,18 @@ order:
 
 ### `src/biome/README.md`
 
-```markdown
+````markdown
 # Biome (global linter) (biome)
 
 Installs Biome globally for all runtimes. Strict version, reproducible, and idempotent.
 
 ## Example Usage
 
-`​`​`json
+```json
 "features": {
     "ghcr.io/savvy-web/biome:0": {}
 }
-`​`​`
+```
 
 ## Options
 
@@ -99,7 +99,7 @@ Installs Biome globally for all runtimes. Strict version, reproducible, and idem
 ---
 
 _Note: This file was auto-generated from the [devcontainer-feature.json](...). Add additional notes to a `NOTES.md`._
-```
+````
 
 ### `src/rust/README.md` (with Customizations section)
 
