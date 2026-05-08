@@ -181,15 +181,14 @@ jobs:
     permissions:
       contents: read
       packages: write
-    strategy:
-      matrix:
-        include: ${{fromJson(needs.collect.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v6
-      - name: Publish Feature
+      - name: Publish Features
+        uses: devcontainers/action@1082abd5d2bf3a11abccba70eef98df068277772 # v1.4.3
+        with:
+          publish-features: "true"
+          base-path-to-features: "./src"
+          oci-registry: "ghcr.io"
+          features-namespace: "${{ github.repository_owner }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # for testing, we will just echo the command instead of running it
-          echo "Publishing ${{ matrix.id }} version ${{ matrix.version }} from ${{ matrix.path }}"
-          devcontainer features publish --id ${{ matrix.id }} --version ${{ matrix.version }} --path ${{ matrix.path }} --registry ghcr.io/${{ github.repository_owner }}

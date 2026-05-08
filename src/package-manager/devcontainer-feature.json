@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "Package Manager (corepack)",
 	"description": "Installs and configures a Node.js package manager (pnpm, yarn, or npm) via corepack. Supports auto-detection from workspace package.json.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/package-manager.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/package-manager/README.md",
 	"options": {
 		"packageManager": {
 			"type": "string",
@@ -13,5 +13,16 @@
 	},
 	"installsAfter": ["ghcr.io/savvy-web/node"],
 	"platforms": ["linux"],
-	"keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"]
+	"keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has a Node.js package manager configured via corepack. The package manager (pnpm, yarn, or npm) specified in the workspace `package.json` `packageManager` field is automatically activated. When no `packageManager` is specified, corepack shims are enabled. Always use the configured package manager instead of calling `npm` directly."
+					}
+				]
+			}
+		}
+	}
 }

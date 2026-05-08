@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "bats (Bash Automated Testing System)",
 	"description": "Installs bats-core, bats-support, bats-assert, and bats-mock for shell script testing.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/bats.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/bats/README.md",
 	"options": {
 		"batsVersion": {
 			"type": "string",
@@ -28,5 +28,16 @@
 	},
 	"installsAfter": ["ghcr.io/savvy-web/kcov"],
 	"platforms": ["linux"],
-	"keywords": ["bats", "testing", "bash", "shell", "coverage", "mock"]
+	"keywords": ["bats", "testing", "bash", "shell", "coverage", "mock"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has bats-core (Bash Automated Testing System) and its helper libraries (bats-support, bats-assert, bats-mock) installed globally. Write shell script tests using `@test` blocks and run them with `bats <file>` or `bats test/`. Use `load 'bats-support/load'` and `load 'bats-assert/load'` at the top of test files to access assertion helpers like `assert_output` and `assert_success`."
+					}
+				]
+			}
+		}
+	}
 }

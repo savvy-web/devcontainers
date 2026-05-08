@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "kcov",
 	"description": "Builds and installs kcov from source for shell script and binary code coverage.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/kcov.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/kcov/README.md",
 	"options": {
 		"kcovVersion": {
 			"type": "string",
@@ -13,5 +13,16 @@
 	},
 	"installsAfter": [],
 	"platforms": ["linux"],
-	"keywords": ["kcov", "coverage", "bash", "shell", "testing"]
+	"keywords": ["kcov", "coverage", "bash", "shell", "testing"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has kcov pre-installed globally for code coverage analysis. Use `kcov --include-path=<source-dir> <output-dir> <command>` to generate coverage reports for shell scripts, Python scripts, and compiled binaries. Reports are generated as HTML and Cobertura XML in the output directory for CI integration."
+					}
+				]
+			}
+		}
+	}
 }

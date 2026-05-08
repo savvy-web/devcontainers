@@ -82,13 +82,14 @@ If you need a quick starting point, load `references/topic-map.md` and jump to t
 1. **`collect`** — runs `collect-and-filter-features.js` to build a JSON matrix of unpublished devcontainer features and passes it as a job output
 2. **`test`** — fan-out matrix job (`fail-fast: false`) that runs each feature's `test/<id>/test.sh`, captures the outcome as an artifact, and fails the individual job if the test failed
 3. **`summarize`** — runs `if: always()` after all test jobs, downloads the per-feature result artifacts, writes a Markdown table to `$GITHUB_STEP_SUMMARY`, and fails if any test failed — this is the publish gate
-4. **`publish`** — depends on `summarize`; skipped when `dry_run` is `true` or `summarize` did not succeed
+4. **`publish`** — depends on `summarize`; skipped when `dry_run` is `true` or `summarize` did not succeed. Uses `devcontainers/action@v1` (pinned SHA) with `publish-features: "true"`, `oci-registry: "ghcr.io"`, and `features-namespace: "${{ github.repository_owner }}"`. The action installs the devcontainer CLI, publishes all features in `./src`, and skips versions already in the registry.
 
 When helping with this workflow:
 
-- Check `.github/scripts/collect-and-filter-features.js` and `filter-unpublished-features.js` for the matrix-building logic
+- Check `.github/scripts/collect-and-filter-features.js` for the matrix-building logic
 - Feature test scripts live at `test/<feature-id>/test.sh`
 - Feature definitions live under `src/<feature-id>/`
+- The action handles CLI installation — no separate `npm install -g @devcontainers/cli` step is needed in the publish job
 
 ## Answer Shape
 

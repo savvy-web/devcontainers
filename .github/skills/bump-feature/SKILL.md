@@ -23,22 +23,38 @@ Bump the feature version whenever:
 - The feature options change (new option added, option default changed)
 - A bug in `install.sh` is fixed
 - The `devcontainer-feature.json` metadata changes (name, description,
-  `installsAfter`, `platforms`)
+  `installsAfter`, `platforms`, `customizations`)
 
 **Do not** bump the version for:
 
 - Changes to `test.sh` that don't affect feature behavior
-- Changes to `docs/features/<id>.md` that don't reflect a behavior change
+- Changes to `src/<id>/README.md` that don't reflect a behavior change
 - Formatting or comment-only changes to `install.sh`
 
 ## Workflow
 
-### Step 1 — Identify the feature
+### Step 1 — Check whether a bump is actually needed
+
+Read `src/<id>/devcontainer-feature.json` to find the current version (e.g.
+`0.2.0`). Then check whether that version already exists in the OCI registry:
+
+```bash
+docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+  && echo "published" || echo "not published"
+```
+
+**If "not published":** the feature already has a pending (unreleased) version
+bump. **Do not bump again** — add your changes on top of the existing version.
+A second bump would create a version gap in the published history and waste a
+registry slot.
+
+**If "published":** the current version is live. Proceed with the bump.
+
+### Step 2 — Identify the feature
 
 Ask the user which feature to bump if not already specified.
-Read `src/<id>/devcontainer-feature.json` to find the current version.
 
-### Step 2 — Determine the new version
+### Step 3 — Determine the new version
 
 Apply standard semver rules:
 
@@ -54,7 +70,7 @@ of `major` at the author's discretion — document the decision.
 
 Confirm the new version with the user before proceeding.
 
-### Step 3 — Update all version references
+### Step 4 — Update all version references
 
 Update every file that contains the old version. The full set to check:
 
@@ -76,17 +92,18 @@ strings alone.
 
 Update step descriptions that mention the old version string.
 
-#### `docs/features/<id>.md`
+#### `src/<id>/README.md`
 
-Update the version string in the `## Usage` jsonc block:
+Update the options table default value and the version in the example usage
+block:
 
-```jsonc
-"ghcr.io/savvy-web/<id>:<new-version>": {}
+```json
+"ghcr.io/savvy-web/<id>:<major>": {}
 ```
 
-If the `## Options` section lists a default value that changed, update it.
+Only the major version appears in the usage block (e.g. `0` from `0.2.0`).
 
-### Step 4 — Update `install.sh` defaults (when the pinned tool version changed)
+### Step 5 — Update `install.sh` defaults (when the pinned tool version changed)
 
 If the reason for the bump is a new pinned tool version (e.g. Biome `2.4.12` →
 `2.5.0`), update the option default in `devcontainer-feature.json`:
@@ -99,40 +116,44 @@ If the reason for the bump is a new pinned tool version (e.g. Biome `2.4.12` →
 }
 ```
 
-This default flows into `test.sh` assertions and docs — update them too.
+This default flows into `test.sh` assertions and the README — update them too.
 
-### Step 5 — Verify consistency
+### Step 6 — Verify consistency
 
 After all edits, run a final consistency check:
 
 1. `version` in `devcontainer-feature.json` matches the new version
 2. All `grep "<version>"` assertions in `test.sh` use the new pinned defaults
-3. `docs/features/<id>.md` usage snippet references the new feature version
-4. `documentationURL` still points to the correct path (it should never change)
+3. `src/<id>/README.md` options table reflects the new default
+4. `documentationURL` still points to `src/<id>/README.md` (it should never change)
 
 Run the validation script to catch anything missed:
 
 ```bash
-pnpm run validate-feature <id>
+pnpm run feature:validate <id>
 ```
 
 ## Completion Checklist
 
+- [ ] Checked registry — current version is published (bump is needed)
 - [ ] `devcontainer-feature.json` `"version"` updated
 - [ ] `test/<id>/test.sh` version assertions updated (if tool default changed)
 - [ ] `test/<id>/scenarios.json` step descriptions updated (if version mentioned)
-- [ ] `docs/features/<id>.md` usage snippet updated
+- [ ] `src/<id>/README.md` options table and usage snippet updated
 - [ ] `install.sh` option defaults updated (if pinned tool version changed)
-- [ ] `pnpm run validate-feature <id>` passes
+- [ ] `pnpm run feature:validate <id>` passes
 
 ## Common Mistakes
 
+- **Bumping when version is already pending** — if `devcontainer-feature.json`
+  says `0.2.0` but the registry only has `0.1.0`, a bump to `0.3.0` creates a
+  version gap. Always check the registry first.
 - **Bumping version but not test assertions** — if you changed the default
   Biome version from `2.4.12` to `2.5.0` but left `grep "2.4.12"` in
   `test.sh`, the test will fail on the new default
 - **Not bumping version after changing install behavior** — the publish
   workflow skips features whose `id:version` image already exists in the
   registry. If the version is not bumped, the change will never be published
-- **Forgetting the docs snippet** — the `## Usage` block in the doc file
-  typically contains the feature version; if it is not updated, users will
-  reference the old version in their `devcontainer.json`
+- **Forgetting the README options table** — the `## Options` table in
+  `src/<id>/README.md` lists default values; if not updated, users will see
+  stale defaults in the generated documentation
