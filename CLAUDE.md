@@ -39,6 +39,8 @@ src/
   <id>/                    # one directory per feature, named by feature id
     devcontainer-feature.json
     install.sh
+    README.md              # canonical docs — auto-generated format
+    NOTES.md               # optional extra content appended to README
 
 test/
   <id>/                    # mirrors src/<id> — test.sh + scenarios.json per feature
@@ -50,7 +52,7 @@ lib/                       # config files and repo-level helpers
       validate-feature.sh      # Check five-file completeness and structural rules
 
 docs/
-  features/                # one .md file per feature, named by feature id
+  features/                # legacy doc files (no longer canonical; see src/<id>/README.md)
     <id>.md
 
 .github/
@@ -58,7 +60,7 @@ docs/
     collect-and-filter-features.js  # Builds publish matrix (skips existing versions)
   workflows/
     test.yml                  # PR CI — auto-discovers all features and tests them
-    publish.yml               # Publish to ghcr.io (manual trigger)
+    publish.yml               # Publish to ghcr.io via devcontainers/action (manual trigger)
     test-feature.yml          # Single-feature test used by lib/scripts/test-feature.sh
     copilot-setup-steps.yml   # Copilot agent environment (Node, pnpm, devcontainer CLI)
   skills/
@@ -82,12 +84,15 @@ Every feature must have exactly these files:
 ```text
 src/<id>/devcontainer-feature.json
 src/<id>/install.sh
+src/<id>/README.md
 test/<id>/test.sh
 test/<id>/scenarios.json
-docs/features/<id>.md
 ```
 
-Run `pnpm run validate-feature <id>` to verify all five exist and pass
+An optional `src/<id>/NOTES.md` may be added for extra content (extended
+examples, OS notes) that the auto-generated README template does not cover.
+
+Run `pnpm run feature:validate <id>` to verify all five exist and pass
 structural checks before committing.
 
 ## Executable Bits
@@ -108,11 +113,20 @@ executable bits; this is expected and safe to ignore.
 
 ## Version Bump Rule
 
+**Before bumping a version, check whether the current version is already
+published** — if the registry doesn't have the version yet, a previous bump
+is pending and no new bump is needed:
+
+```bash
+docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+  && echo "published" || echo "not published"
+```
+
 The publish workflow skips any feature whose `id:version` OCI image already
 exists in the registry. **Always bump `"version"` in
 `devcontainer-feature.json` when the feature behavior changes.** Update
-`test.sh` assertions, `docs/` usage snippets, and option defaults atomically
-in the same commit.
+`test.sh` assertions, `src/<id>/README.md` defaults, and option defaults
+atomically in the same commit.
 
 ## Local Testing
 
@@ -159,8 +173,9 @@ The `publish.yml` workflow:
 2. **test** — fan-out matrix job installs each feature and runs its `test.sh`
 3. **summarize** — writes a Markdown table to `$GITHUB_STEP_SUMMARY`; blocks
    publish if any test failed
-4. **publish** — `devcontainer features publish` pushes each feature to
-   `ghcr.io/savvy-web/<id>:<version>`
+4. **publish** — uses `devcontainers/action@v1` to publish all features in
+   `./src` to `ghcr.io/savvy-web/<id>:<version>`; the action installs the
+   devcontainer CLI and handles version-skipping internally
 
 The test matrix in `test.yml` (PR CI) is built dynamically from all
 `test/<id>/test.sh` files via inline discovery — no manual matrix

@@ -2,10 +2,21 @@
 	"id": "homebrew",
 	"version": "0.1.0",
 	"name": "Homebrew",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/homebrew.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/homebrew/README.md",
 	"description": "Installs Homebrew (macOS/Linux) globally. Skips if already installed.",
 	"options": {},
 	"installsAfter": [],
 	"platforms": ["linux", "darwin"],
-	"keywords": ["global", "package manager", "brew", "homebrew"]
+	"keywords": ["global", "package manager", "brew", "homebrew"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has Homebrew (the open-source package manager) pre-installed and available on the PATH. Use `brew install <package>` to install packages, `brew upgrade` to upgrade, and `brew info <package>` to see package details. On Linux, Homebrew installs packages to `/home/linuxbrew/.linuxbrew`."
+					}
+				]
+			}
+		}
+	}
 }

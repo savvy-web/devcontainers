@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "Node.js",
 	"description": "Installs and configures the Node.js runtime globally.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/node.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/node/README.md",
 	"options": {
 		"nodeVersion": {
 			"type": "string",
@@ -13,5 +13,16 @@
 	},
 	"entrypoint": "/install.sh",
 	"platforms": ["linux"],
-	"keywords": ["node", "javascript", "runtime", "development"]
+	"keywords": ["node", "javascript", "runtime", "development"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has Node.js pre-installed globally with npm, npx, and corepack available on the PATH. Use `node` to run JavaScript, `npm` for package management, and `npx` to run packages without installing them globally. The Node.js version is pinned to a specific release for reproducibility."
+					}
+				]
+			}
+		}
+	}
 }

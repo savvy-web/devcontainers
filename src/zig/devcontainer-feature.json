@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"name": "Zig Compiler",
 	"description": "Installs the Zig programming language (https://ziglang.org/) globally.",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/zig.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/zig/README.md",
 	"options": {
 		"zigVersion": {
 			"type": "string",
@@ -14,5 +14,16 @@
 	"installsAfter": [],
 	"entrypoint": "/install.sh",
 	"platforms": ["linux", "darwin"],
-	"keywords": ["zig", "compiler", "language"]
+	"keywords": ["zig", "compiler", "language"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has the Zig compiler pre-installed globally. Use `zig build` to compile projects with a `build.zig` file, `zig test <file>` to run tests, and `zig fmt <file>` to format source files. The Zig version is pinned for reproducibility."
+					}
+				]
+			}
+		}
+	}
 }

@@ -29,10 +29,10 @@ Example:
 
 #### `documentationURL`
 
-Always set. Points to the feature's doc page in this repo.
+Always set. Points to the feature's README in this repo.
 
 ```json
-"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/biome.md"
+"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/biome/README.md"
 ```
 
 #### `options`
@@ -111,6 +111,40 @@ Array of VS Code extension IDs to recommend when the feature is installed.
 ```
 
 Only include extensions that are meaningfully useful for the feature's purpose.
+
+#### `customizations.vscode.settings.github.copilot.chat.codeGeneration.instructions`
+
+Copilot instructions that tell the AI assistant what tools are available in the
+container and how to use them. Required on every feature.
+
+```json
+"customizations": {
+  "vscode": {
+    "settings": {
+      "github.copilot.chat.codeGeneration.instructions": [
+        {
+          "text": "This dev container has Biome pre-installed globally. Use `biome check --write` to lint and format."
+        }
+      ]
+    }
+  }
+}
+```
+
+When a feature has both extensions and Copilot instructions, combine them:
+
+```json
+"customizations": {
+  "vscode": {
+    "extensions": ["rust-lang.rust-analyzer"],
+    "settings": {
+      "github.copilot.chat.codeGeneration.instructions": [
+        { "text": "This dev container has the Rust toolchain installed via rustup." }
+      ]
+    }
+  }
+}
+```
 
 ## `install.sh` Conventions
 
@@ -238,7 +272,7 @@ The `package-manager` feature demonstrates all common fields:
   "version": "0.1.0",
   "name": "Package Manager (corepack)",
   "description": "Installs and configures a Node.js package manager (pnpm, yarn, or npm) via corepack.",
-  "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/package-manager.md",
+  "documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/package-manager/README.md",
   "options": {
     "packageManager": {
       "type": "string",
@@ -248,6 +282,17 @@ The `package-manager` feature demonstrates all common fields:
   },
   "installsAfter": ["ghcr.io/savvy-web/node"],
   "platforms": ["linux"],
-  "keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"]
+  "keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "github.copilot.chat.codeGeneration.instructions": [
+          {
+            "text": "This dev container has a Node.js package manager configured via corepack. Always use the configured package manager instead of calling npm directly."
+          }
+        ]
+      }
+    }
+  }
 }
 ```

@@ -2,7 +2,7 @@
 	"id": "rust",
 	"version": "0.1.0",
 	"name": "Rust Toolchain (Global)",
-	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/docs/features/rust.md",
+	"documentationURL": "https://github.com/savvy-web/devcontainers/blob/main/src/rust/README.md",
 	"description": "Installs the Rust toolchain globally using rustup. Supports toolchain selection, component install, and validation.",
 	"options": {
 		"toolchain": {
@@ -19,7 +19,14 @@
 	"installsAfter": ["ghcr.io/devcontainers/features/common-utils"],
 	"customizations": {
 		"vscode": {
-			"extensions": ["rust-lang.rust-analyzer"]
+			"extensions": ["rust-lang.rust-analyzer"],
+			"settings": {
+				"github.copilot.chat.codeGeneration.instructions": [
+					{
+						"text": "This dev container has the Rust toolchain installed globally via rustup. `cargo`, `rustc`, `rustup`, `rustfmt`, and `clippy` are all available on the PATH. Use `cargo build` to compile, `cargo test` to run tests, `cargo clippy -- -D warnings` for strict linting, and `cargo fmt` to format code. The toolchain version can be stable, nightly, or a pinned release."
+					}
+				]
+			}
 		}
 	},
 	"platforms": ["linux", "darwin"],
