@@ -34,7 +34,7 @@ jobs:
             const j = JSON.parse(require('fs').readFileSync('${FEATURE_JSON}', 'utf8'));
             const deps = j.installsAfter || [];
             process.stdout.write(
-              deps.some(d => d.includes('ghcr.io/savvy-web/')) ? 'true' : 'false'
+              deps.some(d => d.includes('ghcr.io/savvy-web/features/')) ? 'true' : 'false'
             );
           ")
 

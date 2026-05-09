@@ -18,7 +18,7 @@ been published to the registry.
 in `devcontainer-feature.json` already exists:
 
 ```bash
-docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+docker manifest inspect ghcr.io/savvy-web/features/<id>:<version> 2>/dev/null \
   && echo "published" || echo "not published"
 ```
 
@@ -28,7 +28,7 @@ docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
   making any behavior change.
 
 Example: if `devcontainer-feature.json` says `"version": "0.2.0"` but
-`ghcr.io/savvy-web/<id>:0.2.0` returns a 404, then `0.2.0` is a pending
+`ghcr.io/savvy-web/features/<id>:0.2.0` returns a 404, then `0.2.0` is a pending
 release — do not bump to `0.3.0`.
 
 The publish workflow (`.github/workflows/publish.yml`) skips features whose
@@ -151,5 +151,5 @@ When a feature depends on another feature being installed first (for example,
 `package-manager` depends on Node.js), declare it in `installsAfter`:
 
 ```json
-"installsAfter": ["ghcr.io/savvy-web/node"]
+"installsAfter": ["ghcr.io/savvy-web/features/node"]
 ```

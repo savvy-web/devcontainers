@@ -13,7 +13,7 @@ Add this feature to your `devcontainer.json`:
 ```jsonc
 {
   "features": {
-    "ghcr.io/savvy-web/node:0.1.0": {}
+    "ghcr.io/savvy-web/features/node:0.1.0": {}
   }
 }
 ```

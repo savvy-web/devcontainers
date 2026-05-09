@@ -6,6 +6,6 @@ Installs the Claude Code CLI agent globally via the official native installer (c
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/claude-code:0": {}
+    "ghcr.io/savvy-web/features/claude-code:0": {}
 }
 ```

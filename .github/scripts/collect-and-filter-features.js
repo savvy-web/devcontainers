@@ -16,7 +16,7 @@ for (const feature of readdirSync(featuresRoot)) {
 	const data = JSON.parse(readFileSync(jsonPath, "utf8"));
 	const id = data.id;
 	const version = data.version;
-	const image = `ghcr.io/${org}/${id}:${version}`;
+	const image = `ghcr.io/${org}/features/${id}:${version}`;
 	let publish = false;
 	let reason = "Image does not exist in registry";
 	try {

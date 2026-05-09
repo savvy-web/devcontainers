@@ -6,7 +6,7 @@ Installs the Zig programming language (<https://ziglang.org/>) globally.
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/zig:0": {}
+    "ghcr.io/savvy-web/features/zig:0": {}
 }
 ```
 

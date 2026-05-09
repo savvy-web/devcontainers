@@ -11,7 +11,7 @@ Add this feature to your `devcontainer.json`:
 ```json
 {
   "features": {
-    "ghcr.io/savvy-web/claude-code:0": {}
+    "ghcr.io/savvy-web/features/claude-code:0": {}
   }
 }
 ```

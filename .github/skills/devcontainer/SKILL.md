@@ -142,7 +142,7 @@ documentation now lives in `src/<id>/README.md`.
 published:**
 
 ```bash
-docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+docker manifest inspect ghcr.io/savvy-web/features/<id>:<version> 2>/dev/null \
   && echo "published" || echo "not published"
 ```
 
@@ -192,7 +192,7 @@ structure:
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/<id>:0": {}
+    "ghcr.io/savvy-web/features/<id>:0": {}
 }
 ```
 

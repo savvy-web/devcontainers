@@ -11,7 +11,7 @@
 			"description": "Either 'auto' (read from workspace package.json) or a corepack spec like 'pnpm@10.33.2' or 'pnpm@10.33.2+sha512.<hash>'. Supported PMs: pnpm, yarn, npm."
 		}
 	},
-	"installsAfter": ["ghcr.io/savvy-web/node"],
+	"installsAfter": ["ghcr.io/savvy-web/features/node"],
 	"keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"],
 	"customizations": {
 		"vscode": {

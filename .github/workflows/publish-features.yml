@@ -1,4 +1,4 @@
-name: Publish
+name: Publish Features
 on:
   workflow_dispatch:
     inputs:
@@ -56,7 +56,7 @@ jobs:
             const j = JSON.parse(require('fs').readFileSync('${FEATURE_JSON}', 'utf8'));
             const deps = j.installsAfter || [];
             process.stdout.write(
-              deps.some(d => d.includes('ghcr.io/savvy-web/')) ? 'true' : 'false'
+              deps.some(d => d.includes('ghcr.io/savvy-web/features/')) ? 'true' : 'false'
             );
           ")
           BASE_IMAGE="mcr.microsoft.com/devcontainers/base:ubuntu"
@@ -179,12 +179,44 @@ jobs:
       needs.collect.outputs.matrix != '[]'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       pull-requests: write
       actions: read
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+      - name: Check token permissions
+        run: |
+          echo "--- /rate_limit ---"
+          curl -i -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/rate_limit
+          echo "--- /user ---"
+          curl -i -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user
+          echo "--- /app ---"
+          curl -i -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app
+          echo "--- /installation ---"
+          curl -i -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/installation
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
       - uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: true
       - name: Publish Features
         uses: devcontainers/action@1082abd5d2bf3a11abccba70eef98df068277772 # v1.4.3
         with:
@@ -192,6 +224,39 @@ jobs:
           publish-features: "true"
           base-path-to-features: "./src"
           oci-registry: "ghcr.io"
-          features-namespace: "${{ github.repository_owner }}"
+          features-namespace: "savvy-web/features"
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - name: Create a PR for Documentation
+        id: push_image_info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          echo "Start."
+
+          # Configure git and Push updates
+          git config --global user.email github-actions@github.com
+          git config --global user.name github-actions
+          git config pull.rebase false
+
+          branch=docs/automated-update-$GITHUB_RUN_ID
+          git checkout -b $branch
+          message='docs: automated documentation update'
+
+          # Add / update and commit
+          git add */**/README.md
+          git commit -m 'docs: automated documentation update [skip ci]' || export NO_UPDATES=true
+
+          # Push
+          if [ "$NO_UPDATES" != "true" ] ; then
+              git push origin "$branch"
+              gh api \
+                --method POST \
+                -H "Accept: application/vnd.github+json" \
+                /repos/${GITHUB_REPOSITORY}/pulls \
+                -f title="$message" \
+              -f body="$message" \
+              -f head="$branch" \
+              -f base='main'
+          fi

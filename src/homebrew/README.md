@@ -6,6 +6,6 @@ Installs Homebrew (macOS/Linux) globally. Skips if already installed.
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/homebrew:0": {}
+    "ghcr.io/savvy-web/features/homebrew:0": {}
 }
 ```

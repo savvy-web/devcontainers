@@ -6,7 +6,7 @@ Installs bats-core, bats-support, bats-assert, and bats-mock for shell script te
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/bats:0": {}
+    "ghcr.io/savvy-web/features/bats:0": {}
 }
 ```
 

@@ -16,7 +16,7 @@ Add this feature to your `devcontainer.json` to install bats and its support lib
 ```jsonc
 {
   "features": {
-    "ghcr.io/savvy-web/bats:0.1.0": {}
+    "ghcr.io/savvy-web/features/bats:0.1.0": {}
   }
 }
 ```
@@ -28,8 +28,8 @@ Use with kcov for coverage collection:
 ```jsonc
 {
   "features": {
-    "ghcr.io/savvy-web/kcov:0.1.0": {},
-    "ghcr.io/savvy-web/bats:0.1.0": {}
+    "ghcr.io/savvy-web/features/kcov:0.1.0": {},
+    "ghcr.io/savvy-web/features/bats:0.1.0": {}
   }
 }
 ```

@@ -6,7 +6,7 @@ Installs and configures the Node.js runtime globally.
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/node:0": {}
+    "ghcr.io/savvy-web/features/node:0": {}
 }
 ```
 

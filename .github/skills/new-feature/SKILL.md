@@ -180,7 +180,7 @@ this same structure:
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/<id>:0": {}
+    "ghcr.io/savvy-web/features/<id>:0": {}
 }
 ```
 

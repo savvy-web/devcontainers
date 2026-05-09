@@ -6,7 +6,7 @@ Installs Biome globally for all runtimes. Strict version, reproducible, and idem
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/biome:0": {}
+    "ghcr.io/savvy-web/features/biome:0": {}
 }
 ```
 

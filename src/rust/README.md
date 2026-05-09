@@ -6,7 +6,7 @@ Installs the Rust toolchain globally using rustup. Supports toolchain selection,
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/rust:0": {}
+    "ghcr.io/savvy-web/features/rust:0": {}
 }
 ```
 

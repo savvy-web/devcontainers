@@ -6,7 +6,7 @@ Installs and configures a Node.js package manager (pnpm, yarn, or npm) via corep
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/package-manager:0": {}
+    "ghcr.io/savvy-web/features/package-manager:0": {}
 }
 ```
 

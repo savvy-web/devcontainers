@@ -2,7 +2,7 @@
 
 Composable [devcontainer features](https://containers.dev/implementors/features/) for Savvy Web repositories. Designed for use with GitHub Codespaces, VS Code Dev Containers, and local Docker environments.
 
-Features are published to the GitHub Container Registry at `ghcr.io/savvy-web/<id>`.
+Features are published to the GitHub Container Registry at `ghcr.io/savvy-web/features/<id>`.
 
 ## Features
 

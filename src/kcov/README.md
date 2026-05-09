@@ -6,7 +6,7 @@ Builds and installs kcov from source for shell script and binary code coverage.
 
 ```json
 "features": {
-    "ghcr.io/savvy-web/kcov:0": {}
+    "ghcr.io/savvy-web/features/kcov:0": {}
 }
 ```
 

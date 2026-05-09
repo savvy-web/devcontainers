@@ -39,7 +39,7 @@ Read `src/<id>/devcontainer-feature.json` to find the current version (e.g.
 `0.2.0`). Then check whether that version already exists in the OCI registry:
 
 ```bash
-docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+docker manifest inspect ghcr.io/savvy-web/features/<id>:<version> 2>/dev/null \
   && echo "published" || echo "not published"
 ```
 
@@ -98,7 +98,7 @@ Update the options table default value and the version in the example usage
 block:
 
 ```json
-"ghcr.io/savvy-web/<id>:<major>": {}
+"ghcr.io/savvy-web/features/<id>:<major>": {}
 ```
 
 Only the major version appears in the usage block (e.g. `0` from `0.2.0`).

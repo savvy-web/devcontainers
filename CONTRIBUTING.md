@@ -4,7 +4,7 @@
 Thank you for your interest in contributing to `savvy-web/devcontainers`!
 
 This repository publishes composable devcontainer features to
-`ghcr.io/savvy-web/<id>`. Each feature is a self-contained directory with an
+`ghcr.io/savvy-web/features/<id>`. Each feature is a self-contained directory with an
 install script, tests, and documentation.
 
 ## Prerequisites

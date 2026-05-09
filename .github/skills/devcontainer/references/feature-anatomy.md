@@ -280,7 +280,7 @@ The `package-manager` feature demonstrates all common fields:
       "description": "Either 'auto' or a corepack spec like 'pnpm@10.33.2'"
     }
   },
-  "installsAfter": ["ghcr.io/savvy-web/node"],
+  "installsAfter": ["ghcr.io/savvy-web/features/node"],
   "platforms": ["linux"],
   "keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"],
   "customizations": {

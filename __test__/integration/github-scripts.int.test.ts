@@ -45,7 +45,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 			const result = runCollectAndFilter({
 				fixturePath: fixture("all-cached"),
 				fakeDocker: {
-					existing: ["ghcr.io/savvy-web/foo:0.1.0", "ghcr.io/savvy-web/bar:0.2.0"],
+					existing: ["ghcr.io/savvy-web/features/foo:0.1.0", "ghcr.io/savvy-web/features/bar:0.2.0"],
 				},
 			});
 
@@ -57,7 +57,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 			const result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
 				fakeDocker: {
-					existing: ["ghcr.io/savvy-web/foo:0.1.0"],
+					existing: ["ghcr.io/savvy-web/features/foo:0.1.0"],
 				},
 			});
 
@@ -96,15 +96,15 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 	});
 
 	describe("docker invocation", () => {
-		it("queries ghcr.io/<owner>/<id>:<version> for each feature", () => {
+		it("queries ghcr.io/<owner>/features/<id>:<version> for each feature", () => {
 			const result = runCollectAndFilter({
 				fixturePath: fixture("all-new"),
 				fakeDocker: { existing: [] },
 			});
 
 			expect(result.dockerCalls.sort()).toEqual([
-				"manifest inspect ghcr.io/savvy-web/bar:0.2.0",
-				"manifest inspect ghcr.io/savvy-web/foo:0.1.0",
+				"manifest inspect ghcr.io/savvy-web/features/bar:0.2.0",
+				"manifest inspect ghcr.io/savvy-web/features/foo:0.1.0",
 			]);
 		});
 
@@ -117,8 +117,8 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 
 			expect(result.status, result.stderr).toBe(0);
 			expect(result.dockerCalls.sort()).toEqual([
-				"manifest inspect ghcr.io/another-org/bar:0.2.0",
-				"manifest inspect ghcr.io/another-org/foo:0.1.0",
+				"manifest inspect ghcr.io/another-org/features/bar:0.2.0",
+				"manifest inspect ghcr.io/another-org/features/foo:0.1.0",
 			]);
 		});
 
@@ -142,7 +142,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 		it("writes a single JSON array to stdout", () => {
 			result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
-				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
+				fakeDocker: { existing: ["ghcr.io/savvy-web/features/foo:0.1.0"] },
 			});
 			expect(result.status, result.stderr).toBe(0);
 			expect(() => JSON.parse(result.stdout)).not.toThrow();
@@ -151,7 +151,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 		it("each entry exposes id, version, path, publish, and reason", () => {
 			result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
-				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
+				fakeDocker: { existing: ["ghcr.io/savvy-web/features/foo:0.1.0"] },
 			});
 			for (const entry of result.stdoutJson) {
 				expect(entry).toEqual({
@@ -167,7 +167,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 		it("emits absolute feature paths pointing at the fixture's src directory", () => {
 			result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
-				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
+				fakeDocker: { existing: ["ghcr.io/savvy-web/features/foo:0.1.0"] },
 			});
 			const srcPath = join(fixture("mixed"), "src");
 			for (const entry of result.stdoutJson) {
@@ -191,7 +191,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 			const summaryPath = newSummaryPath();
 			const result = runCollectAndFilter({
 				fixturePath: fixture("mixed"),
-				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
+				fakeDocker: { existing: ["ghcr.io/savvy-web/features/foo:0.1.0"] },
 				githubStepSummary: summaryPath,
 			});
 
@@ -207,7 +207,7 @@ describe.skipIf(skipOnWindows)("collect-and-filter-features script", () => {
 			const summaryPath = newSummaryPath();
 			runCollectAndFilter({
 				fixturePath: fixture("mixed"),
-				fakeDocker: { existing: ["ghcr.io/savvy-web/foo:0.1.0"] },
+				fakeDocker: { existing: ["ghcr.io/savvy-web/features/foo:0.1.0"] },
 				githubStepSummary: summaryPath,
 			});
 

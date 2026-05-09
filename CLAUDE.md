@@ -8,7 +8,7 @@ Guidance for Claude Code and Copilot cloud agents working in this repository.
 ## What This Repo Is
 
 `savvy-web/devcontainers` publishes composable devcontainer features to
-`ghcr.io/savvy-web/<id>`. Features are self-contained directories with an
+`ghcr.io/savvy-web/features/<id>`. Features are self-contained directories with an
 install script, tests, and documentation. They are consumed in
 `devcontainer.json` files across Savvy Web repositories.
 
@@ -118,7 +118,7 @@ published** — if the registry doesn't have the version yet, a previous bump
 is pending and no new bump is needed:
 
 ```bash
-docker manifest inspect ghcr.io/savvy-web/<id>:<version> 2>/dev/null \
+docker manifest inspect ghcr.io/savvy-web/features/<id>:<version> 2>/dev/null \
   && echo "published" || echo "not published"
 ```
 
@@ -174,7 +174,7 @@ The `publish.yml` workflow:
 3. **summarize** — writes a Markdown table to `$GITHUB_STEP_SUMMARY`; blocks
    publish if any test failed
 4. **publish** — uses `devcontainers/action@v1` to publish all features in
-   `./src` to `ghcr.io/savvy-web/<id>:<version>`; the action installs the
+   `./src` to `ghcr.io/savvy-web/features/<id>:<version>`; the action installs the
    devcontainer CLI and handles version-skipping internally
 
 The test matrix in `test.yml` (PR CI) is built dynamically from all

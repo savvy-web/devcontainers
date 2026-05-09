@@ -315,7 +315,7 @@ Add the dependency feature to `installsAfter` in
 `src/<id>/devcontainer-feature.json`:
 
 ```json
-"installsAfter": ["ghcr.io/savvy-web/node"]
+"installsAfter": ["ghcr.io/savvy-web/features/node"]
 ```
 
 Then bump the feature version using the `bump-feature` skill, since

@@ -26,7 +26,7 @@
 			"description": "bats-mock version to install. Accepts with or without a leading 'v'."
 		}
 	},
-	"installsAfter": ["ghcr.io/savvy-web/kcov"],
+	"installsAfter": ["ghcr.io/savvy-web/features/kcov"],
 	"keywords": ["bats", "testing", "bash", "shell", "coverage", "mock"],
 	"customizations": {
 		"vscode": {
