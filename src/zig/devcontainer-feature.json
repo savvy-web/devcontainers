@@ -13,7 +13,6 @@
 	},
 	"installsAfter": [],
 	"entrypoint": "/install.sh",
-	"platforms": ["linux", "darwin"],
 	"keywords": ["zig", "compiler", "language"],
 	"customizations": {
 		"vscode": {

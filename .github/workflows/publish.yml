@@ -181,11 +181,14 @@ jobs:
     permissions:
       contents: read
       packages: write
+      pull-requests: write
+      actions: read
     steps:
       - uses: actions/checkout@v6
       - name: Publish Features
         uses: devcontainers/action@1082abd5d2bf3a11abccba70eef98df068277772 # v1.4.3
         with:
+          generate-docs: "true"
           publish-features: "true"
           base-path-to-features: "./src"
           oci-registry: "ghcr.io"

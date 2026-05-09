@@ -12,7 +12,6 @@
 		}
 	},
 	"installsAfter": ["ghcr.io/savvy-web/node"],
-	"platforms": ["linux"],
 	"keywords": ["corepack", "pnpm", "yarn", "npm", "package-manager"],
 	"customizations": {
 		"vscode": {

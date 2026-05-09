@@ -18,18 +18,3 @@ Installs bats-core, bats-support, bats-assert, and bats-mock for shell script te
 | batsSupportVersion | bats-support version to install. Accepts with or without a leading 'v'. | string | 0.3.0 |
 | batsAssertVersion | bats-assert version to install. Accepts with or without a leading 'v'. | string | 2.2.4 |
 | batsMockVersion | bats-mock version to install. Accepts with or without a leading 'v'. | string | 1.2.5 |
-
-## Coverage Integration
-
-Pair with the `kcov` feature to collect shell script coverage reports:
-
-```json
-"features": {
-    "ghcr.io/savvy-web/kcov:0": {},
-    "ghcr.io/savvy-web/bats:0": {}
-}
-```
-
----
-
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/savvy-web/devcontainers/blob/main/src/bats/devcontainer-feature.json). Add additional notes to a `NOTES.md`._

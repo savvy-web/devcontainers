@@ -6,7 +6,6 @@
 	"description": "Installs Homebrew (macOS/Linux) globally. Skips if already installed.",
 	"options": {},
 	"installsAfter": [],
-	"platforms": ["linux", "darwin"],
 	"keywords": ["global", "package manager", "brew", "homebrew"],
 	"customizations": {
 		"vscode": {

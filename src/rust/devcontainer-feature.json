@@ -29,6 +29,5 @@
 			}
 		}
 	},
-	"platforms": ["linux", "darwin"],
 	"keywords": ["rust", "toolchain", "compiler", "cargo"]
 }

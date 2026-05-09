@@ -14,7 +14,8 @@
 		"**/.claude/plans",
 		"**/docs/superpowers/**",
 		"**/__test__/fixtures/**",
-		"**/__test__/**/fixtures/**"
+		"**/__test__/**/fixtures/**",
+		"**/src/**/NOTES.md"
 	],
 	"customRules": ["@savvy-web/changesets/markdownlint"],
 	"config": {

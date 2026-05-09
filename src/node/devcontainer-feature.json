@@ -12,7 +12,6 @@
 		}
 	},
 	"entrypoint": "/install.sh",
-	"platforms": ["linux"],
 	"keywords": ["node", "javascript", "runtime", "development"],
 	"customizations": {
 		"vscode": {

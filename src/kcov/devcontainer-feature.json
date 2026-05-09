@@ -12,7 +12,6 @@
 		}
 	},
 	"installsAfter": [],
-	"platforms": ["linux"],
 	"keywords": ["kcov", "coverage", "bash", "shell", "testing"],
 	"customizations": {
 		"vscode": {

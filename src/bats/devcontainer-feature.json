@@ -27,7 +27,6 @@
 		}
 	},
 	"installsAfter": ["ghcr.io/savvy-web/kcov"],
-	"platforms": ["linux"],
 	"keywords": ["bats", "testing", "bash", "shell", "coverage", "mock"],
 	"customizations": {
 		"vscode": {
