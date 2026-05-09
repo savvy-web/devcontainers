@@ -31,9 +31,9 @@ Example: if `devcontainer-feature.json` says `"version": "0.2.0"` but
 `ghcr.io/savvy-web/features/<id>:0.2.0` returns a 404, then `0.2.0` is a pending
 release — do not bump to `0.3.0`.
 
-The publish workflow (`.github/workflows/publish.yml`) skips features whose
-`id:version` OCI image already exists in the registry. If the version is not
-bumped after a behavior change, the change will never be published.
+The publish workflow (`.github/workflows/publish-features.yml`) skips features
+whose `id:version` OCI image already exists in the registry. If the version is
+not bumped after a behavior change, the change will never be published.
 
 Changes that require a version bump (only when the current version is already published):
 

@@ -58,24 +58,22 @@ scripts/
 
 .github/
   workflows/
-    test.yml              # CI — runs all feature tests on PRs
-    test-feature.yml      # CI — run one feature (used by act)
-    publish.yml           # publishes new/changed features to ghcr.io
+    test.yml                  # CI — runs all feature tests on PRs
+    test-feature.yml          # CI — manual single-feature test (workflow_dispatch)
+    publish-features.yml      # publishes new/changed features to ghcr.io
 ```
 
 ## Local Feature Testing
 
-Use [act](https://nektosact.com) to run a feature's install and test
-scripts locally without pushing to CI.
+Run a feature's scenarios locally without pushing to CI.
 
-**Prerequisites:** Docker running, `act` installed and the `@devcontailers/cli` installed globally.
+**Prerequisites:** Docker running and `@devcontainers/cli` installed globally.
 
 ```bash
-brew install act
 pnpm add -g @devcontainers/cli
 ```
 
-Test each feature by it's name:
+Test each feature by its name:
 
 ```bash
 pnpm feature:test biome
@@ -88,7 +86,13 @@ pnpm run feature:test
 
 ### How it works
 
-The `pnpm feature:test` command proxies to `lib/scripts/test-feature.sh` which in turn calls `act workflow_dispatch` against `.github/workflows/test-feature.yml`, which installs the feature and runs its `test.sh` inside a fresh Ubuntu container. The `.actrc` at the repo root configures act to use a slim ubuntu image and bind-mount the local workspace.
+`pnpm feature:test` runs `lib/scripts/test-feature.sh`, which delegates to
+`.github/scripts/test-feature-isolated.sh`. That script copies `src/` and
+`test/` to a scratch directory, strips `ghcr.io/savvy-web/features/*` entries
+from `installsAfter` in the manifest copies — the devcontainer CLI rejects
+3-segment OCI references it cannot resolve, and our scenarios install
+features in isolation anyway — then runs `devcontainer features test -f <id>`
+against the scratch tree.
 
 ## Contributing
 

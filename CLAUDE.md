@@ -57,10 +57,14 @@ docs/
 
 .github/
   scripts/
-    collect-and-filter-features.js  # Builds publish matrix (skips existing versions)
+    topo-order.js                # Topo-orders features by installsAfter, marks publish status
+    strip-installs-after.js      # Removes savvy-web installsAfter entries from a manifest
+    test-feature-isolated.sh     # Copies src+test to scratch dir, strips installsAfter, runs CLI tests
+    publish-features.sh          # Publish loop: tests + publishes each feature in topo order
+    parse-test-results.js        # Parses TEST REPORT into structured JSON
   workflows/
     test.yml                  # PR CI — auto-discovers all features and tests them
-    publish.yml               # Publish to ghcr.io via devcontainers/action (manual trigger)
+    publish-features.yml      # Tests + publishes features to ghcr.io/savvy-web/features (custom flow)
     test-feature.yml          # Single-feature test used by lib/scripts/test-feature.sh
     copilot-setup-steps.yml   # Copilot agent environment (Node, pnpm, devcontainer CLI)
   skills/
@@ -138,9 +142,12 @@ pnpm run validate-feature biome
 pnpm run feature:test biome
 ```
 
-`scripts/test-feature.sh` calls `act workflow_dispatch` targeting
-`.github/workflows/test-feature.yml`, which runs `install.sh` then `test.sh`
-inside a fresh `catthehacker/ubuntu:act-latest` container.
+`lib/scripts/test-feature.sh` delegates to
+`.github/scripts/test-feature-isolated.sh`, which copies `src/` and `test/`
+into a scratch directory, strips savvy-web `installsAfter` entries from the
+manifest copies (the devcontainer CLI rejects 3-segment OCI references it
+cannot resolve), and runs `devcontainer features test -f <id>` against the
+scratch tree.
 
 ## Linting
 
@@ -166,16 +173,32 @@ Valid types: `feat`, `fix`, `chore`, `docs`, `ci`, `build`, `test`,
 
 ## Publish Pipeline
 
-The `publish.yml` workflow:
+`.github/workflows/publish-features.yml` is a single-job custom flow that
+drives the `@devcontainers/cli` directly (the `devcontainers/action` is no
+longer used — it returned opaque errors and could not handle the
+test-vs-publish chicken-and-egg between dependent features):
 
-1. **collect** — `collect-and-filter-features.js` builds a JSON matrix of
-   features not yet published at their current version (checks OCI registry)
-2. **test** — fan-out matrix job installs each feature and runs its `test.sh`
-3. **summarize** — writes a Markdown table to `$GITHUB_STEP_SUMMARY`; blocks
-   publish if any test failed
-4. **publish** — uses `devcontainers/action@v1` to publish all features in
-   `./src` to `ghcr.io/savvy-web/features/<id>:<version>`; the action installs the
-   devcontainer CLI and handles version-skipping internally
+1. **`docker login ghcr.io`** with `GITHUB_TOKEN` (the workflow declares
+   `permissions: packages: write`).
+2. **`topo-order.js`** sorts features so dependencies appear before
+   dependents, and stamps each entry with `publish: bool` based on
+   `docker manifest inspect`.
+3. **`publish-features.sh`** walks the order. For each not-yet-published
+   feature: `test-feature-isolated.sh` runs the scenario tests against a
+   stripped scratch copy of the tree, then `devcontainer features publish`
+   pushes to `ghcr.io/savvy-web/features/<id>:<version>`. Topological order
+   means `ghcr.io/savvy-web/features/kcov` is in the registry by the time
+   `bats` is tested, so its `installsAfter` resolves cleanly.
+4. **Docs PR** — when anything was actually published,
+   `devcontainer features generate-docs` regenerates `src/<id>/README.md`
+   files and a `docs/automated-update-<run-id>` branch is opened as a PR.
+
+The 3-segment registry path (`ghcr.io/savvy-web/features/<id>`) breaks the
+devcontainer CLI's local-fallback resolution of `installsAfter`, so test
+runs always go through `test-feature-isolated.sh`, which strips
+`ghcr.io/savvy-web/features/*` entries from a scratch copy of the manifest
+before invoking the CLI. `installsAfter` is purely an ordering hint and
+scenarios test features in isolation, so this is observably equivalent.
 
 The test matrix in `test.yml` (PR CI) is built dynamically from all
 `test/<id>/test.sh` files via inline discovery — no manual matrix

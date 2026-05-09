@@ -46,12 +46,14 @@ docs/
 
 .github/
   scripts/
-    collect-and-filter-features.js  # Builds publish matrix (skips already-published versions)
+    topo-order.js                # Topo-orders features by installsAfter, marks publish status
+    test-feature-isolated.sh     # Strips installsAfter then runs devcontainer features test
+    publish-features.sh          # Publish loop driven by topo-order.js output
   workflows/
-    test.yml            # PR CI — auto-discovers and runs all feature tests
-    publish.yml         # Publish features to ghcr.io (manual trigger)
-    test-feature.yml    # Single-feature test via act (local use)
-    copilot-setup-steps.yml  # Copilot cloud agent environment setup
+    test.yml                  # PR CI — auto-discovers and runs all feature tests
+    publish-features.yml      # Tests + publishes features to ghcr.io/savvy-web/features
+    test-feature.yml          # Single-feature manual test (workflow_dispatch)
+    copilot-setup-steps.yml   # Copilot cloud agent environment setup
   skills/
     devcontainer/   # Devcontainer spec and repo conventions skill
     github-actions/ # GitHub Actions workflow skill

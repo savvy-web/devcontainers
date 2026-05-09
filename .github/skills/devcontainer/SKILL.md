@@ -233,10 +233,10 @@ notes. The content is appended to the README after the options table.
   reproducible. Always use an exact version string.
 - **Wrong `documentationURL`** — must point to `src/<id>/README.md`, not
   `docs/features/<id>.md`.
-- **`version` not bumped** — the `collect-and-filter-features.js` script skips
-  a feature if its `id:version` image already exists in the registry. Bump
-  `version` whenever the feature behavior changes — but only if the current
-  version is already published.
+- **`version` not bumped** — `topo-order.js` marks a feature `publish: false`
+  if its `id:version` image already exists in the registry, and the publish
+  loop skips those entries. Bump `version` whenever the feature behavior
+  changes — but only if the current version is already published.
 - **Bumping when version is pending** — if `devcontainer-feature.json` says
   `0.2.0` but the registry only has `0.1.0`, do not bump to `0.3.0`. Check the
   registry before bumping.
