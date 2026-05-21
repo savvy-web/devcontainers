@@ -1,8 +1,8 @@
 name: Workflow
 
 on:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
   pull_request:
     branches: [main, changeset-release/main]
     types: [opened, synchronize, reopened]
@@ -28,6 +28,7 @@ jobs:
       packages: write
       attestations: write
       checks: write
+      artifact-metadata: write
     with:
       dry-run: ${{ inputs.dry_run || false }}
       app-bot-id: ${{ vars.APP_BOT_ID }}
