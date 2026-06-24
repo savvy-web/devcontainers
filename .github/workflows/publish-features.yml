@@ -30,7 +30,7 @@ jobs:
       FEATURES_NAMESPACE: savvy-web/features
       DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install devcontainer CLI
         run: npm install -g @devcontainers/cli
