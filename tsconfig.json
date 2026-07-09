@@ -1,3 +1,4 @@
 {
-	"extends": ["@savvy-web/rslib-builder/tsconfig/ecma/lib.json"]
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@savvy-web/silk/tsconfig/node/root.json"
 }
