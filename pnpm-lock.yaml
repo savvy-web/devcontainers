@@ -6,17 +6,17 @@ importers:
   .:
     configDependencies:
       '@savvy-web/pnpm-plugin-silk':
-        specifier: 0.21.0
-        version: 0.21.0
+        specifier: 0.22.0
+        version: 0.22.0
 
 packages:
 
-  '@savvy-web/pnpm-plugin-silk@0.21.0':
-    resolution: {integrity: sha512-UADjHt3lC5T22L4g9OjaI4QFaifvCN4viInTfb691R5blYSfoEw3YJ0UDdKzLLzXHPYZEfJShb5tY0SR9pq8Rw==}
+  '@savvy-web/pnpm-plugin-silk@0.22.0':
+    resolution: {integrity: sha512-fdLb4xOZfJcyD01rrgm4RT5UR5quezgLY0chciH1oMVq0ogDiAHxlEqJOltS08Rq6WuzBJoV74yysA9T7DkSuA==}
 
 snapshots:
 
-  '@savvy-web/pnpm-plugin-silk@0.21.0': {}
+  '@savvy-web/pnpm-plugin-silk@0.22.0': {}
 
 ---
 lockfileVersion: '9.0'
@@ -26,9 +26,9 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@manypkg/find-root>@types/node': ^26.1.0
+  '@manypkg/find-root>@types/node': ^26.1.1
 
-pnpmfileChecksum: sha256-9MEuMe9sBkJ8Gvet9Gellvj5WAOoOb3pdjLRqXsHZ94=
+pnpmfileChecksum: sha256-pMHHDu09X1MmSFdOlodQpgjhFumB6jQXvbYZzylTWwM=
 
 importers:
 
@@ -2793,6 +2793,10 @@ packages:
     resolution: {integrity: sha512-IIaP0g3iy9Cyy18w3M9YcaDudujEAVHKt3a3QJg1+sr/oX96TbaGUubG0hJyCjCBThFH+tFpcIyoUHUn1ogaLA==}
     engines: {node: '>=20'}
 
+  string-width@8.2.2:
+    resolution: {integrity: sha512-GaPUh5gfdrYzqeVNZvUfT23vYYxXzKYidUcnMtJg/3rxRV63EFZy3k6xfKlmfeJD0176lnUV/Usr3XcwSvFzpg==}
+    engines: {node: '>=20'}
+
   string_decoder@1.3.0:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
 
@@ -2976,8 +2980,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite@8.1.3:
-    resolution: {integrity: sha512-Ds+gBRbj0lwRO2Y5hwnUBdxSwlAve9LeRyU4sNnAr0ewW0gWF0n5bgXgUzbgZ49MV9BVUAQUFYVcDUcilUExMA==}
+  vite@8.1.4:
+    resolution: {integrity: sha512-bTT9PsdWO+MQMNG9ZXIP/qM9wGh37DFxTV/sPq9cFpHr3w4jkgef032PkAL9jAqhk3Nz8NQw3O8n6/xFkqO4QQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -3091,8 +3095,8 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  workspaces-effect@2.0.2:
-    resolution: {integrity: sha512-iB5i508qiztbdSyjPiA6dh6l+trD0fsWWWfihuvV+YkrNW3XsylJmlyCl4V8o/CiEE3ILgE1cVg7eipxbjCsQg==}
+  workspaces-effect@2.0.3:
+    resolution: {integrity: sha512-qoITmeJdpB/DxOA/EZmitlRW0Dsg8hkQTv6F6wqOB0wd0LSG4k5Xi3MzC8JRYt48Ncu8ohu/L1s+RBlaLW2NOg==}
     engines: {node: '>=24.11.0'}
     peerDependencies:
       '@effect/platform': ^0.96.0
@@ -3956,7 +3960,7 @@ snapshots:
       '@savvy-web/silk-effects': 2.1.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       effect: 3.21.4
       jsonc-effect: 0.3.1(effect@3.21.4)
-      workspaces-effect: 2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      workspaces-effect: 2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       yaml: 2.9.0
     transitivePeerDependencies:
       - '@effect/experimental'
@@ -3978,7 +3982,7 @@ snapshots:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@savvy-web/silk-effects': 2.1.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       effect: 3.21.4
-      workspaces-effect: 2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      workspaces-effect: 2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       zod: 4.4.3
     transitivePeerDependencies:
       - '@cfworker/json-schema'
@@ -4012,7 +4016,7 @@ snapshots:
       unified: 11.0.5
       unified-lint-rule: 3.0.1
       unist-util-visit: 5.1.0
-      workspaces-effect: 2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      workspaces-effect: 2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       yaml: 2.9.0
       yaml-effect: 0.7.2(effect@3.21.4)
       yaml-lint: 1.7.0
@@ -4182,7 +4186,7 @@ snapshots:
       '@trpc/server': 11.18.0(typescript@6.0.3)
       '@vitest-agent/sdk': 1.3.2
       effect: 3.21.4
-      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
       zod: 4.4.3
     transitivePeerDependencies:
       - '@cfworker/json-schema'
@@ -4211,8 +4215,8 @@ snapshots:
       '@vitest/coverage-v8': 4.1.10(vitest@4.1.10)
       effect: 3.21.4
       magic-string: 0.30.21
-      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
-      workspaces-effect: 2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      workspaces-effect: 2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - '@types/react'
@@ -4239,7 +4243,7 @@ snapshots:
       effect: 3.21.4
       ink: 7.1.0(react@19.2.7)
       react: 19.2.7
-      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
     optionalDependencies:
       '@vitest/coverage-istanbul': 4.1.10(vitest@4.1.10)
       '@vitest/coverage-v8': 4.1.10(vitest@4.1.10)
@@ -4268,7 +4272,7 @@ snapshots:
       config-file-effect: 0.3.0(@effect/platform-node@0.107.0(@effect/cluster@0.59.0(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.51.1(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.18.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.51.1(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       effect: 3.21.4
       std-env: 4.2.0
-      workspaces-effect: 2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      workspaces-effect: 2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       xdg-effect: 2.1.1(ebbd840a9936fee4732a1f63bb937b99)
     transitivePeerDependencies:
       - bufferutil
@@ -4319,7 +4323,7 @@ snapshots:
       magicast: 0.5.3
       obug: 2.1.3
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -4335,7 +4339,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.2.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
 
   '@vitest/expect@4.1.10':
     dependencies:
@@ -4346,13 +4350,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.10(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.10(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
@@ -4579,12 +4583,12 @@ snapshots:
   cli-truncate@5.2.0:
     dependencies:
       slice-ansi: 8.0.0
-      string-width: 8.2.1
+      string-width: 8.2.2
 
   cli-truncate@6.1.0:
     dependencies:
       slice-ansi: 9.0.0
-      string-width: 8.2.1
+      string-width: 8.2.2
 
   cli-width@3.0.0: {}
 
@@ -5156,7 +5160,7 @@ snapshots:
       signal-exit: 3.0.7
       slice-ansi: 9.0.0
       stack-utils: 2.0.6
-      string-width: 8.2.1
+      string-width: 8.2.2
       terminal-size: 4.0.1
       type-fest: 5.8.0
       widest-line: 6.0.0
@@ -6353,6 +6357,11 @@ snapshots:
       get-east-asian-width: 1.6.0
       strip-ansi: 7.2.0
 
+  string-width@8.2.2:
+    dependencies:
+      get-east-asian-width: 1.6.0
+      strip-ansi: 7.2.0
+
   string_decoder@1.3.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -6528,7 +6537,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0):
+  vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
@@ -6541,10 +6550,10 @@ snapshots:
       jiti: 2.6.1
       yaml: 2.9.0
 
-  vitest@4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)):
+  vitest@4.1.10(@types/node@26.1.1)(@vitest/coverage-istanbul@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.10
-      '@vitest/mocker': 4.1.10(vite@8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.10
       '@vitest/runner': 4.1.10
       '@vitest/snapshot': 4.1.10
@@ -6561,7 +6570,7 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.1.3(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@26.1.1)(jiti@2.6.1)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 26.1.1
@@ -6596,11 +6605,11 @@ snapshots:
 
   widest-line@6.0.0:
     dependencies:
-      string-width: 8.2.1
+      string-width: 8.2.2
 
   word-wrap@1.2.5: {}
 
-  workspaces-effect@2.0.2(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4):
+  workspaces-effect@2.0.3(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4):
     dependencies:
       '@effect/platform': 0.96.2(effect@3.21.4)
       '@pnpm/catalogs.config': 1100.0.2
@@ -6616,7 +6625,7 @@ snapshots:
   wrap-ansi@10.0.0:
     dependencies:
       ansi-styles: 6.2.3
-      string-width: 8.2.1
+      string-width: 8.2.2
       strip-ansi: 7.2.0
 
   wrap-ansi@6.2.0:
