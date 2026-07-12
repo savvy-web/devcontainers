@@ -113,6 +113,5 @@
 		"editor.formatOnPaste": true
 	},
 	"markdown.styles": [".vscode/static/github-markdown.css"],
-	"vitest.disableWorkspaceWarning": true,
-	"typescript.native-preview.tsdk": "/Users/spencer/workspaces/savvy-web/devcontainers/node_modules/@typescript/native-preview"
+	"vitest.disableWorkspaceWarning": true
 }
