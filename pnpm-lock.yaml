@@ -6,17 +6,17 @@ importers:
   .:
     configDependencies:
       '@savvy-web/pnpm-plugin-silk':
-        specifier: 0.23.0
-        version: 0.23.0
+        specifier: 0.23.1
+        version: 0.23.1
 
 packages:
 
-  '@savvy-web/pnpm-plugin-silk@0.23.0':
-    resolution: {integrity: sha512-YkB5luvlXPvf2wdFHMYv+4bomRT96qiMOTwuuzN6mBVBYtcqt7krldhD0Az84+xujKFy+LliuOZwDMNG8/VR0w==}
+  '@savvy-web/pnpm-plugin-silk@0.23.1':
+    resolution: {integrity: sha512-Iv0lXkpG6NXcNu/khNeaNfpcI8KMnyOnmiB+BbwCw1t0csCZPzLf7EJ4zCuvD/yg1oyHquMXzBQHAzyGq+CnZw==}
 
 snapshots:
 
-  '@savvy-web/pnpm-plugin-silk@0.23.0': {}
+  '@savvy-web/pnpm-plugin-silk@0.23.1': {}
 
 ---
 lockfileVersion: '9.0'
@@ -28,7 +28,7 @@ settings:
 overrides:
   '@microsoft/api-extractor>typescript': ^6.0.3
 
-pnpmfileChecksum: sha256-mkr5h3HTwYB8amObDwI99GWQPyBYMxkoNvUiGbxaswg=
+pnpmfileChecksum: sha256-fwfFCERAC0qMRcqLx4v5UQnSN2pjVU6VoO9YO7k2jt0=
 
 importers:
 
