@@ -18,7 +18,8 @@
 		"**/src/**/NOTES.md",
 		"**/.git",
 		"**/docs/superpowers",
-		"**/__fixtures__/**"
+		"**/__fixtures__/**",
+		"**/.repos"
 	],
 	"customRules": ["@savvy-web/silk/changesets/markdownlint"],
 	"config": {
