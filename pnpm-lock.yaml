@@ -5,16 +5,24 @@ importers:
 
   .:
     configDependencies:
+      '@effected/pnpm-plugin-effect':
+        specifier: 0.5.0
+        version: 0.5.0
       '@savvy-web/pnpm-plugin-silk':
         specifier: 0.28.0
         version: 0.28.0
 
 packages:
 
+  '@effected/pnpm-plugin-effect@0.5.0':
+    resolution: {integrity: sha512-ZXhKy7WI8ROoHdiOX/q2VzmDPHhQZFwuEvsKN68GsBWnjmbQkCCmaisxoXL6wzM6IKNV4zV3IXWIO1cKsydQuA==}
+
   '@savvy-web/pnpm-plugin-silk@0.28.0':
     resolution: {integrity: sha512-Kc02T+OYFDCdM62q9o2XGJivV0A+zlj1wIv+POShOH1DFpKNAsQj9W53XmrJ71FcoTR6phyin5OHd9I0BVEtWw==}
 
 snapshots:
+
+  '@effected/pnpm-plugin-effect@0.5.0': {}
 
   '@savvy-web/pnpm-plugin-silk@0.28.0': {}
 
@@ -28,7 +36,7 @@ settings:
 overrides:
   '@microsoft/api-extractor>typescript': ^6.0.3
 
-pnpmfileChecksum: sha256-1NtVnNcQBB09F0Xlj3Ukzh35TQgbB/d9DBotflTIQAA=
+pnpmfileChecksum: sha256-r3XLVg8OpG+hLvB3N6Xk7gQP9Y/AinWcW1xFTiQIEzE=
 
 importers:
 
