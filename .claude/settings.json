@@ -1,20 +1,12 @@
 {
-	"enableAllProjectMcpServers": true,
+	"attribution": {
+		"commit": "Signed-off-by: C. Spencer Beggs <spencer@savvyweb.systems>",
+		"pr": "Signed-off-by: C. Spencer Beggs <spencer@savvyweb.systems>"
+	},
 	"enabledPlugins": {
-		"design-docs@spencerbeggs": true,
+		"effected@spencerbeggs": true,
+		"okfit@spencerbeggs": true,
 		"silk@savvy-web-systems": true,
-		"vitest-agent-reporter@spencerbeggs": true,
-		"vitest@savvy-web-systems": true
-	},
-	"permissions": {
-		"allow": [
-			"Write(./**)",
-			"Edit(./**)",
-			"Write(.claude/design/**)",
-			"Write(.claude/plans/**)",
-			"Edit(.claude/design/**)",
-			"Edit(.claude/plans/**)"
-		]
-	},
-	"plansDirectory": ".claude/plans"
+		"vitest-agent@spencerbeggs": true
+	}
 }
